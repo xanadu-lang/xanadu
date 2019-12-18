@@ -1043,7 +1043,7 @@ case+ opt2 of
 let
 val
 opt2 =
-t2ype_un_lazy(t2p1)
+t2ype_un_llazy(t2p1)
 in
 case+ opt2 of
 |

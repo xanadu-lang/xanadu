@@ -10,9 +10,9 @@ CPF=cp -f
 
 ######
 
-all:: SATS
-all:: DATS
-all:: CATS
+update:: SATS
+update:: DATS
+update:: CATS
 
 ######
 

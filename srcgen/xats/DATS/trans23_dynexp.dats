@@ -1225,6 +1225,16 @@ in
 let
 val
 opt2 =
+t2ype_un_p2tr(t2p1)
+in
+case+ opt2 of
+|
+~Some_vt(t2p2) => t2p2
+|
+~None_vt((*void*)) =>
+let
+val
+opt2 =
 t2ype_un_lazy(t2p1)
 in
 case+ opt2 of
@@ -1235,13 +1245,14 @@ case+ opt2 of
 let
 val
 opt2 =
-t2ype_un_p2tr(t2p1)
+t2ype_un_llazy(t2p1)
 in
 case+ opt2 of
 |
 ~Some_vt(t2p2) => t2p2
 |
 ~None_vt((*void*)) => t2ype_new(loc0)
+end // end of [let]
 end // end of [let]
 end // end of [let]
 //
