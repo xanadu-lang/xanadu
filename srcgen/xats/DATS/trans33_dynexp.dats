@@ -1103,6 +1103,39 @@ in
 d33exp_make_node(loc0, t2p0, D3Elazy(d3e1))
 end // end of [aux_lazy]
 
+fun
+aux_llazy
+( d3e0
+: d3exp): d3exp = let
+//
+val
+loc0 = d3e0.loc()
+val-
+D3Ellazy
+( d3e1
+, opt2(*free*)) = d3e0.node()
+//
+val d3e1 = trans33_dexp(d3e1)
+val opt2 =
+(
+case+ opt2 of
+| None() =>
+  None(*void*)
+| Some(d3e2) =>
+  let
+  val t2p2 = the_t2ype_void
+  in
+  Some(trans33_dexp_dn(d3e2, t2p2))
+  end
+) : d3expopt // end-of-val]
+//
+val t2p0 =
+t2ype_app1(the_t2ype_llazy, d3e1.type())
+//
+in
+d33exp_make_node(loc0, t2p0, D3Ellazy(d3e1, opt2))
+end // end of [aux_llazy]
+
 (* ****** ****** *)
 
 fun
@@ -1207,10 +1240,16 @@ d3e0.node() of
 | D3Eeval(_, _) => aux_eval(d3e0)
 | D3Efold(d3e1) => aux_fold(d3e0)
 //
-| D3Elazy(d3e1) => aux_lazy(d3e0)
+| D3Elazy
+    (d3e1) => aux_lazy(d3e0)
+  // nonlin lazy-evaluation
+| D3Ellazy
+    (d3e1, opt2) => aux_llazy(d3e0)
+  // linear lazy-evaluation
 //
 | D3Eanno
     (d3e1, s2e2) => aux_anno(d3e0)
+  // type-annotation ascription
 //
 | D3Enone0 _ => d3e0
 | D3Enone1 _ => d3e0
