@@ -276,7 +276,7 @@ p1tr_tbox
 (l:addr) <= p1tr_k
 abstype
 p2tr_tbox
-(a:vtype, l:addr) <= p2tr_k
+(l:addr, a:vtype) <= p2tr_k
 //
 typedef
 p1tr0 = [l:a0] p1tr_tbox(l)
@@ -284,40 +284,40 @@ typedef
 p1tr1(l: a0) = p1tr_tbox(l)
 //
 typedef
-p2tr0(a: vt) = [l:a0] p2tr_tbox(a, l)
+p2tr0(a: vt) = [l:a0] p2tr_tbox(l, a)
 typedef
-p2tr1(a: vt, l: a0) = p2tr_tbox(a, l)
+p2tr1(a: vt, l: a0) = p2tr_tbox(l, a)
 //
 typedef p1tr = p1tr0
 typedef p1tr(l:a0) = p1tr1(l)
 typedef p2tr(a:vt) = p2tr0(a)
-typedef p2tr(a:vt, l:a0) = p2tr1(a, l)
+typedef p2tr(l:a0, a:vt) = p2tr1(l, a)
 //
 (* ****** ****** *)
-//
+
 typedef
 bool_k = $extype("xats_bool_t")
-//
+
 typedef
 sint_k = $extype("xats_sint_t")
 typedef
 uint_k = $extype("xats_uint_t")
-//
+
 typedef
 slint_k = $extype("xats_slint_t")
 typedef
 ulint_k = $extype("xats_ulint_t")
-//
+
 typedef
 ssize_k = $extype("xats_ssize_t")
 typedef
 usize_k = $extype("xats_usize_t")
-//
+
 typedef
 sllint_k = $extype("xats_sllint_t")
 typedef
 ullint_k = $extype("xats_ullint_t")
-//
+
 (* ****** ****** *)
 //
 abstype
