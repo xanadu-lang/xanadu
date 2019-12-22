@@ -1,0 +1,7 @@
+srcgen/xats/xatsopt
+srcgen/xats/xatsopt_dats.c
+srcgen/xats/BUILD/*.o
+*#*
+*.#*
+*~
+lib/libxatsopt.a
