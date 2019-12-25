@@ -114,7 +114,7 @@ case+ xs of
 ~strmcon_vt_nil() =>
  strmcon_vt_nil()
 |
-~strmcon_cons(x0, xs) =>
+~strmcon_vt_cons(x0, xs) =>
 (
  if
  filter0$test<x0>(x0)
