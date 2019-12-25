@@ -32,47 +32,47 @@
 (* ****** ****** *)
 
 fun
-<a:type>
+<a:t0>
 stream_nil(): stream(a)
 fun
-<a:type>
+<a:t0>
 stream_cons
 (x0: a, xs: stream(a)): stream(a)
 
 (* ****** ****** *)
 
 fun
-<a:type>
+<a:t0>
 stream_sing(x0: a): stream(a)
 fun
-<a:type>
+<a:t0>
 stream_pair(x0: a, y0: a): stream(a)
 
 (* ****** ****** *)
 //
 fun
-<a:type>
+<a:t0>
 stream_extend
 (xs: stream(a), x0: a): stream(a)
 fun
-<a:type>
+<a:t0>
 stream_append
 (xs: stream(a), ys: stream(a)): stream(a)
 //
 (* ****** ****** *)
 //
 (*
-stream_map: map$for
-stream_map_vt: map$for
+stream_map: map$fopr
+stream_map_vt: map$fopr
 *)
 //
 fun
-<x0:type>
-<y0:type>
+<x0:t0>
+<y0:t0>
 stream_map(stream(x0)): stream(y0)
 fun
-<x0:type>
-<y0:vtype>
+<x0:t0>
+<y0:vt>
 stream_map_vt(stream(x0)): stream_vt(y0)
 //
 (* ****** ****** *)
@@ -83,10 +83,10 @@ stream_filter_vt: filter$test
 *)
 //
 fun
-<x0:type>
+<x0:t0>
 stream_filter(stream(x0)): stream(x0)
 fun
-<x0:type>
+<x0:t0>
 stream_filter_vt(stream(x0)): stream_vt(x0)
 //
 (* ****** ****** *)
