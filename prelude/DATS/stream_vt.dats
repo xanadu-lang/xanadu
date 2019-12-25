@@ -84,7 +84,7 @@ case+ $eval(xs) of
 | ~strmcon_vt_nil() =>
    strmcon_vt_nil()
 | ~strmcon_vt_cons(x0, xs) =>
-   strmcon_vt_cons(map$fopr0(x0), auxmain(xs))
+   strmcon_vt_cons(map0$fopr(x0), auxmain(xs))
 )
 } (* end of [stream_vt_map0] *)
 
@@ -117,7 +117,7 @@ case+ xs of
 ~strmcon_cons(x0, xs) =>
 (
  if
- filter$test0<x0>(x0)
+ filter0$test<x0>(x0)
  then
  strmcon_vt_cons(x0, auxmain(xs)) else auxloop($eval(xs))
 )
