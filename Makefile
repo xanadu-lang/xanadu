@@ -10,6 +10,10 @@ CPF=cp -f
 
 ######
 
+all::
+
+######
+
 update:: MISC
 update:: SATS
 update:: DATS
