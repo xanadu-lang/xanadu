@@ -261,6 +261,16 @@ d3e0.node() of
   , D3Edapp(d3f0, npf1, d3es))
   end // end of [D3Edapp]
 //
+| D3Epcon
+  (d3e1, lab2) =>
+  let
+  val d3e1 =
+  trans3t_dexp(env0, d3e1)
+  in
+  d3exp_make_node
+  ( loc0
+  , t2p0, D3Epcon(d3e1, lab2))
+  end
 | D3Eproj
   (d3e1, lab2, idx2) =>
   let
@@ -452,6 +462,10 @@ d3e0.node() of
   in
     d3exp_make_node(loc0, t2p0, D3Eanno(d3e1, s2e2))
   end  
+//
+| D3Elcast(d3e1, lab2) => d3e0 (* HX: lab2: missing label *)
+| D3Etcast(d3e1, t2p2) => d3e0 (* HX: t2p2: expected type *)
+| D3Enone0() => d3e0 | D3Enone1(d2e2) => d3e0 | D3Enone2(d3e2) => d3e0
 //
 end // end of [trans3t_dexp]
 
