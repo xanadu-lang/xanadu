@@ -219,8 +219,8 @@ fprint!
 (out, sym, "(", stamp, ")");
 (*
 fprint!(out, "; tqas= ", x0.tqas());
-fprint!(out, "; sexp= ", x0.sexp())
-fprint!(out, "; type= ", x0.type())
+fprint!(out, "; sexp= ", x0.sexp());
+fprint!(out, "; type= ", x0.type());
 *)
 ) where
 {
@@ -298,6 +298,11 @@ case- x0.node() of
   fprint!(out, "D2Pcon1(", d2c0, ")")
 | D2Pcon2(d2cs) =>
   fprint!(out, "D2Pcon2(", d2cs, ")")
+//
+| D2Pflat(d2p1) =>
+  fprint!(out, "D2Pflat(", d2p1, ")")
+| D2Pfree(d2p1) =>
+  fprint!(out, "D2Pfree(", d2p1, ")")
 //
 | D2Psym0(sym, d2pis) =>
   (

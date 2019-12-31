@@ -27,38 +27,69 @@
 
 (* ****** ****** *)
 //
-// For options
-//
-(* ****** ****** *)
-//
-// Author: Hongwei Xi
-// Start Time: September, 2019
-// Authoremail: gmhwxiATgmailDOTcom
-//
-(* ****** ****** *)
-//
-fun<>
-optn_none?
-{a:type}{b:bool}
-(xs: optn(a, b)): bool(b=ff)
-fun<>
-optn_some?
-{a:type}{b:bool}
-(xs: optn(a, b)): bool(b=tt)
-//
-#symload iseqz with optn_none?
-#symload isneqz with optn_some?
+// For functional lin-streams
 //
 (* ****** ****** *)
 
 fun
-<a:t0>
-optn_length
-{b:bool}
-(xs: optn(a, b)): int(b2i(b))
-
-#symload length with optn_length
+<a:vt>
+stream_vt_nil(): stream_vt(a)
+fun
+<a:vt>
+stream_vt_cons
+(x0: a, xs: stream_vt(a)): stream_vt(a)
 
 (* ****** ****** *)
 
-(* end of [optn.sats] *)
+fun
+<a:vt>
+stream_vt_sing(x0: a): stream_vt(a)
+fun
+<a:vt>
+stream_vt_pair(x0: a, y0: a): stream_vt(a)
+
+(* ****** ****** *)
+//
+fun
+<a:vt>
+stream_vt_extend
+(xs: stream_vt(a), x0: a): stream_vt(a)
+fun
+<a:vt>
+stream_vt_append
+(xs: stream_vt(a), ys: stream_vt(a)): stream_vt(a)
+//
+(* ****** ****** *)
+//
+(*
+stream_vt_map0: map0$fopr
+*)
+//
+fun
+<x0:vt>
+<y0:vt>
+stream_vt_map0(stream_vt(x0)): stream_vt(y0)
+//
+(* ****** ****** *)
+//
+(*
+stream_vt_filter: filter0$test
+*)
+//
+fun
+<x0:vt>
+stream_vt_filter0(stream_vt(x0)): stream_vt(x0)
+//
+(* ****** ****** *)
+//
+(*
+stream_vt_mapopt: mapopt0$fopr
+*)
+fun
+<x0:vt>
+<y0:vt>
+stream_vt_mapopt0(stream_vt(x0)): stream_vt(y0)
+//
+(* ****** ****** *)
+
+(* end of [stream_vt.sats] *)

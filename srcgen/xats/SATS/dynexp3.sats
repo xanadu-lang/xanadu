@@ -107,6 +107,9 @@ d3pat_node =
 | D3Pcon1 of (d2con)
 | D3Pcon2 of (d2conlst)
 //
+| D3Pflat of (d3pat) // @
+| D3Pfree of (d3pat) // ~
+//
 | D3Psym0 of
   (d1pat(*sym*), d2pitmlst)
 //
@@ -314,9 +317,11 @@ d3exp_node =
 | D3Edapp of
   (d3exp, int(*npf*), d3explst)
 //
+| D3Epcon of
+  (d3exp(*con*), label(*proj*))
 | D3Eproj of
-  ( d3exp(*rcd*)
-  , label(*proj*), int(*index*))
+  (d3exp(*rcd*),
+   label(*proj*), int(*index*))
 //
 | D3Elet of
   (d3eclist, d3exp(*sequence*))
