@@ -66,221 +66,328 @@ implement
 fprint_val<t2ype> = fprint_t2ype
 
 (* ****** ****** *)
-//
-datavtype implist =
-//
-| implist_nil of ()
-//
-| implist_let1 of implist
-| implist_loc1 of implist
-| implist_loc2 of implist
-//
-| implist_cons of
-  (d3ecl, ti3env, implist)
-//
-(* ****** ****** *)
-//
-extern
+
+local
+
+val
+loc0 = the_location_dummy
+
 fun
-ti3env_reset(ti3env): void
-//
-extern
-fun
-ti3env_get_s2vs(ti3env): s2varlst
-extern
-fun
-ti3env_get_targ(ti3env): t2ypelst
-extern
-fun
-ti3env_get_tsub(ti3env): t2ypelst
-//
-overload .s2vs with ti3env_get_s2vs
-overload .targ with ti3env_get_targ
-overload .tsub with ti3env_get_tsub
-//
-(* ****** ****** *)
-
-implement
-ti3env_reset(ti3e) =
-let
-val+
-TI3ENV(_, xtvs, _) = ti3e
-in (* in-of-let *)
-(
-list_foreach<t2xtv>(xtvs)
-) where
-{
-implement
-(env)(*tmp*)
-list_foreach$fwork<t2xtv><env>
-  (xtv, env) = xtv.type(the_t2ype_none0)
-}
-end // end of [ti3env_reset]
-
-(* ****** ****** *)
-
-implement
-ti3env_get_s2vs
-( ti3e ) =
-( s2vs ) where
-{
-val+
-TI3ENV(s2vs, _, _) = ti3e
-} (* end of [ti3env_get_s2vs] *)
-
-implement
-ti3env_get_targ
-( ti3e ) =
-( targ ) where
-{
-val+
-TI3ENV(_, _, targ) = ti3e
-} (* end of [ti3env_get_targ] *)
-
-implement
-ti3env_get_tsub
-( ti3e ) =
-let
-val+
-TI3ENV(_, xtvs, _) = ti3e
-in
+fxtvs
+( vs
+: t2xtvlst
+)
+: t2ypelst =
 list_vt2t
 (
-list_map<t2xtv><t2ype>(xtvs)
+list_map<t2xtv><t2ype>(vs)
 ) where
 {
+//
 implement
-list_map$fopr<t2xtv><t2ype>(xtv) = xtv.type()
+list_map$fopr<t2xtv><t2ype>
+  (xtv) = t2ype_eval(xtv.type())
+//
 }
-end (* end of [ti3env_get_tsub] *)
+//
+fun
+auxrst // reset
+( xtvs
+: t2xtvlst): void =
+(
+case+ xtvs of
+| list_nil
+  ((*void*)) => ()
+| list_cons
+  (xtv0, xtvs) =>
+  ( auxrst(xtvs) ) where
+  {
+    val () =
+    xtv0.type(the_t2ype_none0(*void*))
+  }
+) (* end of [auxrst] *)
+
+fun
+auximps
+( d2c0
+: d2cst
+, imps
+: implist
+, targ
+: t2ypelst)
+: Option_vt
+  @(d3ecl
+  , s2varlst, t2ypelst) =
+let
+//
+fun
+auxlst
+( xs: implist
+, xarg: t2xtvlst
+)
+:
+Option_vt
+@(d3ecl
+, s2varlst, t2ypelst) =
+(
+case+ xs of
+|
+implist_nil() =>
+  None_vt(*void*)
+|
+implist_cons
+(d3cl, ti3e, xs) =>
+let
+//
+val () =
+println!
+("staload_find_timp: d3cl = ", d3cl)
+//
+val+
+TI3ENV
+( s2vs
+, xtvs, t2ps) = ti3e
+val
+test =
+unify3(loc0, targ, t2ps)
+//
+val () =
+println!
+("staload_find_timp: t2ps = ", t2ps)
+val () =
+println!
+("staload_find_timp: test = ", test)
+//
+in
+  if
+  test
+  then
+  let
+  val t2ps = fxtvs(xtvs)
+  in
+    auxrst(xtvs); // reset
+    Some_vt@(d3cl, s2vs, t2ps)
+  end
+  else
+  (auxrst(xarg); auxlst(xs, xarg))
+end // end of [auxlst]
+)
+//
+val () =
+println!
+("staload_find_timp: d2c0 = ", d2c0)
+//
+in
+(
+let
+val () = list_vt_free(xarg) in opt0
+end
+) where
+{
+  val xarg = t2ypelst_get_xtvs(targ)
+  val opt0 = auxlst(imps, $UN.list_vt2t(xarg))
+}
+//
+end // end of [auximps]
+
+in (* in-of-local *)
+
+implement
+staload_find_timp
+( d3cl
+, d2c0, targ) = let
+//
+val-
+D3Cstaload
+( tok, src
+, knd, fopt
+, flag, mopt) = d3cl.node()
+//
+in
+//
+case+ mopt of
+|
+None() =>
+None_vt()
+|
+Some(menv) => let
+  val
+  hopt =
+  fmodenv_get_t3imptbl(menv)
+in
+case- hopt of
+| Some(htbl) =>
+  (
+    auximps(d2c0, imps, targ)
+  ) where
+  {
+    val imps =
+    t3imptbl_find_implist(htbl, d2c0)
+  }
+end // end of [Some]
+//
+end // end of [staload_find_timp]
+
+end // end of [local]
 
 (* ****** ****** *)
 //
-fun
-implist_add_let1
-( xs
-: implist
-)
-: implist = implist_let1(xs)
+datavtype
+impllst =
+//
+| impllst_nil of ()
+//
+| impllst_let1 of impllst
+| impllst_loc1 of impllst
+| impllst_loc2 of impllst
+//
+| impllst_cons1 of (d3ecl, impllst)
+| impllst_cons2 of (d3ecl, ti3env, impllst)
 //
 (* ****** ****** *)
 //
 fun
-implist_pop_let1
+impllst_add_let1
 ( xs
-: implist): implist =
+: impllst
+)
+: impllst = impllst_let1(xs)
+//
+(* ****** ****** *)
+//
+fun
+impllst_pop_let1
+( xs
+: impllst): impllst =
 ( auxlst(xs) ) where
 {
 fun
 auxlst
 ( xs
-: implist): implist =
+: impllst): impllst =
 case- xs of
-| ~implist_let1(xs) => xs
-| ~implist_cons
-   (d3cl, ti3e, xs) => auxlst(xs)
+| ~impllst_let1(xs) => xs
+| ~impllst_cons1(d3cl, xs) => auxlst(xs)
+| ~impllst_cons2(d3cl, ti3e, xs) => auxlst(xs)
 }
 //
 (* ****** ****** *)
 //
 fun
-implist_add_loc1
+impllst_add_loc1
 ( xs
-: implist): implist = implist_loc1(xs)
+: impllst): impllst = impllst_loc1(xs)
 fun
-implist_add_loc2
+impllst_add_loc2
 ( xs
-: implist): implist = implist_loc2(xs)
+: impllst): impllst = impllst_loc2(xs)
 //
 (* ****** ****** *)
 //
 fun
-implist_pop_loc12
+impllst_pop_loc12
 ( xs
-: implist): implist =
+: impllst): impllst =
 (
 auxlst1
-(xs, implist_nil())
+(xs, impllst_nil())
 ) where
 {
 fun
 auxlst1
 ( xs
-: implist
+: impllst
 , ys
-: implist): implist =
+: impllst): impllst =
 (
 case- xs of
 |
-~implist_loc2
+~impllst_loc2
    (xs) => auxlst2(xs, ys)
 |
-~implist_cons
+~impllst_cons1
+   (d3cl, xs) =>
+ (
+   auxlst1
+   (xs, impllst_cons1(d3cl, ys))
+ )
+|
+~impllst_cons2
    (d3cl, ti3e, xs) =>
  (
    auxlst1
-   (xs, implist_cons(d3cl, ti3e, ys))
+   (xs, impllst_cons2(d3cl, ti3e, ys))
  )
 )
 and
 auxlst2
 ( xs
-: implist
+: impllst
 , ys
-: implist): implist =
+: impllst): impllst =
 (
 case- xs of
-| ~implist_loc1
+| ~impllst_loc1
    (xs) => auxlst3(xs, ys)
-| ~implist_cons
+| ~impllst_cons1
+   (d3cl, xs) => auxlst2(xs, ys)
+| ~impllst_cons2
    (d3cl, ti3e, xs) => auxlst2(xs, ys)
 )
 and
 auxlst3
 ( xs
-: implist
+: impllst
 , ys
-: implist): implist =
+: impllst): impllst =
 (
 case- ys of
 |
-~implist_nil() => xs
+~impllst_nil() => xs
 |
-~implist_cons(d3cl, ti3e, ys) =>
+~impllst_cons1(d3cl, ys) =>
  (
    auxlst3
-   (implist_cons(d3cl, ti3e, xs), ys)
+   (impllst_cons1(d3cl, xs), ys)
+ )
+|
+~impllst_cons2(d3cl, ti3e, ys) =>
+ (
+   auxlst3
+   (impllst_cons2(d3cl, ti3e, xs), ys)
  )
 ) (* end of [auxlst3] *)
-} (* where *) // implist_pop_loc12
+} (* where *) // impllst_pop_loc12
 //
 (* ****** ****** *)
 
 fun
-implist_free
-(xs: implist): void =
+impllst_free
+(xs: impllst): void =
 (
 case+ xs of
 |
-~implist_nil() => ()
+~impllst_nil() => ()
 |
-~implist_let1(xs) => implist_free(xs)
+~impllst_let1(xs) => impllst_free(xs)
 |
-~implist_loc1(xs) => implist_free(xs)
+~impllst_loc1(xs) => impllst_free(xs)
 |
-~implist_loc2(xs) => implist_free(xs)
+~impllst_loc2(xs) => impllst_free(xs)
 //
 |
-~implist_cons(_, _, xs) => implist_free(xs)
+~impllst_cons1(_, xs) => impllst_free(xs)
+|
+~impllst_cons2(_, _, xs) => impllst_free(xs)
 //
-) (* end of [implist_free] *)
+) (* end of [impllst_free] *)
 
 (* ****** ****** *)
 
 fun
-implist_find_timp
+impllst_find_timp
 ( xs
-: !implist
+: !impllst
 , d2c0: d2cst
 , targ: t2ypelst
 )
@@ -291,7 +398,7 @@ Option_vt
 (
 let
 val () =
-list_vt_free(xtvs) in opt0
+list_vt_free(xarg) in opt0
 end
 ) where
 {
@@ -318,7 +425,7 @@ list_map$fopr<t2xtv><t2ype>
 }
 //
 fun
-auxrst
+auxrst // reset
 ( xtvs
 : t2xtvlst): void =
 (
@@ -330,14 +437,14 @@ case+ xtvs of
   ( auxrst(xtvs) ) where
   {
     val () =
-    xtv0.type(the_t2ype_none0)
+    xtv0.type(the_t2ype_none0(*void*))
   }
 ) (* end of [auxrst] *)
 //
 fun
-auxd2c
-( d2c0: d2cst
-, d3cl: d3ecl): bool =
+auxfnd
+( d3cl: d3ecl
+, d2c0: d2cst): bool =
 (
 case-
 d3cl.node() of
@@ -395,11 +502,11 @@ case+ opt3 of
 | Some(d2c1) => (d2c0 = d2c1)
 )
 )
-) (* end of [auxd2c] *)
+) (* end of [auxfnd] *)
 //
 fun
 auxlst
-( xs: !implist
+( xs: !impllst
 , xarg: t2xtvlst
 )
 :
@@ -410,65 +517,90 @@ Option_vt
 case+ xs of
 //
 |
-implist_nil() =>
+impllst_nil() =>
   None_vt((*void*))
-// implist_nil
+// impllst_nil
 //
 |
-implist_let1
+impllst_let1
   (xs) => auxlst(xs, xarg)
 |
-implist_loc1
+impllst_loc1
   (xs) => auxlst(xs, xarg)
 |
-implist_loc2
+impllst_loc2
   (xs) => auxlst(xs, xarg)
 //
 |
-implist_cons
-(d3cl, ti3e, xs) =>
+impllst_cons1
+  (d3cl, xs) =>
 let
 //
-  val
-  found =
-  auxd2c(d2c0, d3cl)
+val
+ans =
+staload_find_timp(d3cl, d2c0, targ)
 //
-  val () =
-  println!
-  ("implist_find_timp: d2c0 = ", d2c0)
-  val () =
-  println!
-  ("implist_find_timp: d3cl = ", d3cl)
-  val () =
-  println!
-  ("implist_find_timp: found = ", found)
+val () =
+println!
+("impllst_find_timp: d3cl = ", d3cl)
+val () =
+println!
+("impllst_find_timp: d2c0 = ", d2c0)
+val () =
+println!
+("impllst_find_timp: targ = ", targ)
+//
+in
+case+ ans of
+|
+ Some_vt _ => ans
+|
+~None_vt((*~found*)) => auxlst(xs, xarg) 
+end
+//
+|
+impllst_cons2
+  (d3cl, ti3e, xs) =>
+let
+//
+val
+fnd = auxfnd(d3cl, d2c0)
+val () =
+println!
+("impllst_find_timp: fnd = ", fnd)
+//
+val () =
+println!
+("impllst_find_timp: d3cl = ", d3cl)
+val () =
+println!
+("impllst_find_timp: d2c0 = ", d2c0)
+val () =
+println!
+("impllst_find_timp: targ = ", targ)
 //
 in
 //
 if
-not
 (
-found // d2c0: found
+~fnd // d2c0: ~found
 )
 then auxlst(xs, xarg)
 else let
-  val+
-  TI3ENV
-  ( s2vs
-  , xtvs, t2ps) = ti3e
-  val
-  test =
-  unify3(loc0, targ, t2ps)
+val+
+TI3ENV
+( s2vs
+, xtvs, t2ps) = ti3e
+val
+test =
+unify3(loc0, targ, t2ps)
 //
-  val () =
-  println!
-  ("implist_find_timp: targ = ", targ)
-  val () =
-  println!
-  ("implist_find_timp: t2ps = ", t2ps)
-  val () =
-  println!
-  ("implist_find_timp: test = ", test)
+val () =
+println!
+("impllst_find_timp: t2ps = ", t2ps)
+val () =
+println!
+("impllst_find_timp: test = ", test)
 //
 in
   if
@@ -484,19 +616,19 @@ in
   (auxrst(xarg); auxlst(xs, xarg))
 end // end of [else]
 //
-end // end of [implist_cons]
+end // end of [impllst_cons]
 //
 ) (* end of [auxlst] *)
 //
-val xtvs = t2ypelst_get_xtvs(targ)
+val xarg = t2ypelst_get_xtvs(targ)
 //
 val opt0 =
 let
 val
-xtvs = $UN.list_vt2t(xtvs) in auxlst(xs, xtvs)
+xarg = $UN.list_vt2t(xarg) in auxlst(xs, xarg)
 end // end-of-let // end-of-val
 //
-} (* end of [implist_find_timp] *)
+} (* end of [impllst_find_timp] *)
 
 (* ****** ****** *)
 
@@ -505,7 +637,7 @@ local
 datavtype implenv =
 |
 IMPLENV of
-(List0_vt(svtplst), implist)
+(List0_vt(svtplst), impllst)
 //
 where
 svtplst = @(s2varlst, t2ypelst)
@@ -562,7 +694,7 @@ implenv_add_let1
 val+
 @IMPLENV(us, xs) = env
 val () =
-(xs := implist_add_let1(xs))
+(xs := impllst_add_let1(xs))
 //
 } (* end of [implenv_add_let1] *)
 
@@ -577,7 +709,7 @@ implenv_pop_let1
 val+
 @IMPLENV(us, xs) = env
 val () =
-(xs := implist_pop_let1(xs))
+(xs := impllst_pop_let1(xs))
 //
 } (* end of [implenv_pop_let1] *)
 
@@ -592,7 +724,7 @@ implenv_add_loc1
 val+
 @IMPLENV(us, xs) = env
 val () =
-(xs := implist_add_loc1(xs))
+(xs := impllst_add_loc1(xs))
 //
 } (* end of [implenv_add_loc1] *)
 
@@ -607,7 +739,7 @@ implenv_add_loc2
 val+
 @IMPLENV(us, xs) = env
 val () =
-(xs := implist_add_loc2(xs))
+(xs := impllst_add_loc2(xs))
 //
 } (* end of [implenv_add_loc2] *)
 
@@ -620,7 +752,7 @@ implenv_pop_loc12
 val+
 @IMPLENV(us, xs) = env
 val () =
-(xs := implist_pop_loc12(xs))
+(xs := impllst_pop_loc12(xs))
 //
 in
   fold@(env) // nothing
@@ -629,7 +761,20 @@ end // end of [implenv_pop_loc12]
 (* ****** ****** *)
 
 implement
-implenv_add_d3ecl
+implenv_add_staload
+(env0, d3cl) =
+( fold@(env0) ) where
+{
+//
+val+
+@IMPLENV(us, xs) = env0
+val () =
+(xs := impllst_cons1(d3cl, xs))
+//
+} (* end of [implenv_add_impdecl3] *)
+
+implement
+implenv_add_impdecl3
 ( env0
 , d3cl, ti3e) =
 ( fold@(env0) ) where
@@ -638,16 +783,16 @@ implenv_add_d3ecl
 val+
 @IMPLENV(us, xs) = env0
 val () =
-(xs := implist_cons(d3cl, ti3e, xs))
+(xs := impllst_cons2(d3cl, ti3e, xs))
 //
-} (* end of [implenv_add_d3ecl] *)
+} (* end of [implenv_add_impdecl3] *)
 
 (* ****** ****** *)
 //
 implement
 implenv_make_nil() =
 IMPLENV
-(list_vt_nil(), implist_nil())
+(list_vt_nil(), impllst_nil())
 //
 (* ****** ****** *)
 //
@@ -660,7 +805,7 @@ val+
 //
 in
 let
-val-~list_vt_nil() = us in implist_free(xs)
+val-~list_vt_nil() = us in impllst_free(xs)
 end
 end // end of [implenv_free_nil]
 //
@@ -706,7 +851,7 @@ implenv_find_timp
 val+IMPLENV(us, xs) = env0
 //
 in
-  implist_find_timp(xs, d2c0, targ)
+  impllst_find_timp(xs, d2c0, targ)
 end // end of [implenv_find_timp]
 //
 (* ****** ****** *)
