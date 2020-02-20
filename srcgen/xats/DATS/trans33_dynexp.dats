@@ -52,9 +52,16 @@ UN = "prelude/SATS/unsafe.sats"
 
 (* ****** ****** *)
 
+#staload "./../SATS/trans12.sats"
+
+(* ****** ****** *)
+
 #staload "./../SATS/staexp2.sats"
 #staload "./../SATS/statyp2.sats"
 #staload "./../SATS/dynexp2.sats"
+
+(* ****** ****** *)
+
 #staload "./../SATS/dynexp3.sats"
 
 (* ****** ****** *)
@@ -1290,9 +1297,9 @@ implement
 trans33_dexp
   (d3e0) = let
 //
-(*
 val loc0 = d3e0.loc()
-*)
+val t2p0 = d3e0.type()
+//
 (*
 val ((*void*)) =
 println!
@@ -1373,8 +1380,30 @@ d3e0.node() of
     (d3e1, s2e2) => aux_anno(d3e0)
   // type-annotation ascription
 //
-| D3Enone0 _ => d3e0
-| D3Enone1 _ => d3e0
+| D3Elcast(d3e1, lab2) =>
+  let
+    val d3e1 =
+    trans33_dexp(d3e1)
+  in
+    d3exp_make_node
+    (loc0, t2p0, D3Elcast(d3e1, lab2))
+  end  
+(*
+| D3Elcast(d3e1, lab2) => d3e0 (* HX: lab2: missing label *)
+*)
+| D3Etcast(d3e1, t2p2) =>
+  let
+    val d3e1 =
+    trans33_dexp(d3e1)
+  in
+    d3exp_make_node
+    (loc0, t2p0, D3Etcast(d3e1, t2p2))
+  end  
+(*
+| D3Etcast(d3e1, t2p2) => d3e0 (* HX: t2p2: expected type *)
+*)
+//
+| D3Enone0 _ => d3e0 | D3Enone1 _ => d3e0
 //
 | _ (* rest-of-d3exp *) => d3e0
 //
@@ -1613,6 +1642,57 @@ d3ecl_make_node
 , D3Cinclude(tok, src, knd, fopt, dopt))
 //
 end // end of [aux_include]
+
+(* ****** ****** *)
+
+fun
+aux_staload
+( d3cl
+: d3ecl): d3ecl = let
+//
+val
+loc0 = d3cl.loc()
+val-
+D3Cstaload
+( tok, src
+, knd, flag
+, fopt, mopt) = d3cl.node()
+//
+val () =
+(
+case+ mopt of
+|
+None() => ()
+|
+Some(menv) =>
+let
+val dopt =
+fmodenv_get_d3eclist(menv)
+in
+case- dopt of
+|
+Some(d3cs) =>
+let
+val
+d3cs = $UN.cast(d3cs)
+val
+d3cs = trans33_declist(d3cs)
+val
+htbl = t3imptbl_make_d3eclist(d3cs)
+in
+fmodenv_set_d3eclist(menv, $UN.cast(d3cs));
+fmodenv_set_t3imptbl(menv, $UN.cast(htbl));
+end
+end // end of [Some]
+)
+//
+in
+//
+d3ecl_make_node
+( loc0
+, D3Cstaload(tok, src, knd, flag, fopt, mopt))
+//
+end // end of [aux_staload]
 
 (* ****** ****** *)
 
@@ -2141,6 +2221,7 @@ d3cl.node() of
   }
 //
 | D3Cinclude _ => aux_include(d3cl)
+| D3Cstaload _ => aux_staload(d3cl)
 //
 | D3Clocal
   (d3cs1, d3cs2) => let

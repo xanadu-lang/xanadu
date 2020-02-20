@@ -55,6 +55,7 @@ UN = "prelude/SATS/unsafe.sats"
 
 (* ****** ****** *)
 
+#staload "./../SATS/trans33.sats"
 #staload "./../SATS/trans3t.sats"
 
 (* ****** ****** *)
@@ -465,8 +466,27 @@ d3e0.node() of
     d3exp_make_node(loc0, t2p0, D3Eanno(d3e1, s2e2))
   end  
 //
+| D3Elcast(d3e1, lab2) =>
+  let
+    val d3e1 =
+    trans3t_dexp(env0, d3e1)
+  in
+    d3exp_make_node(loc0, t2p0, D3Elcast(d3e1, lab2))
+  end  
+(*
 | D3Elcast(d3e1, lab2) => d3e0 (* HX: lab2: missing label *)
+*)
+| D3Etcast(d3e1, t2p2) =>
+  let
+    val d3e1 =
+    trans3t_dexp(env0, d3e1)
+  in
+    d3exp_make_node(loc0, t2p0, D3Etcast(d3e1, t2p2))
+  end  
+(*
 | D3Etcast(d3e1, t2p2) => d3e0 (* HX: t2p2: expected type *)
+*)
+//
 | D3Enone0() => d3e0 | D3Enone1(d2e2) => d3e0 | D3Enone2(d3e2) => d3e0
 //
 end // end of [trans3t_dexp]
@@ -725,6 +745,18 @@ end // end of [aux_include]
 (* ****** ****** *)
 
 fun
+aux_staload
+( env0
+: !implenv
+, d3cl: d3ecl): d3ecl =
+let
+val () =
+implenv_add_staload(env0, d3cl) in d3cl
+end // end of [aux_staload]
+
+(* ****** ****** *)
+
+fun
 aux_valdecl
 ( env0
 : !implenv
@@ -846,7 +878,7 @@ val ti3e = TI3ENV(s2vs, xtvs, t2ps)
 in
 let
 val () =
-implenv_add_d3ecl(env0, d3cl, ti3e) in d3cl
+implenv_add_impdecl3(env0, d3cl, ti3e) in d3cl
 end
 end // end of [list_cons]
 //
@@ -963,7 +995,8 @@ in
 t2ypelst_subst_svarlst(t2ps, s2vs, tsub)
 end // end of [val]
 //
-val ((*freed*)) = list_vt_free(tsub)
+val
+((*freed*)) = list_vt_free(tsub)
 //
 val ti3e = TI3ENV(s2vs, xtvs, t2ps)
 //
@@ -971,7 +1004,7 @@ in
 //
 let
 val () =
-implenv_add_d3ecl(env0, d3cl, ti3e) in d3cl
+implenv_add_impdecl3(env0, d3cl, ti3e) in d3cl
 end
 //
 end // end of [aux_impdecl3_tmp]
@@ -1019,6 +1052,11 @@ d3cl.node() of
     val d3cl =
     aux_include(env0, d3cl) in d3cl
   end // end of [D3Cinclude]
+| D3Cstaload _ =>
+  let
+    val d3cl =
+    aux_staload(env0, d3cl) in d3cl
+  end // end of [D3Cstaload]
 //
 | D3Clocal
   (d3cs1, d3cs2) =>
