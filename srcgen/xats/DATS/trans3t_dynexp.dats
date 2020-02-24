@@ -402,6 +402,18 @@ d3e0.node() of
     , D3Efix(knd0, d2v0, arg1, res2, arrw, body))
   end // D3Efix
 //
+| D3Etry
+  (tok0, d3e1, d3cls) =>
+  let
+    val d3e1 =
+    trans3t_dexp(env0, d3e1)
+    val dcls =
+    trans3t_dclaulst(env0, d3cls)
+  in
+    d3exp_make_node
+    (loc0, t2p0, D3Etry(tok0, d3e1, d3cls))
+  end
+//
 | D3Eflat(d3e1) =>
   let
     val d3e1 =
@@ -440,6 +452,14 @@ d3e0.node() of
   in
     d3exp_make_node(loc0, t2p0, D3Eeval(knd0, d3e1))
   end // end of [D3Eaddr]
+//
+| D3Eraise(d3e1) =>
+  let
+    val d3e1 =
+    trans3t_dexp(env0, d3e1)
+  in
+    d3exp_make_node(loc0, t2p0, D3Eraise(d3e1))
+  end // end of [D3Eraise]
 //
 | D3Elazy(d3e1) =>
   let

@@ -1081,6 +1081,32 @@ end // end of [aux_fix]
 
 (* ****** ****** *)
 
+fun
+aux_try
+( d3e0
+: d3exp): d3exp = let
+//
+val
+loc0 = d3e0.loc()
+val-
+D3Etry
+( tok0
+, d3e1, dcls) = d3e0.node()
+//
+val d3e1 =
+  trans33_dexp(d3e1)
+//
+val tres = d3e1.type()
+val dcls =
+  trans33_dclaulst_dn(dcls, tres)
+//
+in
+d33exp_make_node
+(loc0, tres, D3Etry(tok0, d3e1, dcls))
+end (* end of [aux_try] *)
+
+(* ****** ****** *)
+
 (*
 fun
 aux_flat
@@ -1210,6 +1236,26 @@ val t2p0 = the_t2ype_void(*void*)
 in
 d33exp_make_node(loc0, t2p0, D3Efold(d3e1))
 end // end of [aux_fold]
+
+(* ****** ****** *)
+
+fun
+aux_raise
+( d3e0
+: d3exp): d3exp = let
+//
+val
+loc0 = d3e0.loc()
+val-
+D3Eraise(d3e1) = d3e0.node()
+//
+val t2p0 = t2ype_new(loc0)
+//
+val d3e1 = trans33_dexp(d3e1)
+//
+in
+d33exp_make_node(loc0, t2p0, D3Eraise(d3e1))
+end // end of [aux_raise]
 
 (* ****** ****** *)
 
@@ -1362,12 +1408,19 @@ d3e0.node() of
   (_, _, _, _, _, _) => aux_fix(d3e0)
   // D3Efix
 //
+| D3Etry
+  (tok0, d3e1, dcls) => aux_try(d3e0)
+//
 (*
 | D3Eflat(d3e1) => aux_flat(d3e0)
 *)
 | D3Eaddr(d3e1) => aux_addr(d3e0)
 | D3Eeval(_, _) => aux_eval(d3e0)
 | D3Efold(d3e1) => aux_fold(d3e0)
+//
+| D3Eraise
+    (d3e1) => aux_raise(d3e0)
+  // end of [D3Eraise]
 //
 | D3Elazy
     (d3e1) => aux_lazy(d3e0)

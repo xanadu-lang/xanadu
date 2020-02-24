@@ -469,6 +469,12 @@ x0.node() of
   , fid, "; ", f3as, "; "
   , tres, "; ", arrw, "; ", body, ")")
 //
+| D3Etry
+  (tok0, d3e1, dcls) =>
+  fprint!
+  ( out, "D3Etry("
+  , tok0, "; ", d3e1, "; ", dcls, ")")
+//
 | D3Eaddr(d3e1) =>
   (
    fprint!(out, "D3Eaddr(", d3e1, ")")
@@ -476,6 +482,11 @@ x0.node() of
 | D3Efold(d3e1) =>
   (
    fprint!(out, "D3Efold(", d3e1, ")")
+  )
+//
+| D3Eraise(d3e1) =>
+  (
+  fprint!(out, "D3Eraise(", d3e1, ")")
   )
 //
 | D3Elazy(d3e1) =>
