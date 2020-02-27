@@ -4,6 +4,41 @@
 *)
 (* ****** ****** *)
 
+#staload
+UN =
+"prelude/SATS/unsafe.sats"
+
+(* ****** ****** *)
+
+impltmp
+<x0,xs><r0>
+gseq_foldl
+(xs, r0) = r0 where
+{
+//
+var r0: r0 = r0
+//
+val p0 = $addr(r0)
+//
+val () =
+(
+gseq_foreach<x0,xs>(xs)
+) where
+{
+impltmp
+foreach$work<x0>(x0) =
+let
+val r0 = p2tr_get<r0>(p0)
+in
+p2tr_set<r0>
+(p0, foldl$fopr<x0><r0>(r0, x0))
+end // end of [foreach$work]
+}
+//
+} (* end of [gseq_foldl] *)
+
+(* ****** ****** *)
+
 impltmp
 <x0,xs>
 gseq_length(xs) =
@@ -29,7 +64,7 @@ test =
 gseq_forall<x0,xs>(xs) where
 {
 impltmp
-forall$test(x0) =
+forall$test<x0>(x0) =
 let
 val () = foreach$work(x0) in true
 end
@@ -45,16 +80,24 @@ impltmp
 gseq_map_list
   (xs) = let
 //
+typedef r0 =
+p2tr(list_vt(x0))
+//
 impltmp
 foldl$fopr
 <x0><r0>
-(r0, x0) =
+(p0, x0) =
 let
+//
 val r1 = 
 list_vt_cons
 (map$fopr(x0), _)
+//
+val p1 = $addr(r1.1)
+//
 in
-  cptr_set(r0, r1); $addr(r1.1)
+p2tr_set<r0>
+(p0, $UN.castlin(r1)); (p1)
 end // foldl$fopr
 //
 var r0: list_vt(y0)
@@ -62,7 +105,7 @@ val r1 =
 gseq_foldl<x0,xs>(xs, $addr(r0))
 //
 in
-  cptr_set(r1, list_vt_nil()); castlin(r0)
+  p2tr_set(p1, list_vt_nil()); $UN.castlin(r0)
 end // end of [gseq_map_list]
 
 (* ****** ****** *)
