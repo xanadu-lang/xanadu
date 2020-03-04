@@ -77,4 +77,10 @@ p2tr_set(p0: p2tr(a), x0: a): void
 //
 (* ****** ****** *)
 
+fun
+<x0,xs>
+gseq_uncons(xs: &xs >> xs): x0
+
+(* ****** ****** *)
+
 (* end of [unsafe.sats] *)

@@ -231,6 +231,11 @@ ATS_DYNLOADNAME "libxatsopt_dynloadall"
 //
 #dynload "./staexp2_print.dats"
 #dynload "./statyp2_print.dats"
+//
+#dynload "./dynexp2_d2con.dats"
+#dynload "./dynexp2_d2cst.dats"
+#dynload "./dynexp2_d2var.dats"
+//
 #dynload "./dynexp2_print.dats"
 //
 #dynload "./nmspace.dats"
@@ -1703,6 +1708,19 @@ the_prelude_load
 val () =
 the_prelude_load
 ( XATSHOME
+, 0(*static*), "prelude/SATS/bool.sats")
+val () =
+the_prelude_load
+( XATSHOME
+, 0(*static*), "prelude/SATS/char.sats")
+val () =
+the_prelude_load
+( XATSHOME
+, 0(*static*), "prelude/SATS/gint.sats")
+//
+val () =
+the_prelude_load
+( XATSHOME
 , 0(*static*), "prelude/SATS/gbas.sats")
 val () =
 the_prelude_load
@@ -1712,11 +1730,6 @@ val () =
 the_prelude_load
 ( XATSHOME
 , 0(*static*), "prelude/SATS/gord.sats")
-//
-val () =
-the_prelude_load
-( XATSHOME
-, 0(*static*), "prelude/SATS/gint.sats")
 //
 val () =
 the_prelude_load
