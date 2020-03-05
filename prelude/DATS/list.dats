@@ -12,18 +12,6 @@
 (* ****** ****** *)
 //
 impltmp
-{a:type}
-gseq_nil
-<a,list(a)>() = list_nil()
-impltmp
-{a:type}
-gseq_cons
-<a,list(a)>
-  (x0, xs) = list_cons(x0, xs)
-//
-(* ****** ****** *)
-//
-impltmp
 <>(*tmp*)
 list_nil?
   (xs) =
@@ -41,15 +29,6 @@ case+ xs of
 | list_nil() => false
 | list_cons(_, _) => (true)
 )
-//
-impltmp
-{a:type}
-gseq_nil?
-<a,list(a)>(xs)=list_nil? <a> (xs)
-impltmp
-{a:type}
-gseq_cons?
-<a,list(a)>(xs)=list_cons? <a> (xs)
 //
 (* ****** ****** *)
 //
@@ -72,11 +51,6 @@ case+ xs of
 | list_cons(_, xs) => loop(xs, j0+1)
 )
 } (* end of [list_length] *)
-//
-impltmp
-{a:type}
-gseq_length
-<a,list(a)>(xs) = list_length<a>(xs)
 //
 (* ****** ****** *)
 //
@@ -162,11 +136,6 @@ case+ xs of
 )
 }
 //
-impltmp
-{a:type}
-gseq_forall
-<a,list(a)>(xs) = list_forall<a>(xs)
-//
 (* ****** ****** *)
 //
 impltmp
@@ -187,11 +156,6 @@ case+ xs of
   end
 )
 }
-//
-impltmp
-{a:type}
-gseq_foreach
-<a,list(a)>(xs) = list_foreach<a>(xs)
 //
 (* ****** ****** *)
 //
@@ -278,17 +242,6 @@ list_cons(x0, xs) =>
 //
 (* ****** ****** *)
 //
-impltmp
-{a:type}
-gseq_map_list
-<a,list(a)>(xs) = list_map_vt<a>(xs)
-impltmp
-{a:type}
-gseq_maprev_list
-<a,list(a)>(xs) = list_maprev_vt<a>(xs)
-//
-(* ****** ****** *)
-//
 (*
 HX-2019-10:
 Quite an informative example:
@@ -305,6 +258,79 @@ tabulate$fopr<a><n>(i0) = f0(i0)
 in
   list_tabulate<a><n>(n0)
 end // end of [list_tabulate_cref]
+//
+(* ****** ****** *)
+//
+// For gseq-operations
+//
+(* ****** ****** *)
+//
+impltmp
+{a:type}
+$UN.gseq_head
+<a,list(a)>(xs) = xs.0
+impltmp
+{a:type}
+$UN.gseq_tail
+<a,list(a)>(xs) = xs.1
+impltmp
+{a:type}
+$UN.gseq_uncons
+<a,list(a)>(xs) =
+let
+val x0 = xs.0
+val () = xs := xs.1 in x0
+end
+//
+(* ****** ****** *)
+//
+impltmp
+{a:type}
+gseq_nil
+<a,list(a)>() = list_nil()
+impltmp
+{a:type}
+gseq_cons
+<a,list(a)>
+  (x0, xs) = list_cons(x0, xs)
+//
+(* ****** ****** *)
+//
+impltmp
+{a:type}
+gseq_nil?
+<a,list(a)> = list_nil? <a>
+impltmp
+{a:type}
+gseq_cons?
+<a,list(a)> = list_cons? <a>
+//
+(* ****** ****** *)
+//
+impltmp
+{a:type}
+gseq_length<a,list(a)> = list_length<a>
+//
+(* ****** ****** *)
+//
+impltmp
+{a:type}
+gseq_forall<a,list(a)> = list_forall<a>
+//
+(* ****** ****** *)
+//
+impltmp
+{a:type}
+gseq_foreach<a,list(a)> = list_foreach<a>
+//
+(* ****** ****** *)
+//
+impltmp
+{a:type}
+gseq_map_list<a,list(a)> = list_map_vt<a>
+impltmp
+{a:type}
+gseq_map_rlist<a,list(a)> = list_maprev_vt<a>
 //
 (* ****** ****** *)
 

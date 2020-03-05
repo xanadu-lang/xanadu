@@ -6,7 +6,7 @@
 
 (*
 ** ATS/Xanadu - Unleashing the Potential of Types!
-** Copyright (C) 2019 Hongwei Xi, ATS Trustful Software, Inc.
+** Copyright (C) 2018 Hongwei Xi, ATS Trustful Software, Inc.
 ** All rights reserved
 **
 ** ATS is free software;  you can  redistribute it and/or modify it under
@@ -27,92 +27,60 @@
 
 (* ****** ****** *)
 //
-// For linear lists
-//
-(* ****** ****** *)
-//
 // Author: Hongwei Xi
-// Start Time: September, 2019
+// Start Time: March, 2020
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
-//
-fun<>
-list_vt_nil?
-{a:vtype}{n:int}
-(xs: !list_vt(a, n)): bool(n = 0)
-fun<>
-list_vt_cons?
-{a:vtype}{n:int}
-(xs: !list_vt(a, n)): bool(n > 0)
-//
-#symload
-iseqz with list_vt_nil?
-#symload
-isneqz with list_vt_cons?
-//
-(* ****** ****** *)
-//
+
+implement<>
+string_forall
+  (cs) =
+(
+  loop(ptrof(cs))
+) where
+{
 fun
-<a:vtype>
-list_vt_length
-{n:int}
-(xs: !list_vt(a, n)): int(n)
-//
-#symload
-length with list_vt_length
-//
-(* ****** ****** *)
-//
-fun
-<a:vtype>
-list_vt_reverse
-{n:int}
-(xs: list_vt(a, n)): list_vt(a, n)
-//
-#symload
-reverse with list_vt_reverse
-//
-(* ****** ****** *)
-//
-fun
-<a:vtype>
-list_vt_copy
-{n:int}
-(xs: !list_vt(a, n)): list_vt(a, n)
-fun
-<a:vtype>
-list_vt_rcopy
-{n:int}
-(xs: !list_vt(a, n)): list_vt(a, n)
-//
-#symload copy with list_vt_copy
-#symload rcopy with list_vt_rcopy
-//
-(* ****** ****** *)
-//
-fun
-<a:vt>
-<n:i0>
-list_vt_tabulate(int(n)): list_vt(a, n)
-fun
-<a:vtype>
-list_vt_tabulate_cref
-{n:nat}
-( n0: int(n)
-, f0: nintlt(n) -<cref> a): list_vt(a, n)
-//
-(* ****** ****** *)
-//
-fun
-<x0:type>
-list_vt_forall0
-{n:int}(xs: list_vt(x0, n)): bool
-fun
-<x0:type>
-list_vt_foreach0
-{n:int}(xs: list_vt(x0, n)): void
-//
+loop
+( p0
+: p2tr(char)): bool
+let
+val c0 = !p0
+in(*in-of-let*)
+if
+eqz?(c0)
+then true else
+(
+if
+forall$test<x0>(c0)
+then loop(succ(p0)) else false
+)
+end // end of [loop]
+} (* end of [string_forall] *)
+
 (* ****** ****** *)
 
-(* end of [list_vt.sats] *)
+local
+//
+typedef x0 = cgtz
+typedef xs = string
+//
+in (* in-of-local *)
+
+impltmp
+gseq_nil? <x0,xs> = string_nil? <>
+impltmp
+gseq_cons? <x0,xs> = string_cons? <>
+
+(* ****** ****** *)
+
+impltmp
+gseq_forall<x0,xs> = string_forall<>
+impltmp
+gseq_forall<x0,xs> = string_rforall<>
+
+end // end of [local]
+
+(* ****** ****** *)
+
+(* end of [string.dats] *)

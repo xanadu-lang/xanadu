@@ -120,5 +120,84 @@ impltmp
 gint_mod<sik> = gint_mod_sint_sint
 //
 (* ****** ****** *)
+//
+// For gseq-operations
+//
+(* ****** ****** *)
+
+impltmp<>
+sint_nil?(xs) = (xs <= 0)
+impltmp<>
+sint_cons?(xs) = (xs >= 1)
+
+(* ****** ****** *)
+
+impltmp<>
+sint_forall
+  (xs) =
+( loop(0) ) where
+{
+fun
+loop(x0: sint): bool =
+if
+(x0 < xs)
+then
+(
+if
+forall$test<x0,xs>(x0)
+then loop(succ(x0)) else false
+) (* then *)
+else true // end of [else]
+}
+
+(* ****** ****** *)
+//
+impltmp<>
+sint_rforall
+  (xs) =
+( loop(xs) ) where
+{
+fun
+loop(xs: sint): bool =
+if
+(xs > 0)
+then
+let
+val xs = pred(xs)
+in
+if
+rforall$test<x0,xs>(xs) then loop(xs) else false
+end
+else true // end of [else]
+}
+//
+(* ****** ****** *)
+
+local
+//
+typedef x0 = sint
+typedef xs = sint
+//
+in(*in-of-local*)
+
+(* ****** ****** *)
+//
+impltmp
+gseq_nil? <x0,xs> = sint_nil? <>
+impltmp
+gseq_cons? <x0,xs> = sint_cons? <>
+//
+(* ****** ****** *)
+//
+impltmp
+gseq_forall<x0,xs> = sint_forall<>
+impltmp
+gseq_rforall<x0,xs> = sint_rforall<>
+//
+(* ****** ****** *)
+
+end // end of [local]
+
+(* ****** ****** *)
 
 (* end of [gint.dats] *)

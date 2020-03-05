@@ -6,7 +6,7 @@
 
 (*
 ** ATS/Xanadu - Unleashing the Potential of Types!
-** Copyright (C) 2019 Hongwei Xi, ATS Trustful Software, Inc.
+** Copyright (C) 2018 Hongwei Xi, ATS Trustful Software, Inc.
 ** All rights reserved
 **
 ** ATS is free software;  you can  redistribute it and/or modify it under
@@ -27,92 +27,21 @@
 
 (* ****** ****** *)
 //
-// For linear lists
-//
-(* ****** ****** *)
-//
 // Author: Hongwei Xi
-// Start Time: September, 2019
 // Authoremail: gmhwxiATgmailDOTcom
 //
-(* ****** ****** *)
-//
-fun<>
-list_vt_nil?
-{a:vtype}{n:int}
-(xs: !list_vt(a, n)): bool(n = 0)
-fun<>
-list_vt_cons?
-{a:vtype}{n:int}
-(xs: !list_vt(a, n)): bool(n > 0)
-//
-#symload
-iseqz with list_vt_nil?
-#symload
-isneqz with list_vt_cons?
+// This one should be loaded after xsetup.sats
 //
 (* ****** ****** *)
 //
-fun
-<a:vtype>
-list_vt_length
-{n:int}
-(xs: !list_vt(a, n)): int(n)
-//
-#symload
-length with list_vt_length
-//
-(* ****** ****** *)
-//
-fun
-<a:vtype>
-list_vt_reverse
-{n:int}
-(xs: list_vt(a, n)): list_vt(a, n)
-//
-#symload
-reverse with list_vt_reverse
-//
-(* ****** ****** *)
-//
-fun
-<a:vtype>
-list_vt_copy
-{n:int}
-(xs: !list_vt(a, n)): list_vt(a, n)
-fun
-<a:vtype>
-list_vt_rcopy
-{n:int}
-(xs: !list_vt(a, n)): list_vt(a, n)
-//
-#symload copy with list_vt_copy
-#symload rcopy with list_vt_rcopy
-//
-(* ****** ****** *)
-//
-fun
-<a:vt>
-<n:i0>
-list_vt_tabulate(int(n)): list_vt(a, n)
-fun
-<a:vtype>
-list_vt_tabulate_cref
-{n:nat}
-( n0: int(n)
-, f0: nintlt(n) -<cref> a): list_vt(a, n)
-//
-(* ****** ****** *)
-//
-fun
-<x0:type>
-list_vt_forall0
-{n:int}(xs: list_vt(x0, n)): bool
-fun
-<x0:type>
-list_vt_foreach0
-{n:int}(xs: list_vt(x0, n)): void
+// HX-2020-03-05:
+// For out-of-range subscripting
+excptcon SubscriptExn of ((*void*))
+// For indicating the failure of
+exception AssertExn of () // an assertion
+// For indicating something expected
+exception NotFoundExn of () // to be found but not
 //
 (* ****** ****** *)
 
-(* end of [list_vt.sats] *)
+(* end of [excptn.sats] *)
