@@ -100,6 +100,25 @@ gseq_uncons_opt
 fun
 <x0:tflt
 ,xs:tflt>
+gseq_print(xs): void
+fun
+<x0:tflt
+,xs:tflt>
+gseq_print$beg((*void*)): void
+fun
+<x0:tflt
+,xs:tflt>
+gseq_print$end((*void*)): void
+fun
+<x0:tflt
+,xs:tflt>
+gseq_print$sep((*void*)): void
+
+(* ****** ****** *)
+
+fun
+<x0:tflt
+,xs:tflt>
 gseq_length(xs): nint
 
 (* ****** ****** *)
@@ -234,7 +253,22 @@ gseq_rappend(xs1: xs, xs2: xs): xs
 //
 (* ****** ****** *)
 //
-// For gseq2-operations
+// For gseq-i-operations
+//
+(* ****** ****** *)
+//
+fun
+<x0:tflt
+,xs:tflt>
+gseq_iforall(xs): bool
+fun
+<x0:tflt
+,xs:tflt>
+gseq_iforeach(xs): void
+//
+(* ****** ****** *)
+//
+// For 2-gseq-operations
 //
 (* ****** ****** *)
 //

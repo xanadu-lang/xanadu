@@ -54,6 +54,12 @@ g_copy(x: !(a)): (a)
 
 fun
 <a:vtype>
+g_print(x: !(a)): void
+
+(* ****** ****** *)
+
+fun
+<a:vtype>
 g_equal(!a, !a): void
 fun
 <a:vtype>
@@ -163,6 +169,34 @@ rforeach0$work(x0: x0): void
 fun
 <x0:vt>
 rforeach1$work(x0: !x0): void
+
+(* ****** ****** *)
+//
+// For gseq-i-operations
+//
+(* ****** ****** *)
+
+fun
+<x0:t0>
+iforall$test(nint, x0): bool
+fun
+<x0:vt>
+iforall0$test(nint, x0): void
+fun
+<x0:vt>
+iforall1$test(nint, !x0): void
+
+(* ****** ****** *)
+
+fun
+<x0:t0>
+iforeach$work(nint, x0): void
+fun
+<x0:vt>
+iforeach0$work(nint, x0): void
+fun
+<x0:vt>
+iforeach1$work(nint, !x0): void
 
 (* ****** ****** *)
 //
