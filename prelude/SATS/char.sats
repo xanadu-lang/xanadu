@@ -39,31 +39,31 @@
 (* ****** ****** *)
 //
 fun<>
-char_eqz?
-{c:char}(char(c)): bool(c=0)
+char_eqzq
+{c:char}
+(c0: char(c)): bool(c=0)
 fun<>
-char_neqz?
-{c:char}(char(c)): bool(c>0)
+char_neqzq
+{c:char}
+(c0: char(c)): bool(c>0)
 //
-#symload eqz? with char_eqz?
-#symload neqz? with char_neqz?
-//
-(* ****** ****** *)
-//
-fun<>
-eq_char_char
+fun//<>
+char_equal
 {c1,c2:char}
 ( c1: char(c1)
 , c2: char(c2)): bool(c1=c2)
-fun<>
-neq_char_char
+fun//<>
+char_nequal
 {c1,c2:char}
 ( c1: char(c1)
 , c2: char(c2)): bool(c1!=c2)
 //
-#symload = with eq_char_char
-#symload != with neq_char_char
-//
+(* ****** ****** *)
+
+fun//<>
+char_print(c0: char): void
+#symload print with char_print of 110
+
 (* ****** ****** *)
 
 (* end of [char.sats] *)

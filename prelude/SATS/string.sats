@@ -38,36 +38,54 @@
 //
 (* ****** ****** *)
 //
-// For gseq-operations
-//
-(* ****** ****** *)
-//
 typedef cgtz =
 [c:char|c > 0]char(c)
 //
 (* ****** ****** *)
 //
-castfn
+(*
+fcast
 string_ptrof
-  (string): p2tr(char)
-//
-#symload ptrof with string
+(cs:string): p2tr(char)
+#symload
+ptrof with string_ptrof
+*)
 //
 (* ****** ****** *)
 //
-fun<>
-string_nil(): string(0)
-fun<>
-string_cons{n:int}
+fun//<>
+string_print(string): void
+//
+(* ****** ****** *)
+//
+fun//<>
+string_nil
+((*void*)): string(0)
+fun//<>
+string_cons
+  {n:int}
 ( c0: cgtz
 , cs: string(n)): string(n+1)
 //
 (* ****** ****** *)
 //
-fun<>
-string_nil?(cs: string): bool
-fun<>
-string_cons?(cs: string): bool
+fun//<>
+string_nilq
+  {n:int}
+  (cs: string(n)): bool(n=0)
+fun//<>
+string_consq
+  {n:int}
+  (cs: string(n)): bool(n>0)
+//
+(* ****** ****** *)
+//
+fun//<>
+string_head(string): char
+fun//<>
+string_head_raw(string): cgtz
+fun//<>
+string_tail_raw(string): string
 //
 (* ****** ****** *)
 //

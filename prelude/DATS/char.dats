@@ -33,6 +33,9 @@
 //
 (* ****** ****** *)
 
+impltmp
+g_print<char> = char_print
+
 (* ****** ****** *)
 
 (* end of [char.dats] *)

@@ -33,30 +33,48 @@
 //
 (* ****** ****** *)
 
+#staload
+UN =
+"prelude/SATS/unsafe.sats"
+
+(* ****** ****** *)
+
+implement
+string_nilq(cs) =
+char_eqzq(string_head(cs))
+implement
+string_consq(cs) =
+char_neqzq(string_head(cs))
+
+(* ****** ****** *)
+
 implement<>
 string_forall
-  (cs) =
-(
-  loop(ptrof(cs))
-) where
+  (xs) =
+( loop(xs) ) where
 {
+//
+typedef x0 = cgtz
+typedef xs = string
+//
 fun
-loop
-( p0
-: p2tr(char)): bool
-let
-val c0 = !p0
-in(*in-of-let*)
+loop(xs: xs): bool =
 if
-eqz?(c0)
+string_nilq
+  (xs)
 then true else
-(
+let
+val x0 =
+string_head_raw(xs)
+in
 if
-forall$test<x0>(c0)
-then loop(succ(p0)) else false
-)
-end // end of [loop]
-} (* end of [string_forall] *)
+forall$test<x0>(x0)
+then
+loop
+(string_tail_raw(xs)) else false
+// end of [if]
+end // end of [else]
+} (* end of [string_forall/uncons] *)
 
 (* ****** ****** *)
 
@@ -67,17 +85,31 @@ typedef xs = string
 //
 in (* in-of-local *)
 
+(* ****** ****** *)
+//
 impltmp
-gseq_nil? <x0,xs> = string_nil? <>
+g_print<xs> = string_print
+//
 impltmp
-gseq_cons? <x0,xs> = string_cons? <>
+gseq_print$beg<x0,xs>() = ()
+impltmp
+gseq_print$end<x0,xs>() = ()
+impltmp
+gseq_print$sep<x0,xs>() = ()
+//
+(* ****** ****** *)
+
+impltmp
+gseq_nilq<x0,xs> = string_nilq<>
+impltmp
+gseq_consq<x0,xs> = string_consq<>
 
 (* ****** ****** *)
 
 impltmp
 gseq_forall<x0,xs> = string_forall<>
-impltmp
-gseq_forall<x0,xs> = string_rforall<>
+
+(* ****** ****** *)
 
 end // end of [local]
 

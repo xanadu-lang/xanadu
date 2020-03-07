@@ -37,27 +37,36 @@
 //
 (* ****** ****** *)
 //
-fun<>
+fun//<>
 bool_neg
+{b:bool}
 (x: bool(b)): bool(~b)
 //
-#symload ~ with neg_bool of 100
-#symload not with neg_bool of 100
+#symload ~ with bool_neg of 100
+#symload not with bool_neg of 100
 //
 (* ****** ****** *)
 //
-fun<>
+fun//<>
 bool_add
+{b1,b2:bool}
 ( x: bool(b1)
 , y: bool(b2)): bool(b1+b2)
-fun<>
+fun//<>
 bool_mul
+{b1,b2:bool}
 ( x: bool(b1)
 , y: bool(b2)): bool(b1*b2)
 //
-#symload + with bool_add of 200
-#symload * with bool_mul of 200
+#symload + with bool_add of 100
+#symload * with bool_mul of 100
 //
+(* ****** ****** *)
+
+fun//<>
+bool_print(b0: bool): void
+#symload print with bool_print of 110
+
 (* ****** ****** *)
 
 (* end of [bool.sats] *)
