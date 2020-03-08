@@ -252,7 +252,6 @@ end // end of [else]
 } (* end of [gseq_forall/uncons] *)
 *)
 //
-(*
 impltmp
 <x0,xs>
 gseq_forall
@@ -263,7 +262,6 @@ stream_vt_forall0<x0>
 implement
 forall0$test<x0>(x0) = forall$test<x0>(x0)
 } (* end of [gseq_forall/streamize] *)
-*)
 //
 (* ****** ****** *)
 
@@ -337,6 +335,51 @@ end // end of [else]
 )
 } (* end of [gseq_streamize] *)
 
+(* ****** ****** *)
+//
+impltmp
+<x0,xs>
+gseq_unlist(xx) =
+let
+//
+val xx =
+list_reverse_vt<x0>(xx)
+//
+in
+gseq_unrlist_vt<x0,xs>(xx)
+end // end of [gseq_unlist]
+impltmp
+<x0,xs>
+gseq_unlist_vt(xx) =
+let
+//
+val xx =
+list_vt_reverse<x0>(xx)
+//
+in
+  gseq_unrlist_vt<x0,xs>(xx)
+end // end of [gseq_unlist_vt]
+//
+impltmp
+<x0,xs>
+gseq_unrlist_vt(xx) =
+let
+//
+fun
+loop
+(xx: list_vt(x0), xs: xs): xs =
+(
+case+ xx of
+|
+~ list_vt_nil() => xs
+|
+~ list_vt_cons(x0, xx) =>
+  loop(xx, gseq_cons<x0,xs>(x0, xs))
+)
+in
+loop(xx, gseq_nil<x0,xs>())
+end // end of [gseq_unrlist_vt]
+//
 (* ****** ****** *)
 //
 impltmp
@@ -724,6 +767,9 @@ end // end of [gseq_iforeach/iforall]
 //
 // For z2-gseq-operations
 //
+(* ****** ****** *)
+
+
 (* ****** ****** *)
 
 (* end of [gseq.dats] *)

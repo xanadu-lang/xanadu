@@ -42,13 +42,25 @@ typedef cgtz =
 [c:char|c > 0]char(c)
 //
 (* ****** ****** *)
+
+prfun
+string_lemma
+{n:int}
+(string(n)): [n>=0] void
+
+(* ****** ****** *)
 //
 (*
+//
+// HX-2020-03-07:
+// This is only good
+// for targeting C-likes
+//
 fcast
-string_ptrof
-(cs:string): p2tr(char)
+string_top2tr
+(cs: string): p2tr(char)
 #symload
-ptrof with string_ptrof
+ptrof with string_top2tr
 *)
 //
 (* ****** ****** *)
@@ -60,7 +72,7 @@ string_print(string): void
 //
 fun//<>
 string_nil
-((*void*)): string(0)
+  ((*void*)): string(0)
 fun//<>
 string_cons
   {n:int}
@@ -69,11 +81,11 @@ string_cons
 //
 (* ****** ****** *)
 //
-fun//<>
+fun<>
 string_nilq
   {n:int}
   (cs: string(n)): bool(n=0)
-fun//<>
+fun<>
 string_consq
   {n:int}
   (cs: string(n)): bool(n>0)
