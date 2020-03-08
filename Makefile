@@ -21,6 +21,7 @@ update:: CATS
 update:: PRETOP
 update:: PRESATS
 update:: PREDATS
+update:: PREDATSCATS
 
 ######
 
@@ -40,9 +41,15 @@ CATS: ; \
 $(CPF) $(XATSHOME)/srcgen/xats/CATS/*.cats ./srcgen/xats/CATS/.
 
 ######
-
+#
 PRETOP: ; $(CPF) $(XATSHOME)/prelude/*.?ats ./prelude/.
 PRESATS: ; $(CPF) $(XATSHOME)/prelude/SATS/*.sats ./prelude/SATS/.
+#
 PREDATS: ; $(CPF) $(XATSHOME)/prelude/DATS/*.dats ./prelude/DATS/.
-
+#
+PREDATSCATS:: \
+PREDATSCATS_Xint
+PREDATSCATS_Xint: ; \
+$(CPF) $(XATSHOME)/prelude/DATS/CATS/Xint/*.dats ./prelude/DATS/CATS/Xint/.
+#
 ###### end of [Makefile] ######
