@@ -10,7 +10,7 @@ CPF=cp -f
 
 ######
 
-all::
+all:: update
 
 ######
 
