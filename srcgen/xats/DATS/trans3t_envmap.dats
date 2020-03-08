@@ -62,18 +62,19 @@ _(*TMP*) = "./statyp2_util0.dats"
 
 (* ****** ****** *)
 
+#define
+LOC0 the_location_dummy
+
+(* ****** ****** *)
+
 implement
 fprint_val<t2ype> = fprint_t2ype
 
 (* ****** ****** *)
-
+//
 local
-
-val
-loc0 = the_location_dummy
-
 fun
-fxtvs
+fxtvs_eval
 ( vs
 : t2xtvlst
 )
@@ -86,9 +87,85 @@ list_map<t2xtv><t2ype>(vs)
 //
 implement
 list_map$fopr<t2xtv><t2ype>
-  (xtv) = t2ype_eval(xtv.type())
+  (xtv) =
+(
+let
+val t2p = xtv.type()
+in
+  case+
+  t2p.node() of
+  | T2Pnone0() => t2ype_xtv(xtv)
+  | _(*solved*) => t2ype_eval(t2p)
+end
+)
 //
+} (* fxtvs_eval *)
+fun
+fxtvs_redo
+( vs
+: t2xtvlst
+)
+: t2xtvlst =
+list_vt2t
+(
+list_map<t2xtv><t2xtv>(vs)
+) where
+{
+//
+implement
+list_map$fopr<t2xtv><t2xtv>
+  (xtv) =
+let
+  val xtv2 = t2xtv_new(LOC0)
+  val t2p2 = t2ype_xtv(xtv2)
+in
+let
+val () = xtv.type(t2p2) in xtv2
+end
+end
+//
+} (* fxtvs_redo *)
+in
+fun
+ti3env_redo
+( d3cl
+: d3ecl
+, ti3e
+: ti3env
+, targ
+: t2ypelst
+)
+: t2ypelst =
+(
+  fxtvs_eval(xtvs)
+) where
+{
+val+
+TI3ENV
+(s2vs, xtvs, t2ps) = ti3e
+//
+val xtvs = fxtvs_redo(xtvs)
+//
+val t2ps =
+(
+list_map<t2ype><t2ype>(t2ps)
+) where
+{
+implement
+list_map$fopr<t2ype><t2ype>(x) = t2ype_evalrec(x)
 }
+//
+val-true =
+unify3
+(LOC0, targ, $UN.list_vt2t(t2ps))
+//
+val ((*void*)) = list_vt_free(t2ps)
+//
+} (* end of [ti3env_redo] *) end // end of [local]
+
+(* ****** ****** *)
+
+local
 //
 fun
 auxrst // reset
@@ -139,9 +216,11 @@ implist_cons
 (d3cl, ti3e, xs) =>
 let
 //
+(*
 val () =
 println!
 ("staload_find_timp: d3cl = ", d3cl)
+*)
 //
 val+
 TI3ENV
@@ -149,33 +228,53 @@ TI3ENV
 , xtvs, t2ps) = ti3e
 val
 test =
-unify3(loc0, targ, t2ps)
+unify3(LOC0, targ, t2ps)
 //
+(*
+val () =
+println!
+("staload_find_timp: targ = ", targ)
 val () =
 println!
 ("staload_find_timp: t2ps = ", t2ps)
 val () =
 println!
 ("staload_find_timp: test = ", test)
+*)
 //
 in
   if
   test
   then
   let
-  val t2ps = fxtvs(xtvs)
+//
+  val () = auxrst(xarg)
+  val tsub =
+  ti3env_redo(d3cl, ti3e, targ)
+//
+(*
+  val
+  ((*void*)) =
+  println!
+  ("staload_find_timp: tsub = ", tsub)
+*)
+//
   in
     auxrst(xtvs); // reset
-    Some_vt@(d3cl, s2vs, t2ps)
+    Some_vt@(d3cl, s2vs, tsub)
   end
   else
-  (auxrst(xarg); auxlst(xs, xarg))
+  ( auxrst(xtvs); // reset
+    auxrst(xarg); auxlst(xs, xarg)
+  ) (* end of [else] *) // end-of-if
 end // end of [auxlst]
 )
 //
+(*
 val () =
 println!
 ("staload_find_timp: d2c0 = ", d2c0)
+*)
 //
 in
 (
@@ -403,27 +502,6 @@ end
 ) where
 {
 //
-val
-loc0 = the_location_dummy
-//
-fun
-fxtvs
-( vs
-: t2xtvlst
-)
-: t2ypelst =
-list_vt2t
-(
-list_map<t2xtv><t2ype>(vs)
-) where
-{
-//
-implement
-list_map$fopr<t2xtv><t2ype>
-  (xtv) = t2ype_eval(xtv.type())
-//
-}
-//
 fun
 auxrst // reset
 ( xtvs
@@ -540,16 +618,6 @@ val
 ans =
 staload_find_timp(d3cl, d2c0, targ)
 //
-val () =
-println!
-("impllst_find_timp: d3cl = ", d3cl)
-val () =
-println!
-("impllst_find_timp: d2c0 = ", d2c0)
-val () =
-println!
-("impllst_find_timp: targ = ", targ)
-//
 in
 case+ ans of
 |
@@ -565,10 +633,13 @@ let
 //
 val
 fnd = auxfnd(d3cl, d2c0)
+(*
 val () =
 println!
 ("impllst_find_timp: fnd = ", fnd)
+*)
 //
+(*
 val () =
 println!
 ("impllst_find_timp: d3cl = ", d3cl)
@@ -578,6 +649,7 @@ println!
 val () =
 println!
 ("impllst_find_timp: targ = ", targ)
+*)
 //
 in
 //
@@ -593,27 +665,40 @@ TI3ENV
 , xtvs, t2ps) = ti3e
 val
 test =
-unify3(loc0, targ, t2ps)
+unify3(LOC0, targ, t2ps)
 //
+(*
 val () =
 println!
 ("impllst_find_timp: t2ps = ", t2ps)
 val () =
 println!
 ("impllst_find_timp: test = ", test)
+*)
 //
 in
   if
   test
   then
   let
-  val t2ps = fxtvs(xtvs)
+//
+  val () = auxrst(xarg)
+  val tsub =
+  ti3env_redo(d3cl, ti3e, targ)
+(*
+  val
+  ((*void*)) =
+  println!
+  ("impllst_find_timp: tsub = ", tsub)
+*)
   in
     auxrst(xtvs); // reset
-    Some_vt@(d3cl, s2vs, t2ps)
+    Some_vt@(d3cl, s2vs, tsub)
   end
   else
-  (auxrst(xarg); auxlst(xs, xarg))
+  ( auxrst(xtvs); // reset
+    auxrst(xarg); auxlst(xs, xarg)
+  ) (* end of [else] *) // end-of-if
 end // end of [else]
 //
 end // end of [impllst_cons]
@@ -860,7 +945,7 @@ implement
 t2ype_subst_implenv
   (t2p0, env0) =
 (
-  t2ype_subst(t2p0)
+  t2ype_subst<>(t2p0)
 ) where
 {
 //

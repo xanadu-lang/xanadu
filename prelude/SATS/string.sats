@@ -6,7 +6,7 @@
 
 (*
 ** ATS/Xanadu - Unleashing the Potential of Types!
-** Copyright (C) 2019 Hongwei Xi, ATS Trustful Software, Inc.
+** Copyright (C) 2020 Hongwei Xi, ATS Trustful Software, Inc.
 ** All rights reserved
 **
 ** ATS is free software;  you can  redistribute it and/or modify it under
@@ -27,57 +27,85 @@
 
 (* ****** ****** *)
 //
-// HX-2019-09-09:
-// These can be re-defined
+// For C-strings, that is,
+// char sequence ending with 0
+//
+(* ****** ****** *)
+//
+// Author: Hongwei Xi
+// Start Time: March, 2020
+// Authoremail: gmhwxiATgmailDOTcom
+//
+(* ****** ****** *)
+//
+typedef cgtz =
+[c:char|c > 0]char(c)
 //
 (* ****** ****** *)
 
-typedef
-the_void_ctype = void
+prfun
+string_lemma
+{n:int}
+(string(n)): [n>=0] void
 
 (* ****** ****** *)
 //
-typedef
-the_p1tr_ctype = p1tr0
-typedef
-the_p2tr_ctype(a:vt) = p2tr(a)
-//
-(* ****** ****** *)
-//
-typedef the_sint_ctype = sint0
-typedef the_uint_ctype = uint0
-//
-(* ****** ****** *)
-//
-typedef the_bool_ctype = bool0
-typedef the_char_ctype = char0
-//
-(* ****** ****** *)
-//
-// single precision
-typedef the_sfloat_ctype = sfloat
-// double precision
-typedef the_dfloat_ctype = dfloat
 (*
-// ldouble precision
-typedef the_ldfloat_ctype = ldfloat
+//
+// HX-2020-03-07:
+// This is only good
+// for targeting C-likes
+//
+fcast
+string_top2tr
+(cs: string): p2tr(char)
+#symload
+ptrof with string_top2tr
 *)
 //
 (* ****** ****** *)
 //
-typedef the_string_ctype = string0
+fun//<>
+string_print(string): void
 //
 (* ****** ****** *)
 //
-typedef
-the_lazy_ctype(a:t0) = lazy(a)
-vtypedef
-the_llazy_ctype(a:vt) = lazy_vt(a)
+fun//<>
+string_nil
+  ((*void*)): string(0)
+fun//<>
+string_cons
+  {n:int}
+( c0: cgtz
+, cs: string(n)): string(n+1)
 //
 (* ****** ****** *)
 //
-vtypedef the_excptn_ctype = excptn_vt
+fun<>
+string_nilq
+  {n:int}
+  (cs: string(n)): bool(n=0)
+fun<>
+string_consq
+  {n:int}
+  (cs: string(n)): bool(n>0)
+//
+(* ****** ****** *)
+//
+fun//<>
+string_head(string): char
+fun//<>
+string_head_raw(string): cgtz
+fun//<>
+string_tail_raw(string): string
+//
+(* ****** ****** *)
+//
+fun<>
+string_forall(cs: string): bool
+fun<>
+string_rforall(cs: string): bool
 //
 (* ****** ****** *)
 
-(* end of [xsetup.sats] *)
+(* end of [string.sats] *)

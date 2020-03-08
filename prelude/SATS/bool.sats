@@ -6,7 +6,7 @@
 
 (*
 ** ATS/Xanadu - Unleashing the Potential of Types!
-** Copyright (C) 2019 Hongwei Xi, ATS Trustful Software, Inc.
+** Copyright (C) 2020 Hongwei Xi, ATS Trustful Software, Inc.
 ** All rights reserved
 **
 ** ATS is free software;  you can  redistribute it and/or modify it under
@@ -27,57 +27,46 @@
 
 (* ****** ****** *)
 //
-// HX-2019-09-09:
-// These can be re-defined
+// For booleans
+//
+(* ****** ****** *)
+//
+// Author: Hongwei Xi
+// Start Time: March, 2020
+// Authoremail: gmhwxiATgmailDOTcom
+//
+(* ****** ****** *)
+//
+fun//<>
+bool_neg
+{b:bool}
+(x: bool(b)): bool(~b)
+//
+#symload ~ with bool_neg of 100
+#symload not with bool_neg of 100
+//
+(* ****** ****** *)
+//
+fun//<>
+bool_add
+{b1,b2:bool}
+( x: bool(b1)
+, y: bool(b2)): bool(b1+b2)
+fun//<>
+bool_mul
+{b1,b2:bool}
+( x: bool(b1)
+, y: bool(b2)): bool(b1*b2)
+//
+#symload + with bool_add of 100
+#symload * with bool_mul of 100
 //
 (* ****** ****** *)
 
-typedef
-the_void_ctype = void
+fun//<>
+bool_print(b0: bool): void
+#symload print with bool_print of 110
 
 (* ****** ****** *)
-//
-typedef
-the_p1tr_ctype = p1tr0
-typedef
-the_p2tr_ctype(a:vt) = p2tr(a)
-//
-(* ****** ****** *)
-//
-typedef the_sint_ctype = sint0
-typedef the_uint_ctype = uint0
-//
-(* ****** ****** *)
-//
-typedef the_bool_ctype = bool0
-typedef the_char_ctype = char0
-//
-(* ****** ****** *)
-//
-// single precision
-typedef the_sfloat_ctype = sfloat
-// double precision
-typedef the_dfloat_ctype = dfloat
-(*
-// ldouble precision
-typedef the_ldfloat_ctype = ldfloat
-*)
-//
-(* ****** ****** *)
-//
-typedef the_string_ctype = string0
-//
-(* ****** ****** *)
-//
-typedef
-the_lazy_ctype(a:t0) = lazy(a)
-vtypedef
-the_llazy_ctype(a:vt) = lazy_vt(a)
-//
-(* ****** ****** *)
-//
-vtypedef the_excptn_ctype = excptn_vt
-//
-(* ****** ****** *)
 
-(* end of [xsetup.sats] *)
+(* end of [bool.sats] *)

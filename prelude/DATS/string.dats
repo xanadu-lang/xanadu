@@ -6,7 +6,7 @@
 
 (*
 ** ATS/Xanadu - Unleashing the Potential of Types!
-** Copyright (C) 2019 Hongwei Xi, ATS Trustful Software, Inc.
+** Copyright (C) 2018 Hongwei Xi, ATS Trustful Software, Inc.
 ** All rights reserved
 **
 ** ATS is free software;  you can  redistribute it and/or modify it under
@@ -27,57 +27,97 @@
 
 (* ****** ****** *)
 //
-// HX-2019-09-09:
-// These can be re-defined
+// Author: Hongwei Xi
+// Start Time: March, 2020
+// Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
 
-typedef
-the_void_ctype = void
+#staload
+UN =
+"prelude/SATS/unsafe.sats"
+
+(* ****** ****** *)
+
+implement<>
+string_nilq(cs) =
+char_eqzq(string_head(cs))
+implement<>
+string_consq(cs) =
+char_neqzq(string_head(cs))
+
+(* ****** ****** *)
+
+implement<>
+string_forall
+  (xs) =
+( loop(xs) ) where
+{
+//
+typedef x0 = cgtz
+typedef xs = string
+//
+fun
+loop(xs: xs): bool =
+if
+string_nilq
+  (xs)
+then true else
+let
+val x0 =
+string_head_raw(xs)
+in
+if
+forall$test<x0>(x0)
+then
+loop
+(string_tail_raw(xs)) else false
+// end of [if]
+end // end of [else]
+} (* end of [string_forall/uncons] *)
+
+(* ****** ****** *)
+
+local
+//
+typedef x0 = cgtz
+typedef xs = string
+//
+in (* in-of-local *)
 
 (* ****** ****** *)
 //
-typedef
-the_p1tr_ctype = p1tr0
-typedef
-the_p2tr_ctype(a:vt) = p2tr(a)
+impltmp
+g_print<xs> = string_print
 //
-(* ****** ****** *)
-//
-typedef the_sint_ctype = sint0
-typedef the_uint_ctype = uint0
-//
-(* ****** ****** *)
-//
-typedef the_bool_ctype = bool0
-typedef the_char_ctype = char0
-//
-(* ****** ****** *)
-//
-// single precision
-typedef the_sfloat_ctype = sfloat
-// double precision
-typedef the_dfloat_ctype = dfloat
 (*
-// ldouble precision
-typedef the_ldfloat_ctype = ldfloat
+impltmp
+g_print<xs>(xs) =
+gseq_print<xs,x0>(xs)
+impltmp
+gseq_print$beg<x0,xs>() = ()
+impltmp
+gseq_print$end<x0,xs>() = ()
+impltmp
+gseq_print$sep<x0,xs>() = ()
 *)
 //
 (* ****** ****** *)
-//
-typedef the_string_ctype = string0
-//
-(* ****** ****** *)
-//
-typedef
-the_lazy_ctype(a:t0) = lazy(a)
-vtypedef
-the_llazy_ctype(a:vt) = lazy_vt(a)
-//
-(* ****** ****** *)
-//
-vtypedef the_excptn_ctype = excptn_vt
-//
+
+impltmp
+gseq_nilq<x0,xs> = string_nilq<>
+impltmp
+gseq_consq<x0,xs> = string_consq<>
+
 (* ****** ****** *)
 
-(* end of [xsetup.sats] *)
+impltmp
+gseq_forall<x0,xs> = string_forall<>
+
+(* ****** ****** *)
+
+end // end of [local]
+
+(* ****** ****** *)
+
+(* end of [string.dats] *)

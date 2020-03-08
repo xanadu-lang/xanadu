@@ -1055,19 +1055,19 @@ val
 loc0 = d2e0.loc()
 val-
 D2Ecase
-( knd1
-, d2e2, d2cs) = d2e0.node()
+( knd0
+, d2e1, d2cs) = d2e0.node()
 //
-val d3e2 = trans23_dexp(d2e2)
+val d3e1 = trans23_dexp(d2e1)
 //
-val targ = d3e2.type()
+val targ = d3e1.type()
 val tres = t2ype_new(loc0)
 val d3cs =
   trans23_dclaulst_dn(d2cs, targ, tres)
 //
 in
 d23exp_make_node
-  (loc0, tres, D3Ecase(knd1, d3e2, d3cs))
+  (loc0, tres, D3Ecase(knd0, d3e1, d3cs))
 end (* end of [aux_case] *)
 
 (* ****** ****** *)
@@ -1209,6 +1209,34 @@ x0.node() of
 
 (* ****** ****** *)
 
+fun
+aux_try
+( d2e0
+: d2exp): d3exp = let
+//
+val
+loc0 = d2e0.loc()
+val-
+D2Etry
+( tok0
+, d2e1, d2cs) = d2e0.node()
+//
+val d3e1 = trans23_dexp(d2e1)
+//
+val tres = d3e1.type()
+val targ = the_t2ype_excptn(*void*)
+val d3cs =
+  trans23_dclaulst_dn(d2cs, targ, tres)
+//
+in
+//
+d23exp_make_node
+  (loc0, tres, D3Etry(tok0, d3e1, d3cs))
+//
+end (* end of [aux_try] *)
+
+(* ****** ****** *)
+
 (*
 fun
 aux_flat
@@ -1344,6 +1372,26 @@ end // end of [aux_fold]
 (* ****** ****** *)
 
 fun
+aux_raise
+( d2e0
+: d2exp): d3exp = let
+//
+val
+loc0 = d2e0.loc()
+val-
+D2Eraise(d2e1) = d2e0.node()
+//
+val t2p0 = t2ype_new(loc0)
+val t2p1 = the_t2ype_excptn
+val d3e1 = trans23_dexp_dn(d2e1, t2p1)
+//
+in
+d23exp_make_node(loc0, t2p0, D3Eraise(d3e1))
+end // end of [aux_raise]
+
+(* ****** ****** *)
+
+fun
 aux_lazy
 ( d2e0
 : d2exp): d3exp = let
@@ -1372,27 +1420,21 @@ loc0 = d2e0.loc()
 val-
 D2Ellazy
 ( d2e1
-, opt2(*free*)) = d2e0.node()
+, d2es ) = d2e0.node()
 //
 val d3e1 = trans23_dexp(d2e1)
-val opt2 =
-(
-case+ opt2 of
-| None() =>
-  None(*void*)
-| Some(d2e2) =>
-  let
+val d3es =
+let
   val t2p2 = the_t2ype_void
-  in
-  Some(trans23_dexp_dn(d2e2, t2p2))
-  end
-) : d3expopt // end-of-val]
+in
+  trans23_dexplst_dn(d2es, t2p2)
+end
 //
 val t2p0 =
 t2ype_app1(the_t2ype_llazy, d3e1.type())
 //
 in
-d23exp_make_node(loc0, t2p0, D3Ellazy(d3e1, opt2))
+d23exp_make_node(loc0, t2p0, D3Ellazy(d3e1, d3es))
 end // end of [aux_llazy]
 
 (* ****** ****** *)
@@ -1485,6 +1527,9 @@ d2e0.node() of
 | D2Efix
   (_, _, _, _, _, _) => aux_fix(d2e0)
 //
+| D2Etry
+  (tok0, d2e1, dcls) => aux_try(d2e0)
+//
 (*
 | D2Eflat(d2e1) => aux_flat(d2e0)
 *)
@@ -1492,6 +1537,10 @@ d2e0.node() of
 | D2Eaddr(d2e1) => aux_addr(d2e0)
 | D2Eeval(d2e1) => aux_eval(d2e0)
 | D2Efold(d2e1) => aux_fold(d2e0)
+//
+| D2Eraise
+    (d2e1) => aux_raise(d2e0)
+  // raising lin-exception
 //
 | D2Elazy
     (d2e1) => aux_lazy(d2e0)
@@ -1528,6 +1577,23 @@ println!
 in
   d23exp_dn(trans23_dexp(d2e0), t2p0)
 end // end of [trans23_dexp_dn]
+//
+(* ****** ****** *)
+//
+implement
+trans23_dexplst_dn
+  (d2es, t2p0) =
+(
+list_vt2t
+(
+list_map<d2exp><d3exp>(d2es)
+)
+) where
+{
+implement
+list_map$fopr<d2exp><d3exp>
+  (d2e) = trans23_dexp_dn(d2e, t2p0)
+}
 //
 (* ****** ****** *)
 

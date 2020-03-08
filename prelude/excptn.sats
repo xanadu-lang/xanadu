@@ -6,7 +6,7 @@
 
 (*
 ** ATS/Xanadu - Unleashing the Potential of Types!
-** Copyright (C) 2019 Hongwei Xi, ATS Trustful Software, Inc.
+** Copyright (C) 2018 Hongwei Xi, ATS Trustful Software, Inc.
 ** All rights reserved
 **
 ** ATS is free software;  you can  redistribute it and/or modify it under
@@ -27,57 +27,21 @@
 
 (* ****** ****** *)
 //
-// HX-2019-09-09:
-// These can be re-defined
+// Author: Hongwei Xi
+// Authoremail: gmhwxiATgmailDOTcom
+//
+// This one should be loaded after xsetup.sats
+//
+(* ****** ****** *)
+//
+// HX-2020-03-05:
+// For out-of-range subscripting
+excptcon SubscriptExn of ((*void*))
+// For indicating the failure of
+exception AssertExn of () // an assertion
+// For indicating something expected
+exception NotFoundExn of () // to be found but not
 //
 (* ****** ****** *)
 
-typedef
-the_void_ctype = void
-
-(* ****** ****** *)
-//
-typedef
-the_p1tr_ctype = p1tr0
-typedef
-the_p2tr_ctype(a:vt) = p2tr(a)
-//
-(* ****** ****** *)
-//
-typedef the_sint_ctype = sint0
-typedef the_uint_ctype = uint0
-//
-(* ****** ****** *)
-//
-typedef the_bool_ctype = bool0
-typedef the_char_ctype = char0
-//
-(* ****** ****** *)
-//
-// single precision
-typedef the_sfloat_ctype = sfloat
-// double precision
-typedef the_dfloat_ctype = dfloat
-(*
-// ldouble precision
-typedef the_ldfloat_ctype = ldfloat
-*)
-//
-(* ****** ****** *)
-//
-typedef the_string_ctype = string0
-//
-(* ****** ****** *)
-//
-typedef
-the_lazy_ctype(a:t0) = lazy(a)
-vtypedef
-the_llazy_ctype(a:vt) = lazy_vt(a)
-//
-(* ****** ****** *)
-//
-vtypedef the_excptn_ctype = excptn_vt
-//
-(* ****** ****** *)
-
-(* end of [xsetup.sats] *)
+(* end of [excptn.sats] *)
