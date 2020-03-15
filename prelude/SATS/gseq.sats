@@ -118,7 +118,14 @@ gseq_uncons_opt
 fun
 <x0:t0
 ,xs:t0>
-gseq_print(xs): void
+gseq_cmp(xs: xs): sint
+
+(* ****** ****** *)
+
+fun
+<x0:t0
+,xs:t0>
+gseq_print(xs: xs): void
 fun
 <x0:t0
 ,xs:t0>
@@ -353,6 +360,13 @@ fun
 ,ys:t0>
 gseq_z2forall
   (xs: xs, ys: ys): bool
+fun
+<x0:t0
+,xs:t0>
+<y0:t0
+,ys:t0>
+gseq_z2forcmp
+  (xs: xs, ys: ys): sint
 fun
 <x0:t0
 ,xs:t0>

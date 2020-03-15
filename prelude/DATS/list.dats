@@ -31,6 +31,12 @@ case+ xs of
 )
 //
 (* ****** ****** *)
+
+impltmp
+{a:type}
+g_cmp<list(a)> = gseq_cmp<a,list(a)>
+
+(* ****** ****** *)
 //
 impltmp
 {a:type}
