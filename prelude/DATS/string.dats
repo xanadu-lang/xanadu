@@ -95,7 +95,7 @@ end // end of [else]
 local
 //
 typedef x0 = cgtz
-typedef y0 = cgtz
+typedef xs = string
 //
 in (* in-of-local *)
 
