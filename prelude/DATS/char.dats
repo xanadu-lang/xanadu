@@ -43,6 +43,11 @@ char_noteq<>
 (* ****** ****** *)
 
 impltmp
+g_cmp<char> = char_cmp<>
+
+(* ****** ****** *)
+
+impltmp
 g_equal<char> = char_equal<>
 impltmp
 g_noteq<char> = char_noteq<>
