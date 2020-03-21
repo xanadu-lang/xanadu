@@ -22,6 +22,7 @@ update:: PRETOP
 update:: PRESATS
 update:: PREDATS
 update:: PREDATSCATS
+update:: LIBATS
 
 ######
 
@@ -52,4 +53,13 @@ PREDATSCATS_Xint
 PREDATSCATS_Xint: ; \
 $(CPF) $(XATSHOME)/prelude/DATS/CATS/Xint/*.dats ./prelude/DATS/CATS/Xint/.
 #
+######
+
+LIBATS:: \
+LIBATS_githwxi
+LIBATS_githwxi:: ; \
+$(CPF) $(XATSHOME)/libats/githwxi/DATS/*.dats ./libats/githwxi/DATS/.
+LIBATS_githwxi:: ; \
+$(CPF) $(XATSHOME)/libats/githwxi/TEST/*.dats ./libats/githwxi/TEST/.
+
 ###### end of [Makefile] ######
