@@ -50,9 +50,9 @@ list_vt_consq
 //
 fun
 <a:vt>
-list_vt_free
-{n:int}
-(xs: list_vt(a, n)): void
+list_vt_free(xs: list_vt(a)): void
+//
+(* ****** ****** *)
 //
 fun
 <a:vt>
@@ -80,6 +80,12 @@ fun
 list_vt_reverse
 {n:int}
 (xs: list_vt(a, n)): list_vt(a, n)
+fun
+<a:vt>
+list_vt_rappend
+{m,n:int}
+( xs: list_vt(a, m)
+, ys: list_vt(a, n)): list_vt(a, m+n)
 //
 (* ****** ****** *)
 //

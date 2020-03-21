@@ -181,6 +181,10 @@ case+ xs of
 )
 }
 //
+impltmp
+{a:type}
+gseq_forall<a,list(a)> = list_forall<a>
+//
 (* ****** ****** *)
 //
 impltmp
@@ -201,6 +205,10 @@ case+ xs of
   end
 )
 }
+//
+impltmp
+{a:type}
+gseq_foreach<a,list(a)> = list_foreach<a>
 //
 (* ****** ****** *)
 //
@@ -225,7 +233,8 @@ loop{i:nat}.<i>.
 (
 case+ xs of
 |
-list_nil() => ()
+list_nil() =>
+(r0 := list_vt_nil())
 |
 list_cons(x0, xs) =>
 let

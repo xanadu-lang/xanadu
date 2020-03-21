@@ -22,7 +22,8 @@ stream_vt_cons
 (
 $llazy
 (
-$free(xs);
+g_free(x0);
+g_free(xs);
 strmcon_vt_cons{a}(x0, xs))
 )
 //
@@ -41,12 +42,136 @@ stream_vt_cons(x0, stream_vt_sing(y0))
 //
 impltmp
 <a>(*tmp*)
-stream_vt_free = $free(xs)
+stream_vt_free(xs) = $free(xs)
 //
 impltmp
 <a>(*tmp*)
 g_free<stream_vt(a)> = stream_vt_free<a>
 //
+(* ****** ****** *)
+
+impltmp
+<a>(*tmp*)
+stream_vt_drop
+  (xs, n0) =
+(
+  auxloop(xs, n0)
+) where
+{
+//
+typedef xs = stream_vt(a)
+//
+fun
+auxloop
+(xs: xs, n0: sint): xs =
+if
+(n0 <= 0)
+then xs else
+(
+case+ !xs of
+| ~strmcon_vt_nil() => stream_vt_nil()
+| ~strmcon_vt_cons(x0, xs) =>
+   (g_free<a>(x0); auxloop(xs, pred(n0)))
+)
+} (* end of [stream_vt_drop] *)
+
+(* ****** ****** *)
+
+impltmp
+<a>(*tmp*)
+stream_vt_take
+  (xs, n0) =
+(
+  auxmain(xs, n0)
+) where
+{
+//
+typedef xs = stream_vt(a)
+//
+fun
+auxmain
+(xs: xs, n0: sint): xs =
+$llazy
+(
+g_free(xs);
+if
+(n0 <= 0)
+then
+(
+  g_free(xs); strmcon_vt_nil()
+) (* then *)
+else
+(
+case+ !xs of
+| ~strmcon_vt_nil() => strmcon_vt_nil()
+| ~strmcon_vt_cons(x0, xs) =>
+   strmcon_vt_cons(x0, auxmain(xs, pred(n0)))
+) (* else *)
+)
+} (* end of [stream_vt_take] *)
+
+(* ****** ****** *)
+
+impltmp
+<a>(*tmp*)
+stream_vt_listize(xs) =
+let
+//
+fun
+loop
+( xs
+: stream_vt(a)
+, r0
+: &(?list_vt(a)) >> list_vt(a)
+) : void =
+(
+case+ !xs of
+|
+~ strmcon_vt_nil() =>
+  (r0 := list_vt_nil())
+|
+~ strmcon_vt_cons(x0, xs) =>
+  let
+  val () =
+  (r0 := list_vt_cons(x0, _))
+  in
+    loop(xs, r0.1); $fold(r0)
+  end
+) (* end of [loop] *)
+//
+in
+let
+var r0: list_vt(a)
+val () = loop(xs, r0) in r0 endlet
+end (* end of [stream_vt_listize] *)
+
+(* ****** ****** *)
+
+impltmp
+<a>(*tmp*)
+stream_vt_rlistize(xs) =
+(
+  loop(xs, list_vt_nil())
+) where
+{
+fun
+loop
+( xs
+: stream_vt(a)
+, r0: list_vt(a)): list_vt(a) =
+(
+case+ !xs of
+|
+~ strmcon_vt_nil() => r0
+|
+~ strmcon_vt_cons(x0, xs) =>
+  let
+  val r0 =
+  list_vt_cons(x0, r0) in loop(xs, r0)
+  end
+)
+} (* end of [stream_vt_rlistize] *)
+
 (* ****** ****** *)
 //
 impltmp
@@ -70,8 +195,8 @@ fun
 append(xs, ys) =
 $llazy
 (
-$free(xs);
-$free(ys);
+g_free(xs);
+g_free(ys);
 case+ !xs of
 | ~strmcon_vt_nil() => !ys
 | ~strmcon_vt_cons(x0, xs) =>
@@ -123,7 +248,7 @@ auxmain
 $llazy
 (
 //
-$free(xs);
+g_free(xs);
 //
 case+ !xs of
 |
@@ -153,7 +278,7 @@ auxmain
 : stream_vt(x0) =
 $llazy
 (
-$free(xs);
+g_free(xs);
 auxloop($eval(xs)))
 and
 auxloop
@@ -195,7 +320,7 @@ auxmain
 : stream_vt(y0) =
 $llazy
 (
-$free(xs);
+g_free(xs);
 auxloop($eval(xs)))
 and
 auxloop
@@ -251,7 +376,7 @@ case+ !xs of
 |
 ~ strmcon_vt_nil
   () =>
-  ($free(ys); true)
+  (g_free(ys); true)
 ~ strmcon_vt_cons
   (x0, xs) =>
   (
@@ -259,7 +384,7 @@ case+ !xs of
   |
   ~ strmcon_vt_nil
     () =>
-    ($free(xs); true)
+    (g_free(xs); true)
   |
   ~ strmcon_vt_cons
     (y0, ys) =>
@@ -270,7 +395,8 @@ case+ !xs of
     in
       if
       test
-      then loop(xs, ys) else false
+      then loop(xs, ys)
+      else (g_free(xs); g_free(ys); false)
     end // end of [strmcon_vt_cons]
    )
 ) (* end of [loop] *)
@@ -306,7 +432,7 @@ case+ !xs of
   ~ strmcon_vt_cons
     (y0, ys) =>
     (
-    g_free<y0>(y0); $free(ys); -1
+    g_free(y0); g_free(ys); -1
     )
   )
 |
@@ -318,20 +444,20 @@ case+ !xs of
   ~ strmcon_vt_nil
     () =>
     (
-    g_free<x0>(x0); $free(xs);  1
+    g_free(x0); g_free(xs);  1
     )
   |
   ~ strmcon_vt_cons
     (y0, ys) =>
     let
     val
-    sgn =
+    sign =
     z2forcmp0$fcmp<x0,y0>(x0, y0)
     in
       if
-      (sgn = 0)
+      (sign = 0)
       then loop(xs, ys)
-      else ($free(xs); $free(ys); sgn)
+      else (g_free(xs); g_free(ys); sign)
     end // end of [strmcon_vt_cons]
    )
 ) (* end of [loop] *)
