@@ -147,6 +147,14 @@ fun
 gseq_length(xs): nint
 
 (* ****** ****** *)
+
+fun
+<x0:t0
+,xs:t0>
+gseq_drop
+(xs: xs, n0: sint): xs
+
+(* ****** ****** *)
 //
 (*
 gseq_foldl: foldl$fopr
@@ -315,6 +323,8 @@ fun
 ,xs:t0>
 gseq_iforeach(xs): void
 //
+(* ****** ****** *)
+//
 fun
 <x0:t0
 ,xs:t0>
@@ -325,6 +335,33 @@ fun
 ,xs:t0>
 gseq_rindexof
 (xs: xs, x0: x0): sint // ~1: ~found
+//
+(* ****** ****** *)
+//
+fun
+<x0:t0
+,xs:t0>
+gseq_idropif(xs: xs): xs
+//
+fun
+<x0:t0
+,xs:t0>
+gseq_itakeif_list(xs): list_vt(x0)
+fun
+<x0:t0
+,xs:t0>
+gseq_itakeif_rlist(xs): list_vt(x0)
+//
+(* ****** ****** *)
+//
+fun
+<x0:t0
+,xs:t0>
+gseq_ifilter_list(xs): list_vt(x0)
+fun
+<x0:t0
+,xs:t0>
+gseq_ifilter_rlist(xs): list_vt(x0)
 //
 (* ****** ****** *)
 //
@@ -382,17 +419,17 @@ fun
 ,xs:t0>
 <y0:t0
 ,ys:t0>
-<r0:vt>
+<z0:vt>
 gseq_z2map_list
-  (xs: xs, ys: ys): list_vt(r0)
+  (xs: xs, ys: ys): list_vt(z0)
 fun
 <x0:t0
 ,xs:t0>
 <y0:t0
 ,ys:t0>
-<r0:vt>
+<z0:vt>
 gseq_z2map_rlist
-  (xs: xs, ys: ys): list_vt(r0)
+  (xs: xs, ys: ys): list_vt(z0)
 //
 (* ****** ****** *)
 

@@ -30,6 +30,19 @@
 // For functional lin-streams
 //
 (* ****** ****** *)
+//
+fun
+<a:t0>
+stream_vt2t
+(stream_vt(a)): stream(a)
+//
+(* ****** ****** *)
+
+fun
+<a:vt>
+stream_vt_free(stream_vt(a)): void
+
+(* ****** ****** *)
 
 fun
 <a:vt>
@@ -46,13 +59,22 @@ fun
 stream_vt_sing(x0: a): stream_vt(a)
 fun
 <a:vt>
-stream_vt_pair(x0: a, y0: a): stream_vt(a)
+strmcon_vt_sing(x0: a): strmcon_vt(a)
 
 (* ****** ****** *)
 
 fun
 <a:vt>
-stream_vt_free(xs: stream_vt(a)): void
+stream_vt_pair(x0: a, y0: a): stream_vt(a)
+fun
+<a:vt>
+strmcon_vt_pair(x0: a, y0: a): strmcon_vt(a)
+
+(* ****** ****** *)
+
+fun
+<a:vt>
+stream_vt_length(xs: stream_vt(a)): nint
 
 (* ****** ****** *)
 
@@ -66,14 +88,16 @@ stream_vt_take
 (xs: stream_vt(a), n0: sint): stream_vt(a)
 
 (* ****** ****** *)
-
+//
 fun
 <a:vt>
-stream_vt_listize(stream_vt(a)): list_vt(a)
+stream_vt_listize
+  (xs: stream_vt(a)): list_vt(a)
 fun
 <a:vt>
-stream_vt_rlistize(stream_vt(a)): list_vt(a)
-
+stream_vt_rlistize
+  (xs: stream_vt(a)): list_vt(a)
+//
 (* ****** ****** *)
 //
 fun
@@ -83,9 +107,15 @@ stream_vt_extend
 fun
 <a:vt>
 stream_vt_append
-(xs: stream_vt(a), ys: stream_vt(a)): stream_vt(a)
+(stream_vt(a), stream_vt(a)): stream_vt(a)
 //
 (* ****** ****** *)
+//
+fun
+<x0:vt>
+<r0:vt>
+stream_vt_foldl0
+(xs: stream_vt(x0), r0: r0): r0
 //
 fun
 <x0:vt>
@@ -103,7 +133,8 @@ stream_vt_map0: map0$fopr
 fun
 <x0:vt>
 <y0:vt>
-stream_vt_map0(stream_vt(x0)): stream_vt(y0)
+stream_vt_map0
+  (xs: stream_vt(x0)): stream_vt(y0)
 //
 (* ****** ****** *)
 //
@@ -113,7 +144,8 @@ stream_vt_filter: filter0$test
 //
 fun
 <x0:vt>
-stream_vt_filter0(stream_vt(x0)): stream_vt(x0)
+stream_vt_filter0
+  (xs: stream_vt(x0)): stream_vt(x0)
 //
 (* ****** ****** *)
 //
@@ -123,19 +155,20 @@ stream_vt_mapopt: map + filter
 fun
 <x0:vt>
 <y0:vt>
-stream_vt_mapopt0(stream_vt(x0)): stream_vt(y0)
+stream_vt_mapopt0
+  (xs: stream_vt(x0)): stream_vt(y0)
 //
 (* ****** ****** *)
 //
 fun
 <x0:vt
 ,y0:vt>
-stream_vt_z2forall
+stream_vt_z2forall0
   (xs: stream_vt(x0), ys: stream_vt(y0)): bool
 fun
 <x0:vt
 ,y0:vt>
-stream_vt_z2forcmp
+stream_vt_z2forcmp0
   (xs: stream_vt(x0), ys: stream_vt(y0)): sint
 //
 (* ****** ****** *)
