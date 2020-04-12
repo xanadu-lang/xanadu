@@ -41,6 +41,46 @@ g_free<list_vt(a)> = list_vt_free<a>
 
 impltmp
 <a>(*tmp*)
+list_vt_copy(xs) =
+let
+fun
+loop
+{n:nat}.<n>.
+( xs
+: !list_vt(a, n)
+, r0
+: &(?list_vt(a)>>list_vt(a, n))
+) : void =
+(
+case+ xs of
+|
+! list_vt_nil() =>
+  (r0 := list_vt_nil())
+|
+! list_vt_cons(x0, xs) =>
+  let
+  val x0 = g_copy<a>(x0)
+  val () =
+  (r0 := list_vt_cons(x0, _))
+  in
+    loop(xs, r0.1); $fold(r0)
+  end
+)
+in
+let
+var r0: list_vt(a) in loop(xs, r0); r0
+end
+end // end of [list_vt_copy]
+
+impltmp
+<a>(*tmp*)
+list_vt_rcopy(xs) =
+list_vt_rappend10<a>(xs, list_vt_nil())
+
+(* ****** ****** *)
+
+impltmp
+<a>(*tmp*)
 list_vt_length
   {n}(xs) =
 ( loop(xs, 0) ) where
@@ -136,6 +176,41 @@ case+ xs0 of
 } end (* end of [list_vt_rappend10] *)
 
 (* ****** ****** *)
+
+implement
+<a>(*tmp*)
+list_vt_rappend11
+  (xs, ys) =
+(
+  loop(xs, ys)
+) where
+{
+//
+fun
+loop
+{m,n:nat} .<m>.
+( xs0
+: !list_vt(a, m)
+, ys0
+: !list_vt(a, n)
+) : list_vt(a, m+n) =
+(
+case+ xs0 of
+|
+! list_vt_nil() =>
+  list_vt_copy<a>(ys0)
+|
+! list_vt_cons(x0, xs1) =>
+  let
+    val x0 = g_copy<a>(x0)
+  in
+    loop(xs1, list_vt_cons(x0, ys0))
+  end // end of [list_vt_cons]
+) (* end of [loop] *)
+//
+} end (* end of [list_vt_rappend11] *)
+
+(* ****** ****** *)
 //
 (*
 HX-2019-10:
@@ -216,6 +291,78 @@ end // end of [list_vt_cons]
 )
 } (* end of [list_vt_foreach0] *)
 //
+(* ****** ****** *)
+//
+impltmp
+<x0><y0>
+list_vt_map(xs) = let
+//
+fun
+loop{i:nat}.<i>.
+( xs
+: list_vt(x0, i)
+, r0
+: &(?list_vt(y0)) >> list_vt(y0, i)
+) : void =
+(
+case+ xs of
+|
+~ list_vt_nil() =>
+  (r0 := list_vt_nil())
+|
+~ list_vt_cons(x0, xs) =>
+  let
+  val y0 =
+  map0$fopr<x0><y0>(x0)
+  val () =
+  (r0 := list_vt_cons(y0, _))
+  in
+    loop(xs, r0.1); $fold(r0)
+  end
+) (* end of [loop] *)
+//
+in
+  let
+  var r0: list_vt(y0)
+  val () = loop(xs, r0) in r0 end
+end (* end of [list_map_vt] *)
+//
+(* ****** ****** *)
+
+impltmp
+<x0><y0>
+list_vt_maprev0
+  (xs) =
+(
+let
+val ys =
+list_vt_nil() in loop(xs, ys)
+end
+) where
+{
+//
+fun
+loop
+{i,j:nat}.<i>.
+( xs
+: list_vt(x0, i)
+, ys
+: list_vt(y0, j)): list_vt(y0, i+j) =
+(
+case+ xs of
+|
+~ list_vt_nil() => ys
+|
+~ list_vt_cons(x0, xs) =>
+  let
+  val y0 = map0for<x0><y0>(x0)
+  in
+    loop(xs, list_vt_cons(y0, ys))
+  end
+)
+//
+} (* end of [list_vt_maprev0] *)
+
 (* ****** ****** *)
 
 (* end of [list_vt.dats] *)

@@ -99,6 +99,12 @@ list_vt_rappend10
 {m,n:int}
 ( xs: !list_vt(a, m)
 , ys: ~list_vt(a, n)): list_vt(a, m+n)
+fun
+<a:vt>
+list_vt_rappend11
+{m,n:int}
+( xs: !list_vt(a, m)
+, ys: !list_vt(a, n)): list_vt(a, m+n)
 //
 (* ****** ****** *)
 //
@@ -122,6 +128,19 @@ fun
 <x0:vt>
 list_vt_foreach0(xs: list_vt(x0)): void
 //
+(* ****** ****** *)
+//
+fun
+<x0:vt>
+<y0:vt>
+list_vt_map0
+{n:int}(xs: list_vt(x0, n)): list_vt(y0, n)
+fun
+<x0:vt>
+<y0:vt>
+list_vt_maprev0
+{n:int}(xs: list_vt(x0, n)): list_vt(y0, n)
+
 (* ****** ****** *)
 
 (* end of [list_vt.sats] *)
