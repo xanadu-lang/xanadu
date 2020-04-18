@@ -101,9 +101,9 @@ gseq_uncons_opt<x0,xs>(xs)
 in
 //
 case+ opt of
-| ~optn_vt_nil() =>
-   $raise SubscriptExn()
-| ~optn_vt_cons(x0) => x0
+| optn_vt_nil() =>
+  $raise SubscriptExn()
+| optn_vt_cons(x0) => x0
 //
 end // end of [gseq_uncons_exn]
 *)
@@ -114,7 +114,7 @@ gseq_uncons_exn
   (xs) =
 (
 if
-gseq_nilq <x0,xs> (xs)
+gseq_nilq<x0,xs>(xs)
 then $raise SubscriptExn()
 else gseq_uncons_raw<x0,xs>(xs)
 )
@@ -124,7 +124,7 @@ gseq_uncons_opt
   (xs) =
 (
 if
-gseq_nilq <x0,xs> (xs)
+gseq_nilq<x0,xs>(xs)
 then optn_nil() else optn_cons(x0)
 )
 //
@@ -218,8 +218,22 @@ gseq_drop
 ) where
 {
   impltmp
-  idropif$test<x0>(i0, _) = i0 < n0
+  idropif$test<x0>(i0, _) = (i0 < n0)
 } (* gseq_drop/idropif *)
+
+(* ****** ****** *)
+
+impltmp
+<x0,xs>
+gseq_dropif
+  (xs) =
+(
+  gseq_idropif(xs)
+) where
+{
+  impltmp
+  idropif$test<x0>(_, x0) = dropif$test<x0>(x0)
+} (* gseq_drop/dropif *)
 
 (* ****** ****** *)
 
@@ -398,13 +412,13 @@ loop
 (
 case+ xx of
 |
-~ list_vt_nil() => xs
+list_vt_nil() => xs
 |
-~ list_vt_cons(x0, xx) =>
-  loop(xx, gseq_cons<x0,xs>(x0, xs))
+list_vt_cons(x0, xx) =>
+loop(xx, gseq_cons<x0,xs>(x0, xs))
 )
 in
-loop(xx, gseq_nil<x0,xs>())
+  loop(xx, gseq_nil<x0,xs>())
 end // end of [gseq_unrlist_vt]
 //
 (* ****** ****** *)
