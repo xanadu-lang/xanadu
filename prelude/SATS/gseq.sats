@@ -147,13 +147,18 @@ fun
 gseq_length(xs): nint
 
 (* ****** ****** *)
-
+//
 fun
 <x0:t0
 ,xs:t0>
 gseq_drop
 (xs: xs, n0: sint): xs
-
+//
+fun
+<x0:t0
+,xs:t0>
+gseq_dropif(xs: xs): xs
+//
 (* ****** ****** *)
 //
 (*
@@ -189,6 +194,11 @@ fun
 <x0:t0
 ,xs:t0>
 gseq_listize(xs): list_vt(x0)
+fun
+<x0:t0
+,xs:t0>
+gseq_rlistize(xs): list_vt(x0)
+//
 fun
 <x0:t0
 ,xs:t0>
@@ -284,13 +294,6 @@ fun
 <x0:t0
 ,xs:t0>
 gseq_rforeach(xs): void
-//
-(* ****** ****** *)
-//
-fun
-<x0:t0
-,xs:t0>
-gseq_rlistize(xs): list_vt(x0)
 //
 (* ****** ****** *)
 //
