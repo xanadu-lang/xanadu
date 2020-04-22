@@ -1,0 +1,7 @@
+#
+# ignoring generated files
+#
+bin/xatsopt
+srcgen/xats/xatsopt
+
+###### end of [.gitignore] ######
