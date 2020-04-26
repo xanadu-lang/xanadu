@@ -359,67 +359,6 @@ d3e0.node() of
 | D3Efcst _ => ()
 | D3Etcst _ => ()
 //
-| D3Esap1
-  (d3e1, s2e2) =>
-  {
-    val () =
-    tread33_d3exp(d3e1)
-  }
-//
-| D3Edapp
-  (d3f1, npf2, d3es) =>
-  {
-    val () =
-    tread33_d3exp(d3f1)
-    val () =
-    tread33_d3explst(d3es)
-  }
-//
-| D3Eif0
-  (d3e1, d3e2, opt3) =>
-  {
-//
-  val () = aux_D3Eif0(d3e0)
-//
-  val () = tread33_d3exp(d3e1)
-  val () = tread33_d3exp(d3e2)
-  val () = tread33_d3expopt(opt3)
-//
-  }
-//
-| D3Ecase
-  (knd0, d3e1, d3cs) =>
-  {
-  val () = tread33_d3exp(d3e1)
-  val () = tread33_d3claulst(d3cs)
-  }
-//
-| D3Elet(d3cs, d3e1) =>
-  {
-    val () =
-    tread33_d3eclist(d3cs)
-    val () = tread33_d3exp(d3e1)
-  }
-| D3Ewhere(d3e1, d3cs) =>
-  {
-    val () =
-    tread33_d3eclist(d3cs)
-    val () = tread33_d3exp(d3e1)
-  }
-//
-| D3Eassgn(d3e1, d3e2) =>
-  {
-    val () = tread33_d3exp(d3e1)
-    val () = tread33_d3exp(d3e2)
-  }
-//
-| D3Etry
-  (tok0, d3e1, d3cs) =>
-  {
-    val () = tread33_d3exp(d3e1)
-    val () = tread33_d3claulst(d3cs)
-  }
-//
 | D3Econ2(d2cs) =>
   let
     val
@@ -454,6 +393,90 @@ d3e0.node() of
     (loc0, ": TRERR33(D3Esym0): the possible solutions: ", dpis);
   end
 //
+| D3Esap1
+  (d3e1, s2e2) =>
+  {
+    val () =
+    tread33_d3exp(d3e1)
+  }
+//
+| D3Edapp
+  (d3f1, npf2, d3es) =>
+  {
+    val () =
+    tread33_d3exp(d3f1)
+    val () =
+    tread33_d3explst(d3es)
+  }
+//
+| D3Epcon
+  (d3e1, lab2) =>
+  {
+(*
+  val () = aux_D3Epcon(d3e0)
+*)
+  val () = tread33_d3exp(d3e1)
+  }
+//
+| D3Eif0
+  (d3e1, d3e2, opt3) =>
+  {
+//
+  val () = aux_D3Eif0(d3e0)
+//
+  val () = tread33_d3exp(d3e1)
+  val () = tread33_d3exp(d3e2)
+  val () = tread33_d3expopt(opt3)
+//
+  }
+//
+| D3Ecase
+  (knd0, d3e1, d3cs) =>
+  {
+  val () = tread33_d3exp(d3e1)
+  val () = tread33_d3claulst(d3cs)
+  }
+//
+| D3Elet(d3cs, d3e1) =>
+  {
+    val () =
+    tread33_d3eclist(d3cs)
+    val () = tread33_d3exp(d3e1)
+  }
+| D3Ewhere(d3e1, d3cs) =>
+  {
+    val () =
+    tread33_d3eclist(d3cs)
+    val () = tread33_d3exp(d3e1)
+  }
+//
+| D3Eseqn(d3es, d3e1) =>
+  {
+    val () =
+    tread33_d3explst(d3es)
+    val () = tread33_d3exp(d3e1)
+  }
+//
+| D3Etuple
+    (knd0, npf1, d3es) =>
+  {
+    val () =
+    tread33_d3explst(d3es)
+  }
+//
+| D3Eassgn(d3e1, d3e2) =>
+  {
+    val () = tread33_d3exp(d3e1)
+    val () = tread33_d3exp(d3e2)
+  }
+//
+| D3Etry
+  (tok0, d3e1, d3cs) =>
+  {
+    val () = tread33_d3exp(d3e1)
+    val () = tread33_d3claulst(d3cs)
+  }
+//
 | D3Eaddr(d3e1) =>
   {
     val () = tread33_d3exp(d3e1)
@@ -469,6 +492,11 @@ d3e0.node() of
     val () = tread33_d3exp(d3e1)
   }
 //
+| D3Eraise(d3e1) =>
+  {
+    val () = tread33_d3exp(d3e1)
+  }
+//
 | D3Elazy(d3e1) =>
   {
     val () = tread33_d3exp(d3e1)
@@ -477,6 +505,15 @@ d3e0.node() of
   {
     val () = tread33_d3exp(d3e1)
     val () = tread33_d3explst(d3es)
+  }
+//
+| D3Eflat(d3e1) =>
+  {
+    val () = tread33_d3exp(d3e1)
+  }
+| D3Etalf(d3e1) =>
+  {
+    val () = tread33_d3exp(d3e1)
   }
 //
 | D3Elcast(d3e1, lab2) =>
@@ -502,6 +539,7 @@ d3e0.node() of
     ( loc0
     , ": TRERR33(D3Elcast): the inferred type = ", t2p1);
   end
+//
 | D3Etcast(d3e1, t2p2) =>
   let
 //
@@ -517,6 +555,9 @@ d3e0.node() of
     (loc0, ": ***TRERR33***");
     prerrln!
     ( loc0
+    , ": TRERR33(D3Etcast): type-mismatch");
+    prerrln!
+    ( loc0
     , ": TRERR33(D3Etcast): the d3exp: ", d3e1);
     prerrln!
     ( loc0
@@ -526,7 +567,7 @@ d3e0.node() of
     , ": TRERR33(D3Etcast): the inferred type: ", t2p1);
   end
 //
-| D3Enone0() => ((*void*))
+| D3Enone0( ) => ((*void*))
 //
 | D3Enone1(_) =>
   let
@@ -1004,6 +1045,7 @@ tread33_main(d3cs) = let
 //
 val () =
 tread33_d3eclist(d3cs)
+//
 val
 xerrs = the_trerr33lst_get()
 val
