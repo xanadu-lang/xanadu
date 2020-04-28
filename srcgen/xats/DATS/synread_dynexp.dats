@@ -587,53 +587,64 @@ list_foreach$fwork<d0clau><env>(dcl, env) = synread_d0clau(dcl)
 implement
 //{}(*tmp*)
 synread_d0ecl
-  (d0c0) = let
+  (d0cl) = let
 //
-val loc0 = d0c0.loc((*void*))
+val loc0 = d0cl.loc((*void*))
 //
 (*
 val () =
 println!
-("synread_d0ecl: d0c0 = ", d0c0)
+("synread_d0ecl: d0cl = ", d0cl)
 *)
 //
 in
 //
 case+
-d0c0.node() of
+d0cl.node() of
 //
 | D0Cnonfix
   (tok, ids) =>
   {
-    val () =
-    synread_i0dntlst(ids)
+  val () =
+  synread_i0dntlst(ids)
   }
 //
 | D0Cfixity
   (tok, ids, opt) =>
   {
-    val () =
-    synread_i0dntlst(ids)
+  val () =
+  synread_i0dntlst(ids)
 //
-    val () =
-    (
-      synread_precopt(opt)
-    ) (* end of [val] *)
+  val () =
+  (
+    synread_precopt(opt)
+  ) (* end of [val] *)
   }
 //
 | D0Cstatic
-  (tok, d0c) =>
+  (tok, dcl1) =>
   {
-    val () = synread_d0ecl(d0c)
+    val () =
+    (
+      synread_d0ecl(dcl1)
+    )
   }
 | D0Cextern
-  (tok, d0c) =>
+  (tok, dcl1) =>
   {
-    val () = synread_d0ecl(d0c)
+    val () =
+    (
+      synread_d0ecl(dcl1)
+    )
   }
 //
+| D0Cinclude
+  (tok, d0e(*src*)) => ()
+| D0Cstaload
+  (tok, d0e(*src*)) => ()
+//
 | D0Cabssort
-  (tok, tid) =>
+  (tok, tid(*name*)) =>
   {
 (*
     val () =
@@ -674,14 +685,13 @@ d0c0.node() of
   {
 (*
     val () =
-      synread_SEXPDEF(tok)
-    // end of [val]
+    synread_SEXPDEF(tok)
 *)
     val () = synread_EQ(teq)  
     val () = synread_s0eid(sid)
-    val () = synread_s0exp(def)
-    val () = synread_sort0opt(res)
     val () = synread_s0marglst(arg)
+    val () = synread_sort0opt(res)
+    val () = synread_s0exp(def)
   }
 //
 | D0Cvaldecl
@@ -736,7 +746,7 @@ d0c0.node() of
   {
 (*
     val () =
-    synread_FUN(tok)
+    synread_FUN/VAL(tok)
 *)
     val () = synread_tq0arglst(tqas)
     val () = synread_d0cstdeclist(d0cs)
@@ -745,22 +755,22 @@ d0c0.node() of
 | D0Cnone(tok) =>
   let
     val () =
-    synerr_add(SYNERRd0ecl(d0c0))
+    synerr_add(SYNERRd0ecl(d0cl))
   in
-    prerrln!(loc0, ": SYNERR(d0ecl): ", d0c0);
+    prerrln!(loc0, ": SYNERR(d0ecl): ", d0cl);
   end // end of [D0Cnone]
 //
 | D0Ctokerr(tok) =>
   let
     val () =
-    synerr_add(SYNERRd0ecl(d0c0))
+    synerr_add(SYNERRd0ecl(d0cl))
   in
-    prerrln!(loc0, ": SYNERR(d0ecl): ", d0c0);
+    prerrln!(loc0, ": SYNERR(d0ecl): ", d0cl);
   end // end of [D0Cnone]
 //
 | _(* rest-of-d0ecl *) =>
   (
-    prerrln!(loc0, ": synread_d0ecl: d0c0 = ", d0c0)
+    prerrln!(loc0, ": synread_d0ecl: d0cl = ", d0cl)
   )
 //
 end // end of [synread_d0ecl]
