@@ -726,6 +726,13 @@ x0.node() of
   ( out
   , "D3Clocal(", head, "; ", body, ")")
 //
+| D3Cabstype(d2cl) =>
+  fprint!(out, "D3Cabstype(", d2cl, ")")
+| D3Cabsopen(d2cl) =>
+  fprint!(out, "D3Cabsopen(", d2cl, ")")
+| D3Cabsimpl(d2cl) =>
+  fprint!(out, "D3Cabsimpl(", d2cl, ")")
+//
 | D3Cvaldecl
   (knd, mopt, v3ds) =>
   fprint!

@@ -853,8 +853,34 @@ end (* t2ype_evalrec *) end // end of [local]
 
 (* ****** ****** *)
 
-local
-
+implement
+{}(*tmp*)
+t2ype_whnfz
+  (t2p0) = let
+//
+var flag: int = 0
+//
+(*
+val () =
+println!
+("t2ype_whnfz: t2p0 = ", t2p0)
+*)
+//
+in
+//
+let
+val
+t2p0 =
+auxt2p0(t2p0, flag)
+(*
+val () =
+println!
+("t2ype_whnfz: t2p0(res) = ", t2p0)
+*)
+in t2p0 end // end of [let]
+//
+end where
+{
 fun
 auxbas
 ( t2p0: t2ype
@@ -894,30 +920,9 @@ auxcst
 ( t2p0: t2ype
 , flag
 : &int >> int): t2ype =
-let
-//
-val-
-T2Pcst(s2c0) = t2p0.node()
-//
-val
-def0 = s2cst_get_type(s2c0)
-//
-in
-//
-case+
-def0.node() of
-//
-| T2Pnone0() => t2p0
-//
-| _(* else *) => 
-  (
-    t2ype_hnfize(def0)
-  ) where
-  {
-    val () = flag := flag + 1
-  }
-//
-end // end of [auxcst]
+(
+  t2ype_whnfz$cst(t2p0, flag)
+)
 
 and
 auxxtv
@@ -930,25 +935,21 @@ T2Pxtv
 (xtv0) = t2p0.node()
 in
 //
-case+
-t2p0.node() of
-| T2Pxtv(xtv) =>
-  let
+let
   val
-  t2p1 = xtv.type()
-  in
-    case+
-    t2p1.node() of
-    | T2Pnone0() => t2p0
-    | _ (*non-T2Pnone0*) =>
-      (
-        t2ype_hnfize(t2p1)
-      ) where
-      {
-        val () = flag := flag + 1
-      }
-  end
-| _(* non-T2Pxtv *) => (t2p0)
+  t2p1 = xtv0.type()
+in
+  case+
+  t2p1.node() of
+  | T2Pnone0() => t2p0
+  | _ (*non-T2Pnone0*) =>
+    (
+      auxt2p0(t2p1, flag)
+    ) where
+    {
+      val () = flag := flag + 1
+    }
+end
 //
 end // end of [auxxtv]
 
@@ -967,20 +968,21 @@ val fini = flag
 //
 val t2p1 = auxt2p0(t2p1, flag)
 val t2ps = auxt2ps(t2ps, flag)
+//
 in
 //
 case+
 t2p1.node() of
 | T2Plam
   (s2vs, t2p2) =>
-  let
+  (
+    auxt2p0(t2p0, flag)
+  ) where
+  {
     val () = flag := flag + 1
-  in
-    t2ype_hnfize
-    (
+    val t2p0 =
     t2ype_subst_svarlst(t2p2, s2vs, t2ps)
-    ) (* t2ype_hnfize *)
-  end
+  } (* auxt2p0 *)
 | _ (*non-T2Plam*) =>
   if
   fini=flag
@@ -1006,8 +1008,10 @@ t2p0.node() of
 //
 | T2Pcst _ =>
   auxcst(t2p0, flag)
+//
 | T2Pxtv _ =>
   auxxtv(t2p0, flag)
+//
 | T2Papp _ =>
   auxapp(t2p0, flag)
 //
@@ -1018,8 +1022,8 @@ t2p0.node() of
 //
 | _ (*rest-of-t2ype*) => t2p0
 //
-)
-
+) (* end of [auxt2p0] *)
+//
 and
 auxt2ps
 ( t2ps
@@ -1040,28 +1044,48 @@ case+ t2ps of
     fini = flag
     then t2ps else list_cons(t2p1, t2ps2)
   end
-)
-
-in (* in-of-local *)
-
-implement
-t2ype_hnfize
-  (t2p0) = let
+) (* end of [auxt2ps] *)
 //
-(*
-val () =
-println!
-("t2ype_hnfize: t2p0 = ", t2p0)
-*)
+} (* end of [t2ype_whnfz] *)
+
+(* ****** ****** *)
+//
+implement
+t2ype_whnfize(t2p0) =
+(
+  t2ype_whnfz<>(t2p0)
+) where
+{
+//
+implement
+t2ype_whnfz$cst<>
+  (t2p0, flag) =
+let
+//
+val-
+T2Pcst(s2c0) = t2p0.node()
+//
+val
+def0 = s2cst_get_type(s2c0)
 //
 in
 //
-  let
-    var flag: int = 0 in auxt2p0(t2p0, flag)
-  end
+case+
+def0.node() of
 //
-end (* end of [t2ype_hnfize] *) end // end of [local]
-
+|
+T2Pnone0() => t2p0
+//
+| _(* else *) => 
+let
+val () =
+flag := flag + 1 in t2ype_whnfize(def0)
+end
+//
+end // t2ype_whnfz$cst
+//
+} (* end of [t2ype_whnfize] *)
+//
 (* ****** ****** *)
 
 implement
@@ -1069,7 +1093,7 @@ t2ype_projize
 (t2p0, lab1) =
 let
 (*
-val t2p0 = hnfize(t2p0)
+val t2p0 = whnfize(t2p0)
 *)
 in
 //
@@ -1139,6 +1163,232 @@ list_map<labs2exp><labt2ype>(ls2es)
   val+SLABELED(l0, s2e) = ls2e in TLABELED(l0, s2exp_erase(s2e))
   end
 }
+
+(* ****** ****** *)
+
+local
+
+fun
+auxbas
+( t2p0: t2ype
+, flag
+: &int >> int): t2ype =
+let
+val
+t2p0 = t2bas_eval(t2p0)
+in
+//
+case+
+t2p0.node() of
+| T2Pbas _ => t2p0
+| _(*non-T2Pbas*) =>
+  (
+    auxt2p0(t2p0, flag)
+  ) where
+  {
+    val () = flag := flag + 1
+  }
+//
+end // end of [auxbas]
+
+and
+auxvar
+( t2p0: t2ype
+, flag
+: &int >> int): t2ype =
+let
+val-
+T2Pvar
+(s2v0) = t2p0.node() in t2p0
+end // end of [auxvar]
+
+and
+auxxtv
+( t2p0: t2ype
+, flag
+: &int >> int): t2ype =
+let
+val-
+T2Pxtv
+(xtv0) = t2p0.node()
+in
+//
+let
+  val
+  t2p1 = xtv0.type()
+in
+  case+
+  t2p1.node() of
+  | T2Pnone0() => t2p0
+  | _ (*non-T2Pnone0*) =>
+    let
+      val
+      t2p1 =
+      t2ype_normize(t2p1)
+    in
+      xtv0.type(t2p1); t2p1
+    end where
+    {
+      val () = flag := flag + 1
+    }
+end
+//
+end // end of [auxxtv]
+
+and
+auxapp
+( t2p0: t2ype
+, flag
+: &int >> int): t2ype =
+let
+//
+val-
+T2Papp
+(t2p1, t2ps) = t2p0.node()
+//
+val fini = flag
+//
+val t2p1 = auxt2p0(t2p1, flag)
+val t2ps = auxt2ps(t2ps, flag)
+//
+in
+//
+case+
+t2p1.node() of
+| T2Plam
+  (s2vs, t2p2) =>
+  let
+    val () = flag := flag + 1
+  in
+    t2ype_normize
+    (
+    t2ype_subst_svarlst(t2p2, s2vs, t2ps)
+    ) (* t2ype_whnfize *)
+  end
+| _ (*non-T2Plam*) =>
+  if
+  fini=flag
+  then t2p0
+  else
+  let
+    val s2t0 = t2p0.sort()
+  in
+    t2ype_make_node(s2t0, T2Papp(t2p1, t2ps))
+  end
+//
+end // end of [auxapp]
+
+and
+auxt2p0
+( t2p0: t2ype
+, flag
+: &int >> int): t2ype =
+(
+case+
+t2p0.node() of
+//
+| T2Pbas _ =>
+  auxbas(t2p0, flag)
+//
+| T2Pvar _ =>
+  auxvar(t2p0, flag)
+//
+(*
+| T2Pcst _ =>
+  auxcst(t2p0, flag)
+*)
+//
+| T2Pxtv _ =>
+  auxxtv(t2p0, flag)
+//
+| T2Papp _ =>
+  auxapp(t2p0, flag)
+//
+(*
+| T2Plft _ =>
+  auxlft(t2p0, flag)
+*)
+//
+| T2Pfun
+  (fc2, npf, t2ps, t2p1) =>
+  let
+  val
+  s2t0 = t2p0.sort()
+  val
+  fc2 = auxt2p0(fc2, flag)
+  val
+  t2ps = auxt2ps(t2ps, flag)
+  val
+  t2p1 = auxt2p0(t2p1, flag)
+  in
+    t2ype_make_node
+    (s2t0, T2Pfun(fc2, npf, t2ps, t2p1))
+  end
+//
+| T2Puni(s2vs, t2p1) =>
+  let
+  val
+  s2t0 = t2p0.sort()
+  val
+  t2p1 = auxt2p0(t2p1, flag)
+  in
+    t2ype_make_node(s2t0, T2Puni(s2vs, t2p1))
+  end
+| T2Pexi(s2vs, t2p1) =>
+  let
+  val
+  s2t0 = t2p0.sort()
+  val
+  t2p1 = auxt2p0(t2p1, flag)
+  in
+    t2ype_make_node(s2t0, T2Pexi(s2vs, t2p1))
+  end
+//
+| _ (*rest-of-t2ype*) => t2p0
+//
+)
+
+and
+auxt2ps
+( t2ps
+: t2ypelst
+, flag
+: &int >> int): t2ypelst =
+(
+case+ t2ps of
+| list_nil() =>
+  list_nil()
+| list_cons(t2p1, t2ps2) =>
+  let
+  val fini = flag
+  val t2p1 = auxt2p0(t2p1, flag)
+  val t2ps2 = auxt2ps(t2ps2, flag)
+  in
+    if
+    fini = flag
+    then t2ps else list_cons(t2p1, t2ps2)
+  end
+)
+
+in(*in-of-local*)
+
+implement
+t2ype_normize
+  (t2p0) = let
+//
+(*
+val () =
+println!
+("t2ype_normize: t2p0 = ", t2p0)
+*)
+//
+in
+//
+  let
+    var flag: int = 0 in auxt2p0(t2p0, flag)
+  end
+//
+end (* end of [t2ype_normize] *) end // end of [local]
 
 (* ****** ****** *)
 

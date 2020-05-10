@@ -377,10 +377,19 @@ t2ype_un_llazy
 //
 (* ****** ****** *)
 //
-fun
-t2ype_hnfize(t2p0: t2ype): t2ype
+fun{}
+t2ype_whnfz
+  (t2p0: t2ype): t2ype
+fun{}
+t2ype_whnfz$cst
+  (t2ype, flag: &int >> _): t2ype
 //
-overload hnfize with t2ype_hnfize
+(* ****** ****** *)
+//
+fun
+t2ype_whnfize(t2p0: t2ype): t2ype
+//
+overload whnfize with t2ype_whnfize
 //
 (* ****** ****** *)
 
@@ -441,6 +450,13 @@ s2explst_erase
 fun
 labs2explst_erase
   (ls2es: labs2explst): labt2ypelst
+//
+(* ****** ****** *)
+//
+fun
+t2ype_normize(t2p0: t2ype): t2ype
+//
+overload normize with t2ype_normize
 //
 (* ****** ****** *)
 

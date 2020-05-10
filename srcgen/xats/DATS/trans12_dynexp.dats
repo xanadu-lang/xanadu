@@ -3007,14 +3007,26 @@ T_ABSTYPE(knd) = knd.node()
 in
 //
 ifcase
+//
 | (knd=PROPSORT) => the_sort2_prop
 | (knd=VIEWSORT) => the_sort2_view
+//
+| (knd=TBOXSORT) => the_sort2_tbox
 | (knd=TFLTSORT) => the_sort2_tflt
+//
+| (knd=VTBOXSORT) => the_sort2_vtbox
 | (knd=VTFLTSORT) => the_sort2_vtflt
+//
 | _(* SEXPDEF *) =>
   let
+//
+(*
     val () =
-    assertloc(false) in the_sort2_tflt
+    println!("auxst: knd = ", knd)
+*)
+//
+    val () =
+    assertloc(false) in the_sort2_vtflt
   end
 //
 end // end-of-let
@@ -3159,6 +3171,25 @@ case+ svss of
 in (* in-of-local *)
 
 fun
+aux_absopen
+( d1cl
+: d1ecl): d2ecl = let
+//
+val
+loc0 = d1cl.loc()
+//
+val-
+D1Cabsopen
+( knd
+, sqid) = d1cl.node()
+//
+val sqid = auxsqid(sqid)
+//
+in
+  d2ecl_make_node(loc0, D2Cabsopen(knd, sqid))
+end // end of [aux_absopen]
+
+fun
 aux_absimpl
 ( d1cl
 : d1ecl): d2ecl = let
@@ -3170,7 +3201,8 @@ val-
 D1Cabsimpl
 ( knd
 , sqid
-, smas, res1, s1e2) = d1cl.node()
+, smas
+, res1, s1e2) = d1cl.node()
 //
 val sqid = auxsqid(sqid)
 val svss = auxsmas(sqid, smas)
@@ -3851,7 +3883,7 @@ fun
 auxdyn
 (s2e0: s2exp): s2exp =
 let
-  val s2e0 = hnfize(s2e0)
+  val s2e0 = whnfize(s2e0)
 in (* in-of-let *)
   case+
   s2e0.node() of
@@ -3868,7 +3900,7 @@ auxsta
 ( s2e0: s2exp
 , svs1: s2varlst): s2exp =
 let
-  val s2e0 = hnfize(s2e0)
+  val s2e0 = whnfize(s2e0)
 in
   case+
   s2e0.node() of
@@ -4943,7 +4975,7 @@ d1cl.node() of
 | D1Csexpdef _ => aux_sexpdef(d1cl)
 //
 | D1Cabstype _ => aux_abstype(d1cl)
-//
+| D1Cabsopen _ => aux_absopen(d1cl)
 | D1Cabsimpl _ => aux_absimpl(d1cl)
 //
 | D1Cvaldecl _ => aux_valdecl(d1cl)
