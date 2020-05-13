@@ -28,58 +28,77 @@
 (* ****** ****** *)
 //
 // Author: Hongwei Xi
-// Start Time: September, 2019
+// Start Time: October, 2018
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
-
-#staload "./staexp1.sats"
-#staload "./dynexp1.sats"
-
-(* ****** ****** *)
-
-#staload "./staexp2.sats"
-#staload "./statyp2.sats"
-#staload "./dynexp2.sats"
-#staload "./dynexp3.sats"
-
-(* ****** ****** *)
 //
-typedef
-treader23
-(a:t@ype) = (a) -> void
-//
-(* ****** ****** *)
-//
-datatype trerr23 =
-//
-| TRERR23d3pat of (d3pat)
-| TRERR23d3exp of (d3exp)
-//
-| TRERR23f3arg of (f3arg)
-| TRERR23d3ecl of (d3ecl)
-//
-typedef
-trerr23lst = List0(trerr23)
-//
-(* ****** ****** *)
-//
-fun//{}
-trerr23_add(trerr23): void
-//
-(* ****** ****** *)
-//
-fun
-tread23_program
-  (prog: d3eclist): void
-//
-(* ****** ****** *)
-//
-fun//{}
-tread23_d3ecl: treader23(d3ecl)
-fun//{}
-tread23_d3eclist: treader23(d3eclist)
+#include
+"share/atspre_staload.hats"
+#staload
+UN = "prelude/SATS/unsafe.sats"
 //
 (* ****** ****** *)
 
-(* end of [xats_tread23.sats] *)
+#staload "./../SATS/statyp2.sats"
+#staload "./../SATS/staexp2.sats"
+#staload "./../SATS/dynexp2.sats"
+#staload "./../SATS/dynexp3.sats"
+
+(* ****** ****** *)
+
+#staload "./../SATS/trans33.sats"
+
+(* ****** ****** *)
+//
+datavtype
+abstenv =
+ABSTENV of abstlst
+//
+and
+abstlst =
+//
+| abstlst_nil of ()
+//
+| abstlst_let1 of abstlst
+| abstlst_loc1 of abstlst
+| abstlst_loc2 of abstlst
+//
+| abstlst_open of (d3ecl, t2ype, abstlst)
+| abstlst_impl of (d3ecl, t2ype, abstlst)
+//
+(* ****** ****** *)
+
+local
+
+absimpl
+abstenv_vtype = abstenv
+
+in(*in-of-local*)
+
+(* ****** ****** *)
+//
+implement
+abstenv_make_nil
+  ((*void*)) =
+(
+ABSTENV(abstlst_nil())
+)
+//
+(* ****** ****** *)
+//
+implement
+abstenv_free_nil
+  (env0) =
+{
+val- ~ABSTENV(lst0) = env0
+val- ~abstlst_nil() = lst0
+}
+//
+(* ****** ****** *)
+
+end // end of [local]
+
+(* ****** ****** *)
+
+(* end of [trans33_envmap.dats] *)
