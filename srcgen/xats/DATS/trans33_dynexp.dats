@@ -92,7 +92,7 @@ val
 prog1 =
 trans33_declist(env0, prog0)
 //
-val () = abstenv_free_nil(env0)
+val () = abstenv_free_all(env0)
 //
 } (* end of [trans33_program] *)
 
@@ -1051,6 +1051,9 @@ D3Elet
 ( d3cs
 , d3e1) = d3e0.node()
 //
+val () =
+abstenv_add_let1(env0)
+//
 val
 d3cs =
 trans33_declist(env0, d3cs)
@@ -1062,6 +1065,9 @@ d3e1 =
 trans33_dexp(env0, d3e1)
 val
 t2p1 = d3e1.type((*void*))
+//
+val () = abstenv_pop_let1(env0)
+//
 in
 d33exp_make_node
   (loc0, t2p1, D3Elet(d3cs, d3e1))
@@ -2060,6 +2066,46 @@ end // end of [aux_staload]
 
 (* ****** ****** *)
 
+local
+
+in(*in-of-local*)
+
+(* ****** ****** *)
+
+fun
+aux_absopen
+( env0:
+! abstenv
+, d3cl: d3ecl): d3ecl =
+(
+  d3cl
+) where
+{
+val () =
+abstenv_push_open(env0, d3cl)
+} // end of [aux_absopen]
+
+(* ****** ****** *)
+
+fun
+aux_absimpl
+( env0:
+! abstenv
+, d3cl: d3ecl): d3ecl =
+(
+  d3cl
+) where
+{
+val () =
+abstenv_push_impl(env0, d3cl)
+} // end of [aux_absimpl]
+
+(* ****** ****** *)
+
+end // end of [local]
+
+(* ****** ****** *)
+
 fun
 aux_valdecl
 ( env0:
@@ -2644,17 +2690,29 @@ D3Cextern
 //
 | D3Clocal
   (head, body) => let
+    val () =
+    abstenv_add_loc1(env0)
     val
     head =
     trans33_declist(env0, head)
+//
+    val () =
+    abstenv_add_loc2(env0)
     val
     body =
     trans33_declist(env0, body)
+//
   in
-    d3ecl_make_node
-      (loc0, D3Clocal(head, body))
-    // d3ecl_make_node
+  let
+    val () = abstenv_pop_loc12(env0)
+  in
+    d3ecl_make_node(loc0, D3Clocal(head, body))
   end
+  end
+//
+| D3Cabstype _ => d3cl
+| D3Cabsopen _ => aux_absopen(env0, d3cl)
+| D3Cabsimpl _ => aux_absimpl(env0, d3cl)
 //
 | D3Cvaldecl _ => aux_valdecl(env0, d3cl)
 //
