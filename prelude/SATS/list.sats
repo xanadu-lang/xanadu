@@ -36,6 +36,11 @@
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
+
+#symload nil with list_nil
+#symload cons with list_cons
+
+(* ****** ****** *)
 //
 fun<>
 list_nilq
@@ -46,7 +51,9 @@ list_consq
 {a:type}{n:int}
 (xs: list(a, n)): bool(n > 0)
 //
+#symload nilq with list_nilq
 #symload eqzq with list_nilq
+#symload consq with list_consq
 #symload neqzq with list_consq
 //
 (* ****** ****** *)
@@ -103,12 +110,34 @@ list_append
 //
 fun
 <a:t0>
+list_concat
+(xss: list(list(a))): list(a)
+fun
+<a:t0>
+list_concat_vt
+(xss: list(list(a))): list_vt(a)
+//
+(* ****** ****** *)
+//
+fun
+<a:t0>
 list_rappend
 {m,n:int}
 ( xs: list(a, m)
 , ys: list(a, n)): list(a, m+n)
 //
 #symload rappend with list_rappend
+//
+(* ****** ****** *)
+//
+fun
+<a:t0>
+list_rappend_vt
+{m,n:int}
+( xs: list(a, m)
+, ys: list_vt(a, n)): list_vt(a, m+n)
+//
+#symload rappend with list_rappend_vt
 //
 (* ****** ****** *)
 //

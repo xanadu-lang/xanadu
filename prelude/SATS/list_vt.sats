@@ -37,11 +37,24 @@
 //
 (* ****** ****** *)
 
+#symload
+nil_vt with list_vt_nil
+#symload
+cons_vt with list_vt_cons
+
+(* ****** ****** *)
+
 fcast
 list_vt2t
 {a:t0}{n:i0}
 (xs: list_vt(a, n)): list(a, n)
 
+(* ****** ****** *)
+//
+fun
+<a:vt>
+list_vt_sing(x: a): list_vt(a, 1)
+//
 (* ****** ****** *)
 //
 fun<>
@@ -79,6 +92,27 @@ fun
 list_vt_length
 {n:int}
 (xs: !list_vt(a, n)): sint(n)
+//
+(* ****** ****** *)
+//
+fun
+<a:vt>
+list_vt_append
+{m,n:int}
+( list_vt(a, m)
+, list_vt(a, n)): list_vt(a, m+n)
+//
+#symload append with list_vt_append
+//
+(* ****** ****** *)
+//
+fun
+<a:vt>
+list_vt_concat
+( xss
+: list_vt(list_vt(a))): list_vt(a)
+//
+#symload concat with list_vt_concat
 //
 (* ****** ****** *)
 //

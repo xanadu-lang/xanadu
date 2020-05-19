@@ -87,10 +87,47 @@ case+ xs of
   end
 )
 in
-  let
-    var r0: list(a) in loop(xs, r0); r0
-  end
+let
+  var r0: list(a) in loop(xs, r0); r0
+end
 end (* end of [list_append] *)
+//
+(* ****** ****** *)
+//
+impltmp
+<a>(*tmp*)
+list_concat
+  (xss) =
+(
+list_vt2t
+(list_concat_vt<a>(xss))
+)
+//
+impltmp
+<a>(*tmp*)
+list_concat_vt
+  (xss) =
+(
+let
+val
+res = list_vt_nil()
+in
+list_vt_reverse<a>(auxmain(xss, res))
+end
+) where
+{
+fun
+auxmain
+( xss
+: list(list(a))
+, res: list_vt(a)): list_vt(a) =
+(
+case+ xss of
+| list_nil() => res
+| list_cons(xs, xss) =>
+  auxmain(xss, list_rappend_vt(xs, res))
+)
+} (* end of [list_concat_vt] *)
 //
 (* ****** ****** *)
 //
@@ -117,14 +154,65 @@ case+ xs of
 )
 } (* list_rappend *)
 //
+(* ****** ****** *)
+
+//
+impltmp
+<a>(*tmp*)
+list_rappend_vt
+  (xs, ys) =
+(
+  loop(xs, ys)
+) where
+{
+fun
+loop
+{m,n:nat}.<m>.
+( xs
+: list(a, m)
+, ys
+: list_vt(a, n)): list_vt(a, m+n) =
+(
+case+ xs of
+| list_nil() => ys
+| list_cons(x0, xs) =>
+  loop(xs, list_vt_cons(x0, ys))
+)
+} (* list_rappend_vt *)
+
+(* ****** ****** *)
+//
 impltmp
 <a>(*tmp*)
 list_reverse
   (xs) =
 (
-list_rappend<a>(xs, list_nil())
+  list_rappend<a>(xs, list_nil())
 ) (* list_reverse *)
 //
+(* ****** ****** *)
+
+impltmp
+<a>(*tmp*)
+list_copy_vt
+  (xs) =
+(
+list_map_vt<a><a>(xs)
+) where
+{
+impltmp map$fopr<a><a>(x0) = x0
+}
+impltmp
+<a>(*tmp*)
+list_rcopy_vt
+  (xs) =
+(
+list_maprev_vt<a><a>(xs)
+) where
+{
+impltmp map$fopr<a><a>(x0) = x0
+}
+
 (* ****** ****** *)
 //
 impltmp
