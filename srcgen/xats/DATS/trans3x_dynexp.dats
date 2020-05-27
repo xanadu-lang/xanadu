@@ -68,19 +68,39 @@ fprint_val<t2ype> = fprint_t2ype
 //
 implement
 trans3x_program
-  (prog) =
-(
-  trans3x_declist(prog)
-)
+  (prog0) =
+  (prog1) where
+{
+//
+val
+env0 = tr3xenv_make_nil()
+//
+val
+prog1 =
+trans3x_declist(env0, prog0)
+//
+val () = tr3xenv_free_top(env0)
+//
+} (* end of [trans3x_program] *)
 //
 (* ****** ****** *)
-//
+
+local
+
+in(*in-of-local*)
+
 implement
 trans3x_dexp
-  (d3e0) = let
+(env0, d3e0) = let
 //
 val
 loc0 = d3e0.loc()
+//
+val
+t2p0 = d3e0.type()
+val
+t2p0 = t2ype_normize(t2p0)
+//
 val () =
 println!
 ("trans3x_dexp: d3e0 = ", d3e0)
@@ -89,42 +109,171 @@ in(*in-of-let*)
 //
 case+
 d3e0.node() of
+//
+| D3Elet(d3cs, d3e1) =>
+  let
+//
+    val () =
+    tr3xenv_add_let1(env0)
+//
+    val
+    d3cs =
+    trans3x_declist(env0, d3cs)
+    val
+    d3e1 = trans3x_dexp(env0, d3e1)
+//
+    val () =
+    tr3xenv_pop_let1(env0)
+//
+  in
+    d3exp_make_node
+    (loc0, t2p0, D3Elet(d3cs, d3e1))
+  end
+//
 | _ (* rest-of-d3exp *) => d3e0 // yet-to-be-handled
 //
 end // end of [trans3x_dexp]
-//
+
+end // end of [local]
+
 (* ****** ****** *)
 
 implement
 trans3x_dexpopt
-  (opt) =
+(env0, opt) =
 (
 case+ opt of
 | None() => None()
-| Some(d3e) => Some(trans3x_dexp(d3e))
+| Some(d3e) =>
+  Some(trans3x_dexp(env0, d3e))
 ) (* end of [trans3x_dexpopt] *)
+
+(* ****** ****** *)
 
 implement
 trans3x_dexplst
-  (d3es) =
-list_vt2t(d3es) where
-{
+  (env0, d3es) = let
+//
 val
-d3es =
-list_map<d3exp><d3exp>
-  (d3es) where
+env0 =
+$UN.castvwtp1{ptr}(env0)
+//
+in
+list_vt2t
+(
+list_map<d3exp><d3exp>(d3es)
+) where
 {
 implement
-list_map$fopr<d3exp><d3exp>(d3e) = trans3x_dexp(d3e)
+list_map$fopr<d3exp><d3exp>(d3e0) =
+let
+val env0 =
+$UN.castvwtp0{tr3xenv}(env0)
+val d3e0 = trans3x_dexp(env0, d3e0)
+in
+let prval () = $UN.cast2void(env0) in d3e0 end
+end
 }
-} (* end of [trans3x_dexplst] *)
+end // end of [trans3x_dexplst]
 
 (* ****** ****** *)
 //
+local
+
+fun
+aux_valdecl
+( env0:
+! tr3xenv
+, d3cl: d3ecl): d3ecl =
+let
 //
+val-
+D3Cvaldecl
+( knd
+, mopt
+, v3ds) = d3cl.node()
+//
+fun
+auxv3d0
+( env0:
+! tr3xenv
+, v3d0
+: v3aldecl
+)
+: v3aldecl =
+let
+val+
+V3ALDECL(rcd) = v3d0
+//
+val loc = rcd.loc
+val pat = rcd.pat
+val def = rcd.def
+val wtp = rcd.wtp
+//
+val () =
+tr3xenv_add_dpat(env0, pat)
+//
+val def =
+(
+case+ def of
+|
+None() => None()
+|
+Some(d3e0) =>
+Some(trans3x_dexp(env0, d3e0))
+) : d3expopt // end-of-val
+//
+in
+V3ALDECL
+(@{loc=loc,pat=pat,def=def,wtp=wtp})
+end // end of [auxv3d0]
+and
+auxv3ds
+( env0:
+! tr3xenv
+, v3ds
+: v3aldeclist
+)
+: v3aldeclist =
+list_vt2t
+(
+list_map<v3aldecl><v3aldecl>(v3ds)
+) where
+{
+val
+env0 =
+$UN.castvwtp1{ptr}(env0)
+implement
+list_map$fopr<v3aldecl><v3aldecl>
+  (v3d0) =
+let
+val env0 =
+$UN.castvwtp0{tr3xenv}(env0)
+val v3d0 = auxv3d0(env0, v3d0)
+in
+let prval () = $UN.cast2void(env0) in v3d0
+end
+end
+} (* end of [auxv3ds] *)
+//
+val v3ds = auxv3ds(env0, v3ds)
+//
+in
+  d3ecl_make_node
+  (d3cl.loc(), D3Cvaldecl(knd, mopt, v3ds))
+end // end of [aux_valdecl]
+
+fun
+aux_vardecl
+( env0:
+! tr3xenv
+, d3cl: d3ecl): d3ecl = d3cl
+
+in(*in-of-local*)
+
 implement
 trans3x_decl
-  (d3cl) = let
+(env0, d3cl) = let
 //
 val loc0 = d3cl.loc()
 //
@@ -132,26 +281,75 @@ in(* in-of-let *)
 //
 case+
 d3cl.node() of
+//
+|
+D3Cinclude _ => d3cl
+|
+D3Cstaload _ => d3cl
+//
+|
+D3Clocal
+(head, body) => let
+  val () =
+  tr3xenv_add_loc1(env0)
+  val
+  head =
+  trans3x_declist(env0, head)
+//
+  val () =
+  tr3xenv_add_loc2(env0)
+  val
+  body =
+  trans3x_declist(env0, body)
+//
+in
+let
+  val () = tr3xenv_pop_loc12(env0)
+in
+  d3ecl_make_node(loc0, D3Clocal(head, body))
+end
+end
+//
+|
+D3Cvaldecl _ =>
+aux_valdecl(env0, d3cl)
+|
+D3Cvardecl _ =>
+aux_vardecl(env0, d3cl)
+//
 | _(*rest-of-d3ecl*) => d3cl // yet-to-be-handled
 //
 end // end of [trans3x_decl]
+
+end // end of [local]
 //
 (* ****** ****** *)
 //
 implement
 trans3x_declist
-  (dcls) =
-list_vt2t(dcls) where
-{
+  (env0, dcls) = let
+//
 val
-dcls =
-list_map<d3ecl><d3ecl>
-  (dcls) where
+env0 =
+$UN.castvwtp1{ptr}(env0)
+//
+in
+list_vt2t
+(
+list_map<d3ecl><d3ecl>(dcls)
+) where
 {
 implement
-list_map$fopr<d3ecl><d3ecl>(dcl) = trans3x_decl(dcl)
+list_map$fopr<d3ecl><d3ecl>(d3cl) =
+let
+val env0 =
+$UN.castvwtp0{tr3xenv}(env0)
+val d3cl = trans3x_decl(env0, d3cl)
+in
+let prval () = $UN.cast2void(env0) in d3cl end
+end
 }
-} (* end of [trans3x_declist] *)
+end // end of [trans3x_declist]
 //
 (* ****** ****** *)
 

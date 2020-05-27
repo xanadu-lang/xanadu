@@ -6,7 +6,7 @@
 
 (*
 ** ATS/Xanadu - Unleashing the Potential of Types!
-** Copyright (C) 2019 Hongwei Xi, ATS Trustful Software, Inc.
+** Copyright (C) 2020 Hongwei Xi, ATS Trustful Software, Inc.
 ** All rights reserved
 **
 ** ATS is free software;  you can  redistribute it and/or modify it under
@@ -27,88 +27,47 @@
 
 (* ****** ****** *)
 //
-// For generic ordering
-//
-(* ****** ****** *)
-//
 // Author: Hongwei Xi
-// Start Time: June, 2019
+// Start Time: May 24, 2020
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
 
-fun
-<a:vtype>
-gl_eq00(~a, ~a): bool
-fun
-<a:vtype>
-gl_eq11(!a, !a): bool
-
-fun
-<a:vtype>
-gl_neq00(~a, ~a): bool
-fun
-<a:vtype>
-gl_neq11(!a, !a): bool
+#staload "./basics.sats"
 
 (* ****** ****** *)
 
-fun
-<a:vtype>
-gl_lt00(~a, ~a): bool
-fun
-<a:vtype>
-gl_lt11(!a, !a): bool
-
-fun
-<a:vtype>
-gl_gt00(~a, ~a): bool
-fun
-<a:vtype>
-gl_gt11(!a, !a): bool
-
-fun
-<a:vtype>
-gl_lte00(~a, ~a): bool
-fun
-<a:vtype>
-gl_lte11(!a, !a): bool
-
-fun
-<a:vtype>
-gl_gte00(~a, ~a): bool
-fun
-<a:vtype>
-gl_gte11(!a, !a): bool
+#staload "./staexp2.sats"
+#staload "./statyp2.sats"
 
 (* ****** ****** *)
 
-fun
-<a:vtype>
-gl_cmp00(~a, ~a): sint
-fun
-<a:vtype>
-gl_cmp11(!a, !a): sint
+#staload "./dynexp3.sats"
 
 (* ****** ****** *)
 
-fun
-<a:vtype>
-gl_max00(x: ~a, y: ~a): (a)
-fun
-<a:vtype>
-gl_max11(x: !a, y: !a): (a)
-
+#staload "./intrep0.sats"
 
 (* ****** ****** *)
 
-fun
-<a:vtype>
-gl_min00(x: ~a, y: ~a): (a)
-fun
-<a:vtype>
-gl_min11(x: !a, y: !a): (a)
+absvtype compenv_vtype
+vtypedef compenv = compenv_vtype
 
 (* ****** ****** *)
+//
+fun
+xcomp3i_dexp
+( env0
+: !compenv, d3e0: d3exp): i0val
+fun
+xcomp3i_dexpopt
+( env0
+: !compenv, opt0: d3expopt): i0valopt
+fun
+xcomp3i_dexplst
+( env0
+: !compenv, d3es: d3explst): i0valist
+//
+(* ****** ****** *)
 
-(* end of [gord_vt.sats] *)
+(* end of [xats_xcomp3i.sats] *)

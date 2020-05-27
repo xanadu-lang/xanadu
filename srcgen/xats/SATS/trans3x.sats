@@ -61,8 +61,12 @@ typedef t2ypelst = $S2T.t2ypelst
 
 (* ****** ****** *)
 //
+typedef d2con = $D2E.d2con
+typedef d2var = $D2E.d2var
+//
 typedef d2cst = $D2E.d2cst
 //
+typedef d3pat = $D3E.d3pat
 typedef d3exp = $D3E.d3exp
 typedef d3ecl = $D3E.d3ecl
 //
@@ -85,19 +89,68 @@ trans3x_program
 //
 (* ****** ****** *)
 //
-fun
-trans3x_dexp: d3exp -> d3exp 
-fun
-trans3x_dexplst: d3explst -> d3explst
-fun
-trans3x_dexpopt: d3expopt -> d3expopt
+absvtype tr3xenv_vtype = ptr
+vtypedef tr3xenv = tr3xenv_vtype
 //
 (* ****** ****** *)
 //
 fun
-trans3x_decl: d3ecl -> d3ecl 
+tr3xenv_add_let1
+  (env0: !tr3xenv): void
+//
 fun
-trans3x_declist: d3eclist -> d3eclist
+tr3xenv_add_loc1
+  (env0: !tr3xenv): void
+fun
+tr3xenv_add_loc2
+  (env0: !tr3xenv): void
+//
+fun
+tr3xenv_pop_let1
+  (env0: !tr3xenv): void
+fun
+tr3xenv_pop_loc12
+  (env0: !tr3xenv): void
+//
+(* ****** ****** *)
+//
+fun
+tr3xenv_add_dpat
+( env0
+: !tr3xenv, d3p1: d3pat): void
+//
+(* ****** ****** *)
+//
+fun
+tr3xenv_make_nil(): tr3xenv
+fun
+tr3xenv_free_top(tr3xenv): void
+//
+(* ****** ****** *)
+//
+fun
+trans3x_dexp
+( env0
+: !tr3xenv, d3e0: d3exp): d3exp 
+fun
+trans3x_dexplst
+( env0
+: !tr3xenv, d3es: d3explst): d3explst
+fun
+trans3x_dexpopt
+( env0
+: !tr3xenv, d3es: d3expopt): d3expopt 
+//
+(* ****** ****** *)
+//
+fun
+trans3x_decl
+( env0
+: !tr3xenv, d3c0: d3ecl): d3ecl
+fun
+trans3x_declist
+( env0
+: !tr3xenv, d3cs: d3eclist): d3eclist
 //
 (* ****** ****** *)
 
