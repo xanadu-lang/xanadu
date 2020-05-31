@@ -108,6 +108,73 @@ ifcase
 | _(* else *) => D3Evtop(d2v0)
 end
 
+fun
+aux_lam
+( env0:
+! tr3xenv
+, d3en: d3end): d3end =
+let
+val-
+D3Elam
+( knd
+, f3as
+, res1, arrw, body) = d3en
+//
+val body =
+aux_f3as_body(env0, f3as, body)
+//
+in
+  D3Elam
+  (knd, f3as, res1, arrw, body)
+end // end of [aux_lam]
+and
+aux_fix
+( env0:
+! tr3xenv
+, d3en: d3end): d3end =
+let
+val-
+D3Efix
+( knd
+, d2v0
+, f3as
+, res1, arrw, body) = d3en
+//
+val () =
+tr3xenv_add_fix1(env0, d2v0)
+val body =
+aux_f3as_body(env0, f3as, body)
+//
+in
+let
+val () =
+tr3xenv_pop_fix1(env0)
+in
+D3Efix
+(knd, d2v0, f3as, res1, arrw, body)
+end
+end // end of [aux_fix]
+and
+aux_f3as_body
+( env0
+: !tr3xenv
+, f3as
+: f3arglst, body: d3exp): d3exp =
+(
+let
+val () =
+tr3xenv_add_lams(env0, f3as)
+//
+val
+body = trans3x_dexp(env0, body)
+//
+in
+let
+val () = tr3xenv_pop_lams(env0) in body
+end
+end // end of [aux_f3as_body]
+)
+
 in(*in-of-local*)
 
 implement
@@ -164,32 +231,94 @@ d3exp_make_node(loc0, t2p0, dend)
 end
 //
 |
+D3Esap0
+(d3f1, s2es) =>
+let
+val
+d3f1 = trans3x_dexp(env0, d3f1)
+in
+d3exp_make_node
+(loc0, t2p0, D3Esap0(d3f1, s2es))
+end
+|
+D3Esap1
+(d3f1, s2es) =>
+let
+val
+d3f1 = trans3x_dexp(env0, d3f1)
+in
+d3exp_make_node
+(loc0, t2p0, D3Esap1(d3f1, s2es))
+end
+//
+|
+D3Etapp
+(d2f1, s2es) =>
+(
+d3exp_make_node
+(loc0, t2p0, D3Etapp(d2f1, s2es))
+)
+|
+D3Edapp
+(d3f1, npf2, d3es) =>
+let
+val
+d3f1 = trans3x_dexp(env0, d3f1)
+val
+d3es = trans3x_dexplst(env0, d3es)
+in
+d3exp_make_node
+( loc0
+, t2p0, D3Edapp(d3f1, npf2, d3es))
+end
+|
 D3Elet(d3cs, d3e1) =>
 let
 //
-  val () =
-  tr3xenv_add_let1(env0)
+val () =
+tr3xenv_add_let1(env0)
 //
-  val
-  d3cs =
-  trans3x_declist(env0, d3cs)
-  val
-  d3e1 = trans3x_dexp(env0, d3e1)
+val
+d3cs =
+trans3x_declist(env0, d3cs)
+val
+d3e1 = trans3x_dexp(env0, d3e1)
 //
-  val () =
-  tr3xenv_pop_let1(env0)
+val () = tr3xenv_pop_let1(env0)
 //
 in
   d3exp_make_node
-    (loc0, t2p0, D3Elet(d3cs, d3e1))
-  // d3exp_make_node
+  (loc0, t2p0, D3Elet(d3cs, d3e1))
 end
 //
-| d3en(*else*) =>
-  let
-  val d3e0 =
-  d3exp_make_node(loc0, t2p0, d3en) in d3e0
-  end
+|
+D3Eif0
+(d3e1, d3e2, opt3) =>
+let
+val d3e1 =
+trans3x_dexp(env0, d3e1)
+val d3e2 =
+trans3x_dexp(env0, d3e2)
+val opt3 =
+trans3x_dexpopt(env0, opt3)
+in
+d3exp_make_node
+(loc0, t2p0, D3Eif0(d3e1, d3e2, opt3))
+end
+|
+D3Elam _ =>
+let
+val dend = aux_lam(env0, dend)
+val d3e0 =
+d3exp_make_node(loc0, t2p0, dend) in d3e0
+end
+//
+|
+d3en(*else*) =>
+let
+val d3e0 =
+d3exp_make_node(loc0, t2p0, d3en) in d3e0
+end
 //
 end // end of [trans3x_dexp]
 
@@ -246,6 +375,8 @@ aux_valdecl
 , d3cl: d3ecl): d3ecl =
 let
 //
+val
+loc0 = d3cl.loc()
 val-
 D3Cvaldecl
 ( knd
@@ -310,7 +441,8 @@ val env0 =
 $UN.castvwtp0{tr3xenv}(env0)
 val v3d0 = auxv3d0(env0, v3d0)
 in
-let prval () = $UN.cast2void(env0) in v3d0
+let
+prval () = $UN.cast2void(env0) in v3d0
 end
 end
 } (* end of [auxv3ds] *)
@@ -319,7 +451,7 @@ val v3ds = auxv3ds(env0, v3ds)
 //
 in
   d3ecl_make_node
-  (d3cl.loc(), D3Cvaldecl(knd, mopt, v3ds))
+  (loc0, D3Cvaldecl(knd, mopt, v3ds))
 end // end of [aux_valdecl]
 
 fun
@@ -327,6 +459,126 @@ aux_vardecl
 ( env0:
 ! tr3xenv
 , d3cl: d3ecl): d3ecl = d3cl
+
+fun
+aux_fundecl
+( env0:
+! tr3xenv
+, d3cl: d3ecl): d3ecl =
+let
+//
+val
+loc0 = d3cl.loc()
+val-
+D3Cfundecl
+( knd
+, mopt
+, tqas, f3ds) = d3cl.node()
+//
+fun
+auxf3d0
+( env0:
+! tr3xenv
+, f3d0
+: f3undecl
+)
+: f3undecl =
+let
+val+
+F3UNDECL(rcd) = f3d0
+//
+val loc = rcd.loc
+val nam = rcd.nam
+val a2g = rcd.a2g
+val a3g = rcd.a3g
+val res = rcd.res
+val d2c = rcd.d2c
+val def = rcd.def
+val wtp = rcd.wtp
+val ctp = rcd.ctp
+//
+val def =
+(
+case+ a3g of
+|
+None() => def
+|
+Some(f3as) =>
+(
+case+ def of
+|
+None() => None()
+|
+Some(body) =>
+Some
+(aux_f3as_body(env0, f3as, body))
+)
+) : d3expopt // val
+//
+in
+F3UNDECL
+@{
+ loc=loc
+,nam=nam,d2c=d2c
+,a2g=a2g,a3g=a3g
+,res=res,def=def,wtp=wtp,ctp=ctp}
+end // end of [auxf3d0]
+//
+and
+auxf3ds
+( env0:
+! tr3xenv
+, f3ds
+: f3undeclist
+)
+: f3undeclist =
+list_vt2t
+(
+list_map<f3undecl><f3undecl>(f3ds)
+) where
+{
+val
+env0 =
+$UN.castvwtp1{ptr}(env0)
+implement
+list_map$fopr<f3undecl><f3undecl>
+  (f3d0) =
+let
+val env0 =
+$UN.castvwtp0{tr3xenv}(env0)
+val f3d0 = auxf3d0(env0, f3d0)
+in
+let
+prval () = $UN.cast2void(env0) in f3d0
+end
+end
+} (* end of [auxf3ds] *)
+//
+and
+aux_f3as_body
+( env0
+: !tr3xenv
+, f3as
+: f3arglst, body: d3exp): d3exp =
+let
+val () =
+tr3xenv_add_lams(env0, f3as)
+//
+val
+body = trans3x_dexp(env0, body)
+//
+in
+let
+val () = tr3xenv_pop_lams(env0) in body
+end
+end // end of [aux_f3as_body]
+//
+val f3ds = auxf3ds(env0, f3ds)
+//
+in
+d3ecl_make_node
+(loc0, D3Cfundecl(knd, mopt, tqas, f3ds))
+end // end of [aux_fundecl]
 
 in(*in-of-local*)
 
@@ -375,6 +627,10 @@ aux_valdecl(env0, d3cl)
 |
 D3Cvardecl _ =>
 aux_vardecl(env0, d3cl)
+//
+|
+D3Cfundecl _ =>
+aux_fundecl(env0, d3cl)
 //
 | _(*rest-of-d3ecl*) => d3cl // yet-to-be-handled
 //
