@@ -37,6 +37,20 @@
 //
 (* ****** ****** *)
 //
+fun
+<a:t0>
+list_sing(x: a): list(a, 1)
+//
+(* ****** ****** *)
+
+fun
+<a:t0>
+list_make_nval
+{n:nat}
+(n: int(n), x: a): list(a, n)
+
+(* ****** ****** *)
+//
 fun<>
 list_nilq
 {a:type}{n:int}
@@ -85,6 +99,11 @@ list_length
 //
 (* ****** ****** *)
 //
+fun
+<a:t0>
+list_extend
+{n:int}
+(list(a, m), a): list(a, m+1)
 fun
 <a:t0>
 list_append

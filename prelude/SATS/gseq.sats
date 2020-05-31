@@ -448,39 +448,44 @@ gseq_z2map_rlist
 (* ****** ****** *)
 
 #symload
-nilq with gseq_nilq of 100
+nilq with gseq_nilq of 0100
 #symload
-consq with gseq_consq of 100
+consq with gseq_consq of 0100
 
 (* ****** ****** *)
 
 #symload
-head with gseq_head_exn of 100
+head with gseq_head_exn of 0100
 #symload
-head_exn with gseq_head_exn of 100
+head_exn with gseq_head_exn of 0100
+#symload
+head_opt with gseq_head_opt of 0100
 
 (* ****** ****** *)
 
 #symload
-tail with gseq_tail_exn of 100
+tail with gseq_tail_exn of 0100
 #symload
-tail_exn with gseq_tail_exn of 100
+tail_exn with gseq_tail_exn of 0100
+#symload
+tail_opt with gseq_tail_opt of 0100
 
 (* ****** ****** *)
 
-#symload length with gseq_length of 100
+#symload
+length with gseq_length of 0100
 
 (* ****** ****** *)
-
-#symload foldl with gseq_foldl of 100
-#symload forall with gseq_forall of 100
-#symload foreach with gseq_foreach of 100
-
-(* ****** ****** *)
-
-#symload rforall with gseq_rforall of 100
-#symload rforeach with gseq_rforeach of 100
-
+//
+#symload foldl with gseq_foldl of 0100
+#symload foldr with gseq_foldr of 0100
+//
+#symload forall with gseq_forall of 0100
+#symload foreach with gseq_foreach of 0100
+//
+#symload rforall with gseq_rforall of 0100
+#symload rforeach with gseq_rforeach of 0100
+//
 (* ****** ****** *)
 
 (* end of [gseq.sats] *)
