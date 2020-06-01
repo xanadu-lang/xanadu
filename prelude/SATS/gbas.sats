@@ -68,17 +68,25 @@ g_input_opt
 
 fun
 <a:vt>
-g_print(x: !(a)): void
-
-(* ****** ****** *)
-
-fun
-<a:vt>
 g_equal(!a, !a): bool
 fun
-<a:vt>
+<x0:vt>
 g_noteq(!a, !a): bool
 
+(* ****** ****** *)
+//
+fun
+<a:vt>
+g_print(x: !a): void
+fun
+<a:vt>
+g_print0(x: ~a): void
+(*
+fun
+<a:vt>
+g_print1(x: !a): void
+*)
+//
 (* ****** ****** *)
 
 fun
@@ -88,13 +96,16 @@ dropif$test(x0): bool
 (* ****** ****** *)
 
 fun
-<x0:t0><y0:vt>
+<x0:t0>
+<y0:vt>
 map$fopr(x0: x0): (y0)
 fun
-<x0:vt><y0:vt>
+<x0:vt>
+<y0:vt>
 map0$fopr(x0: x0): (y0)
 fun
-<x0:vt><y0:vt>
+<x0:vt>
+<y0:vt>
 map1$fopr(x0: !x0): (y0)
 
 (* ****** ****** *)
@@ -115,13 +126,16 @@ filter1$test(x0: !x0): bool
 // Using filter + map together
 //
 fun
-<x0:t0><y0:vt>
+<x0:t0>
+<y0:vt>
 mapopt$fopr(x0): optn_vt(y0)
 fun
-<x0:vt><y0:vt>
+<x0:vt>
+<y0:vt>
 mapopt0$fopr(x0): optn_vt(y0)
 fun
-<x0:vt><y0:vt>
+<x0:vt>
+<y0:vt>
 mapopt1$fopr(x0: !x0): optn_vt(y0)
 //
 (* ****** ****** *)
