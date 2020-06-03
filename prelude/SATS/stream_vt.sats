@@ -126,6 +126,10 @@ fun
 <a:vt>
 stream_vt_rlistize
 (xs: stream_vt(a)): list_vt(a)
+fun
+<a:vt>
+stream_vt_streamize
+(xs: stream_vt(a)): stream_vt(a)
 //
 (* ****** ****** *)
 //
@@ -137,6 +141,14 @@ fun
 <a:vt>
 stream_vt_append
 (stream_vt(a), stream_vt(a)): stream_vt(a)
+fun
+<a:vt>
+stream_vt_concat
+(xss: stream_vt(stream_vt(a))): stream_vt(a)
+fun
+<x0:vt
+,xs:vt>
+stream_vt_gconcat(stream_vt(xs)): stream_vt(x0)
 //
 (* ****** ****** *)
 //
@@ -215,15 +227,35 @@ cons_vt with strmcon_vt_cons
 (* ****** ****** *)
 //
 #symload print with stream_vt_print of 1000
+#symload print0 with stream_vt_print of 1000
 
 (* ****** ****** *)
 //
 #symload length with stream_vt_length of 1000
+#symload length0 with stream_vt_length of 1000
 //
 (* ****** ****** *)
 //
+#symload extend with stream_vt_extend of 1000
+(*
+#symload extend00 with stream_vt_extend of 1000
+*)
+#symload append with stream_vt_append of 1000
+(*
+#symload append00 with stream_vt_append of 1000
+*)
+//
+(* ****** ****** *)
+
+#symload concat with stream_vt_concat of 1000
+#symload gconcat with stream_vt_gconcat of 1000
+
+(* ****** ****** *)
+//
 #symload listize with stream_vt_listize of 1000
+#symload listize0 with stream_vt_listize of 1000
 #symload rlistize with stream_vt_rlistize of 1000
+#symload rlistize0 with stream_vt_rlistize of 1000
 //
 (* ****** ****** *)
 

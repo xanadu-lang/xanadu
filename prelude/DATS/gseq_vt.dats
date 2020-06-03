@@ -22,7 +22,7 @@ impltmp
 glseq_uncons_exn
   (xs) =
 if
-glseq_nilq1<x0,xs>(xs)
+glseq_nilq<x0,xs>(xs)
 then let
 val
 () = g_free<xs>(xs)
@@ -37,7 +37,7 @@ impltmp
 glseq_uncons_opt
   (xs) =
 if
-glseq_nilq1<x0,xs>(xs)
+glseq_nilq<x0,xs>(xs)
 then
 optn_vt_nil((*void*))
 else
@@ -90,12 +90,12 @@ impltmp
 <x0,xs>
 glseq_listize0(xs) =
 stream_vt_listize<x0>
-(glseq_streamize0<x0,xs>(xs))
+(glseq_streamize<x0,xs>(xs))
 impltmp
 <x0,xs>
 glseq_rlistize0(xs) =
 stream_vt_rlistize<x0>
-(glseq_streamize0<x0,xs>(xs))
+(glseq_streamize<x0,xs>(xs))
 //
 (* ****** ****** *)
 
@@ -135,7 +135,7 @@ impltmp
 glseq_forall0
   (xs) =
 stream_vt_forall0<x0>
-(glseq_streamize0<x0,xs>(xs))
+(glseq_streamize<x0,xs>(xs))
 //
 (* ****** ****** *)
 //

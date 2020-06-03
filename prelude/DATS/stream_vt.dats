@@ -333,6 +333,12 @@ end
 } (* end of [stream_vt_rlistize] *)
 
 (* ****** ****** *)
+
+impltmp
+<a>(*tmp*)
+stream_vt_streamize(xs) = xs
+
+(* ****** ****** *)
 //
 impltmp
 <a>(*tmp*)
@@ -358,12 +364,63 @@ $llazy
 g_free(xs);
 g_free(ys);
 case+ !xs of
-| strmcon_vt_nil() => !ys
-| strmcon_vt_cons(x0, xs) =>
-  strmcon_vt_cons(x0, append(xs, ys))
+| ~
+strmcon_vt_nil() => !ys
+| ~
+strmcon_vt_cons(x0, xs) =>
+strmcon_vt_cons(x0, append(xs, ys))
 )
 } (* end of [stream_vt_append] *)
 
+(* ****** ****** *)
+//
+impltmp
+<a>(*tmp*)
+stream_vt_concat
+  (xss) =
+(
+  concat(xss)
+) where
+{
+fun
+concat(xss) =
+$llazy
+(
+g_free(xss);
+case+ !xss of
+| ~
+strmcon_vt_nil() =>
+strmcon_vt_nil()
+| ~
+strmcon_vt_cons(xs0, xss) => !
+(stream_vt_append<a>(xs0, concat(xss)))
+)
+} (* end of [stream_vt_concat] *)
+impltmp
+<x0,xs>
+stream_vt_gconcat
+  (xss) =
+(
+  concat(xss)
+) where
+{
+fun
+concat(xss) =
+$llazy
+(
+g_free(xss);
+case+ !xss of
+| ~
+strmcon_vt_nil() =>
+strmcon_vt_nil()
+| ~
+strmcon_vt_cons(xs0, xss) => !
+(
+stream_vt_append<x0>
+(glseq_streamize0<x0,xs>(xs0), concat(xss)))
+)
+} (* end of [stream_vt_gconcat] *)
+//
 (* ****** ****** *)
 
 impltmp
@@ -409,9 +466,9 @@ loop
 : stream_vt(a)): bool =
 (
 case+ !xs of
-|
+| ~
 strmcon_vt_nil() => true
-|
+| ~
 strmcon_vt_cons(x0, xs) =>
 let
   val
@@ -468,10 +525,10 @@ $llazy
 g_free(xs);
 //
 case+ !xs of
-|
+| ~
 strmcon_vt_nil() =>
 strmcon_vt_nil((*void*))
-|
+| ~
 strmcon_vt_cons(x0, xs) =>
 let
   val y0 =
@@ -510,11 +567,11 @@ auxloop
 : strmcon_vt(x0) =
 (
 case+ xs of
-|
+| ~
 strmcon_vt_nil
   () =>
 strmcon_vt_nil()
-|
+| ~
 strmcon_vt_cons
   (x0, xs) =>
 ( if
@@ -554,10 +611,10 @@ auxloop
 : strmcon_vt(y0) =
 (
 case+ xs of
-|
+| ~
 strmcon_vt_nil() =>
 strmcon_vt_nil()
-|
+| ~
 strmcon_vt_cons(x0, xs) =>
 let
   val
@@ -575,7 +632,7 @@ end // end of [strmcon_vt_cons]
 
 (* ****** ****** *)
 //
-// For z2-gseq-operations
+// For z2-glseq-operations
 //
 (* ****** ****** *)
 
@@ -595,27 +652,27 @@ loop
 : stream_vt(y0)): bool =
 (
 case+ !xs of
-|
+| ~
 strmcon_vt_nil() =>
 (g_free(ys); true)
-|
+| ~
 strmcon_vt_cons(x0, xs) =>
 (
   case+ !ys of
-  |
+  | ~
   strmcon_vt_nil() =>
   (g_free(xs); true)
-  |
+  | ~
   strmcon_vt_cons(y0, ys) =>
   let
     val
     test =
     z2forall0$test<x0,y0>(x0, y0)
   in
-      if
-      test
-      then loop(xs, ys)
-      else (g_free(xs); g_free(ys); false)
+    if
+    test
+    then loop(xs, ys)
+    else (g_free(xs); g_free(ys); false)
   end // end of [strmcon_vt_cons]
 )
 ) (* end of [loop] *)
@@ -639,45 +696,62 @@ loop
 : stream_vt(y0)): sint =
 (
 case+ !xs of
-|
+| ~
 strmcon_vt_nil() =>
 (
   case+ !ys of
-  | strmcon_vt_nil() => 0
-  | strmcon_vt_cons(y0, ys) =>
-    (
-      g_free(y0); g_free(ys); -1
-    )
+  | ~
+  strmcon_vt_nil() => 0
+  | ~
+  strmcon_vt_cons(y0, ys) =>
+  (
+    g_free(y0); g_free(ys); -1
+  )
 )
-|
+| ~
 strmcon_vt_cons(x0, xs) =>
 (
   case+ !ys of
-  | strmcon_vt_nil() =>
-    (
-      g_free(x0); g_free(xs);  1
-    )
-  | strmcon_vt_cons(y0, ys) =>
-    let
+  | ~
+  strmcon_vt_nil() =>
+  (
+    g_free(x0); g_free(xs);  1
+  )
+  | ~
+  strmcon_vt_cons(y0, ys) =>
+  let
     val
     sign =
     z2forcmp0$fcmp<x0,y0>(x0, y0)
-    in
-      if
-      (sign = 0)
-      then loop(xs, ys)
-      else (g_free(xs); g_free(ys); sign)
-    end // end of [strmcon_vt_cons]
+  in
+    if
+    (sign = 0)
+    then loop(xs, ys)
+    else (g_free(xs); g_free(ys); sign)
+  end // end of [strmcon_vt_cons]
 )
 ) (* end of [loop] *)
 } (* end of [stream_vt_z2forcmp0] *)
 
 (* ****** ****** *)
-
+//
+// HX-2020-06-02: for glseq-operations
+//
+(* ****** ****** *)
+//
 impltmp
 {x0:vt}
-glseq_streamize0<x0,stream_vt(x0)>(xs) = xs
-
+glseq_listize0
+<x0,stream_vt(x0)> = stream_vt_listize<x0>
+impltmp
+{x0:vt}
+glseq_rlistize0
+<x0,stream_vt(x0)> = stream_vt_rlistize<x0>
+impltmp
+{x0:vt}
+glseq_streamize
+<x0,stream_vt(x0)> = stream_vt_streamize<x0>
+//
 (* ****** ****** *)
 
 (* end of [stream_vt.dats] *)

@@ -102,7 +102,7 @@ list_length
 fun
 <a:t0>
 list_extend
-{n:int}
+{m:int}
 (list(a, m), a): list(a, m+1)
 fun
 <a:t0>
@@ -169,6 +169,22 @@ fun
 list_foreach
 {n:int}(xs: list(x0, n)): void
 
+(* ****** ****** *)
+//
+fun
+<x0:t0>
+list_listize
+{n:int}
+(xs: list(x0, n)): list_vt(x0, n)
+fun
+<x0:t0>
+list_rlistize
+{n:int}
+(xs: list(x0, n)): list_vt(x0, n)
+fun
+<x0:t0>
+list_streamize(list(x0)): stream_vt(x0)
+//
 (* ****** ****** *)
 //
 (*
@@ -240,7 +256,7 @@ list_mergesort_vt
 nil with list_nil of 000
 #symload
 cons with list_cons of 000
-
+//
 (* ****** ****** *)
 //
 #symload nilq with list_nilq of 1000
@@ -276,6 +292,12 @@ cons with list_cons of 000
 
 #symload forall with list_forall of 1000
 #symload foreach with list_foreach of 1000
+
+(* ****** ****** *)
+
+#symload listize with list_listize of 1000
+#symload rlistize with list_rlistize of 1000
+#symload streamize with list_streamize of 1000
 
 (* ****** ****** *)
 
