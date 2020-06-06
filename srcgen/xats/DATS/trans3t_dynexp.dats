@@ -142,23 +142,24 @@ D3Etcst
 , ti3a
 , ti2s) = d3e0.node()
 //
-// (*
+(*
 val () =
 println!
 ("auxtcst: d2c0 = ", d2c0)
-// *)
+*)
 //
 val-
 TI3ARGsome(targ) = ti3a
 //
-// (*
+(*
 val () =
 println!
 ("auxtcst: ti3a = ", ti3a)
 val () =
 println!
 ("auxtcst: targ = ", targ)
-// *)
+*)
+//
 val
 t2p0 =
 t2ype_subst_implenv(t2p0, env0)
@@ -166,11 +167,11 @@ val
 targ =
 t2ypelst_subst_implenv(targ, env0)
 //
-// (*
+(*
 val () =
 println!
 ("auxtcst: targ(1) = ", targ)
-// *)
+*)
 //
 val d3e0 =
 d3exp_make_node
@@ -219,14 +220,14 @@ trans3t_dexp
 val loc0 = d3e0.loc()
 val t2p0 = d3e0.type()
 //
-// (*
+(*
 val () =
 println!
 ("trans3t_dexp: d3e0 = ", d3e0)
 val () =
 println!
 ("trans3t_dexp: t2p0 = ", t2p0)
-// *)
+*)
 //
 in
 //
@@ -245,13 +246,19 @@ d3e0.node() of
 //
 | D3Econ1 _ => d3e0
 //
+| D3Esym0 _ => d3e0
+//
 | D3Efcst _ => d3e0
+//
+| D3Esap0 _ => d3e0
+| D3Etapp _ => d3e0
 //
 | D3Etcst _ =>
   auxtcst(env0, d3e0)
 | D3Etimp _ => (d3e0)
 //
-| D3Esap1(d3e1, s2es) =>
+| D3Esap1
+  (d3e1, s2es) =>
   let
   val d3e1 =
   trans3t_dexp(env0, d3e1)
@@ -1247,9 +1254,11 @@ val rtp = rcd.rtp
 val wtp = rcd.wtp
 val ctp = rcd.ctp
 //
+(*
 val ( ) =
 println!
 ("trans3t_fundecl: d2c = ", d2c)
+*)
 //
 val def =
 (

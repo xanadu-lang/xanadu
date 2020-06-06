@@ -1173,6 +1173,22 @@ end // end of [gseq_z2map_list/z2foldl]
 
 impltmp
 <x0,xs>
+gseq_mergesort
+  (xs) = let
+//
+val xx =
+gseq_listize<x0,xs>(xs)
+val xx =
+list_vt_mergesort<x0>(xx)
+//
+in
+  gseq_unlist_vt<x0,xs>(xx)
+end // end of [gseq_mergesort]
+
+(* ****** ****** *)
+
+impltmp
+<x0,xs>
 gseq_permutize
   (xs) = let
 //
@@ -1180,7 +1196,6 @@ val y0 =
 gseq_listize<x0,xs>(xs)
 val ys =
 list_vt_permutize<x0>(y0)
-val () = list_vt_free(y0)
 //
 in
 (
@@ -1188,7 +1203,7 @@ in
 ) where
 {
   typedef y0 = list_vt(x0)
-  impltmp map$fopr<y0><xs> = gseq_unlist_vt<x0,xs>
+  impltmp map0$fopr<y0><xs> = gseq_unlist_vt<x0,xs>
 }
 end // end of [gseq_permutize]
 
