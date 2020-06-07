@@ -90,6 +90,15 @@ implenv = implenv_vtype
 //
 (* ****** ****** *)
 //
+(*
+HX: copy the path out!
+*)
+fun
+implenv_get_path
+  (!implenv): d3explst
+overload
+.path with implenv_get_path
+//
 fun
 implenv_get_s2vs
   (!implenv): s2varlst
@@ -130,12 +139,20 @@ implenv_free_nil(implenv): void
 (* ****** ****** *)
 //
 fun
-implenv_pop0_tsub
+implenv_pop0_init
 (env0: !implenv): void
 fun
-implenv_push_tsub
+implenv_push_init
+(env0: !implenv): void
+//
+fun
+implenv_pop0_timp
+(env0: !implenv): void
+fun
+implenv_push_timp
 ( env0
 : !implenv
+, d3e0: d3exp
 , s2vs: s2varlst
 , tsub: t2ypelst): void
 //
