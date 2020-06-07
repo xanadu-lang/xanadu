@@ -159,6 +159,12 @@ implenv_push_timp
 (* ****** ****** *)
 //
 fun
+implenv_path_recq
+(env0: !implenv, d3e0: d3exp): bool
+//
+(* ****** ****** *)
+//
+fun
 t2ype_subst_implenv
 (t2ype, env0: !implenv): t2ype
 fun

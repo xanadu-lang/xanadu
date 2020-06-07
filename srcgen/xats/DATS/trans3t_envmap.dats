@@ -71,6 +71,67 @@ implement
 fprint_val<t2ype> = fprint_t2ype
 
 (* ****** ****** *)
+
+fun
+implist_path_recq
+( d3e0
+: d3exp
+, d3es
+: d3explst ): bool =
+let
+//
+val-
+D3Etcst
+( d2c0
+, ti3a
+, ti2s) = d3e0.node()
+//
+val-
+TI3ARGsome(targ) = ti3a
+//
+fun
+auxd3e1
+( d3e1
+: d3exp): bool =
+let
+//
+val-
+D3Etcst
+( d2c1
+, ti3a
+, ti2s) = d3e1.node()
+//
+in
+//
+if
+(d2c0=d2c1)
+then
+let
+val-
+TI3ARGsome
+ ( t2ps ) = ti3a in match3(targ, t2ps)
+end else false
+//
+end // end of [auxd3e1]
+and
+auxd3es
+( d3es
+: d3explst): bool =
+(
+case+ d3es of
+|
+list_nil() => false
+|
+list_cons
+(d3e1, d3es) =>
+if auxd3e1(d3e1) then true else auxd3es(d3es)
+)
+//
+in
+  auxd3es(d3es)
+end // end of [implist_path_recq]
+
+(* ****** ****** *)
 //
 local
 fun
@@ -155,7 +216,8 @@ implement
 list_map$fopr<t2ype><t2ype>(x) = t2ype_evalrec(x)
 }
 //
-val-true =
+val-
+true =
 unify3
 (LOC0, targ, $UN.list_vt2t(t2ps))
 //
@@ -1044,6 +1106,23 @@ in
 implstk_find_timp(xs, d2c0, targ)
 end // end of [implenv_find_timp]
 //
+(* ****** ****** *)
+
+implement
+implenv_path_recq
+  ( env0, d3e0 ) = let
+//
+val+
+IMPLENV(xs, ts, us) = env0
+//
+in
+let
+val d3es = $UN.list_vt2t(ts)
+in
+  implist_path_recq(d3e0, d3es)
+end
+end // end of [implenv_find_timp]
+
 (* ****** ****** *)
 
 implement

@@ -177,12 +177,32 @@ d3exp_make_node
 ( loc0
 , t2p0
 , D3Etcst
-  (d2c0, TI3ARGsome(targ), ti2s)
+  ( d2c0
+  , TI3ARGsome(targ), ti2s)
 ) (* end of [val] *)
 //
 val
+recq =
+implenv_path_recq(env0, d3e0)
+//
+in
+//
+if
+recq
+then
+let
+  val tpth = env0.path()
+in
+d3exp_make_node
+(loc0, t2p0, D3Etrec(d3e0, tpth))
+end // end of [then]
+else
+let
+//
+val
 opt0 =
-implenv_find_timp(env0, d2c0, targ)
+implenv_find_timp
+(env0, d2c0, targ)
 //
 in
 //
@@ -215,6 +235,8 @@ in
   , D3Etimp(d3e0, targ, d3cl, tsub)
  )
 end
+//
+end // end of [else]
 //
 end // end of [auxtcst]
 
