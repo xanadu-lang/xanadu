@@ -168,7 +168,15 @@ fun
 xint_gint_print_sint
 ( x0 : sint ) : void // = $ext()
 impltmp
-gint_print_sint<> = xint_gint_print_sint
+gint_print_sint<>(i0) =
+xint_gint_print_sint(i0)
+#extern
+fun
+xint_gint_print_uint
+( x0 : uint ) : void // = $ext()
+impltmp
+gint_print_uint<>(u0) =
+xint_gint_print_uint(u0)
 //
 (* ****** ****** *)
 //
@@ -412,6 +420,115 @@ xint_strptr_set_at
 , i0: int(i), c0: cgtz): void
 impltmp
 strptr_set_at<> = xint_strptr_set_at
+//
+(* ****** ****** *)
+//
+// prelude/garr.sats
+// (arrays of various dimensionality)
+//
+(* ****** ****** *)
+//
+// HX-2020-06-10:
+// Please note that
+// [a] is boxed in Xinterp
+//
+#extern
+fun
+xint_a0ptr_alloc
+{a:type}((*void*)): a0ptr(?a)
+impltmp
+{a:type}
+a0ptr_alloc<a> = xint_a0ptr_alloc
+//
+#extern
+fun
+xint_a0ref_get
+{a:type}
+(A0: a0ref(a)): a
+#extern
+fun
+xint_a0ref_set
+{a:type}
+(A0: a0ref(a), x0: a): void
+//
+impltmp
+{a:type}
+a0ref_get<a>
+(A0) = xint_a0ref_get{a}(A0)
+impltmp
+{a:type}
+a0ref_set<a>
+(A0, x0) = xint_a0ref_set{a}(A0, x0)
+//
+(* ****** ****** *)
+//
+#extern
+fun
+xint_a1ptr_alloc
+{a:type}{n:int}
+( asz: int(n) ): a0ptr(?a)
+impltmp
+{a:type}
+a1ptr_alloc<a> = xint_a1ptr_alloc
+//
+#extern
+fun
+xint_a1ref_get_at
+{a:type}{n:int}
+( A0
+: a1ref(a, n), i0: nintlt(n)): a
+#extern
+fun
+xint_a1ptr_get_at
+{a:type}{n:int}
+( A0:
+! a1ptr(a, n), i0: nintlt(n)): a
+//
+#extern
+fun
+xint_a1ref_set_at
+{a:type}{n:int}
+( A0
+: a1ref(a, n), i0: nintlt(n), x0: a): void
+#extern
+fun
+xint_a1ptr_set_at
+{a:type}{n:int}
+( A0:
+! a1ptr(a, n), i0: nintlt(n), x0: a): void
+#extern
+fun
+xint_a1ptr_set_at_raw
+{a:vtype}{n:int}
+( A0:
+! a1ptr(?a, n), i0: nintlt(n), x0: a): void
+//
+impltmp
+{a:type}
+a1ref_get_at<a>
+(A0, i0) =
+xint_a1ref_get_at{a}(A0, i0)
+impltmp
+{a:type}
+a1ptr_get_at<a>
+(A0, i0) =
+xint_a1ptr_get_at{a}(A0, i0)
+//
+impltmp
+{a:type}
+a1ref_set_at<a>
+(A0, i0, x0) =
+xint_a1ref_set_at{a}(A0, i0, x0)
+impltmp
+{a:type}
+a1ptr_set_at<a>
+(A0, i0, x0) =
+xint_a1ptr_set_at{a}(A0, i0, x0)
+impltmp
+{a:type}
+a1ptr_set_at_raw<a>
+(A0, i0, x0) =
+xint_a1ptr_set_at_raw{a}(A0, i0, x0)
 //
 (* ****** ****** *)
 
