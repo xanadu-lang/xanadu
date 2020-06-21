@@ -491,8 +491,7 @@ r0 = p2tr(yy)
 //
 impltmp
 foldl$fopr
-<x0><r0>
-(p0, x0) =
+<x0><r0>(p0, x0) =
 let
 //
 val y0 =
@@ -532,8 +531,8 @@ gseq_foldl
 {
 impltmp
 foldl$fopr
-<x0><r0>
-(r0, x0) =
+ <x0><r0>
+( r0, x0 ) =
 list_vt_cons(map$fopr<x0><y0>(x0), r0)
 }
 //
@@ -878,9 +877,11 @@ end // end of [gseq_rforeach/rforall]
 //
 impltmp
 <x0,xs>
-gseq_append(xs1, xs2) =
+gseq_append
+(xs1, xs2) =
 (
-gseq_foldr<x0,xs><r0>(xs1, xs2)
+gseq_foldr
+<x0,xs><r0>(xs1, xs2)
 ) where
 {
 //
@@ -888,7 +889,8 @@ typedef r0 = xs
 //
 impltmp
 foldr$fopr
-<x0><r0>(x0, r0) = gseq_cons<x0,xs>(x0, r0)
+<x0><r0>(x0, r0) =
+gseq_cons<x0,xs>(x0, r0)
 }
 //
 impltmp
@@ -896,6 +898,7 @@ impltmp
 gseq_reverse(xs) =
 gseq_rappend<x0,xs>
 (xs, gseq_nil<x0,xs>())
+//
 impltmp
 <x0,xs>
 gseq_rappend(xs1, xs2) =
