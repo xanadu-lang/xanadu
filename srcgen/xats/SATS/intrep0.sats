@@ -40,6 +40,13 @@
 #staload "./symbol.sats"
 
 (* ****** ****** *)
+//
+abstype h0srt_tbox = ptr
+//
+typedef h0srt = h0srt_tbox
+typedef h0srtlst = List0(h0srt)
+//
+(* ****** ****** *)
 
 abstype htcst_tbox = ptr
 abstype htvar_tbox = ptr
@@ -92,8 +99,12 @@ h0typ_node =
 datatype
 h0exp_node =
 // externally named
-| H0Eexp of hdcst // constant
+| H0Ecst of hdcst // constant
 | H0Evar of hdvar // variable
+//
+| H0Elet of (h0dclist, h0exp)
+//
+| H0Eif0 of (h0exp, h0exp, h0expopt)
 //
 (* ****** ****** *)
 
