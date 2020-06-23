@@ -44,9 +44,21 @@ rand((*void*)): a0
 (* ****** ****** *)
 //
 fun<>
+rand_seed
+((*void*)): uint
+fun<>
+rand_set_nil
+((*void*)): void
+fun<>
+rand_set_seed
+( seed : uint ) : void
+//
+(* ****** ****** *)
+//
+fun<>
 rand_nint(): nint
 fun<>
-rand_nint$limit(): sint
+rand_nint$limit(): sintgt(0)
 fun<>
 rand_nint_limit
 {n:pos}(l0: int(n)): nintlt(n)
@@ -62,7 +74,18 @@ rand_list$length(): nint
 fun
 <a:t0>
 rand_list_length
-{n:nat}(ln: int(n)): list_vt(a, n)
+{n:nat}(ln: int(n)): list_vt(a,n)
+//
+(* ****** ****** *)
+//
+fun<>
+rand_string(): string_vt
+fun<>
+rand_string$length(): nint
+//
+fun<>
+rand_string_length
+{n:nat}(ln: int(n)): string_vt(n)
 //
 (* ****** ****** *)
 

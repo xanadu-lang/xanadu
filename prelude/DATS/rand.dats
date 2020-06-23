@@ -39,10 +39,108 @@
 
 impltmp
 <>(*tmp*)
+rand_set_nil() =
+let
+val
+seed = rand_seed<>()
+in
+rand_set_seed<>(seed)
+end
+
+(* ****** ****** *)
+
+impltmp
+rand<bool>() =
+let
+val tf =
+rand_nint_limit(2)
+in
+if
+(tf > 0)
+then true else false
+end
+
+(* ****** ****** *)
+
+impltmp
+rand<char>() =
+let
+val n0 =
+rand_nint_limit(256)
+in
+char_make_sint
+( if
+  (n0<128)
+  then n0 else n0-256 )
+end
+
+(* ****** ****** *)
+//
+impltmp
+<>(*tmp*)
 rand_nint() =
 rand_nint_limit<>
 (rand_nint$limit<>())
-
+//
+(*
+HX-2020-06-22:
+the default [1024]
+is randomly chosen
+*)
+impltmp
+<>(*tmp*)
+rand_nint$limit() = 1024
+//
+(* ****** ****** *)
+//
+impltmp
+{a0:vt
+,a1:vt}
+rand<(a0,a1)>() =
+let
+val x0 =
+rand<a0>()
+val x1 =
+rand<a1>() in @(x0, x1)
+end
+impltmp
+{a0:vt
+,a1:vt}
+rand<$(a0,a1)>() =
+let
+val x0 =
+rand<a0>()
+val x1 =
+rand<a1>() in $(x0, x1)
+end
+//
+impltmp
+{a0:vt
+,a1:vt
+,a2:vt}
+rand<(a0,a1,a2)>() =
+let
+val x0 =
+rand<a0>()
+val x1 =
+rand<a1>()
+val x2 =
+rand<a2>() in @(x0, x1, x2)
+end
+impltmp
+{a0:vt
+,a1:vt
+,a2:vt}
+rand<$(a0,a1,a2)>() =
+let
+val x0 =
+rand<a0>()
+val x1 =
+rand<a1>()
+val x2 =
+rand<a2>() in $(x0, x1, x2)
+end
+//
 (* ****** ****** *)
 //
 impltmp
@@ -52,8 +150,12 @@ rand_list_length<a>
 (rand_list$length<>())
 //
 impltmp
+{a:t0}
+rand<list_vt(a)>() =
+list_vt2t(rand_list<a>())
+impltmp
 {a:vt}
-rand<list(a)> = rand_list<a>
+rand<list_vt(a)> = rand_list<a>
 //
 (* ****** ****** *)
 //
@@ -65,7 +167,7 @@ is randomly chosen
 //
 impltmp
 <>(*tmp*)
-rand_list$length =
+rand_list$length() =
 (rand_nint_limit<>(16))
 //
 (* ****** ****** *)
@@ -83,5 +185,19 @@ map$fopr<int><a>(_) = rand<a>()
 }
 //
 (* ****** ****** *)
+//
+impltmp
+<>(*tmp*)
+rand_string() =
+rand_string_length<>
+(rand_string$length<>())
+//
+impltmp
+rand<string>() =
+string_vt2t(rand_string<>())
+impltmp
+rand<string_vt> = rand_string<>
+//
+(* ****** ****** *)
 
-(* end of [rand.sats] *)
+(* end of [rand.dats] *)
