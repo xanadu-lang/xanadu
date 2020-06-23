@@ -41,7 +41,24 @@ mytest_fun(fx: f0): r0
 
 impltmp
 <a0:vt>
-mytest_arg = rand<a0>
+mytest_arg
+(
+// argless
+) =
+( arg ) where
+{
+val
+arg = rand<a0>()
+//
+(*
+val () =
+println!
+("mytest_arg: arg = ", arg)
+*)
+//
+} (* end of [where] *)
+//
+end // end of [mytest_arg]
 
 (* ****** ****** *)
 
@@ -95,6 +112,72 @@ let
 val x1 = mytest_arg<a1>()
 val x2 = mytest_arg<a2>() in f0(x1, x2)
 end
+//
+(* ****** ****** *)
+//
+#extern
+fun
+<f0:t0>
+mytest_fun_asso(fx: f0): bool
+//
+impltmp
+{a0:t0}
+mytest_fun_asso
+<(a0,a0)-<fnp>a0>
+  (f0) = let
+//
+val x1 = mytest_arg<a0>()
+val x2 = mytest_arg<a0>()
+val x3 = mytest_arg<a0>()
+//
+in
+  f0(f0(x1, x2), x3) = f0(x1, f0(x2, x3))
+end // end of [mytest_fun_asso]
+impltmp
+{a0:t0}
+mytest_fun_asso
+<(a0,a0)-<cfr>a0>
+  (f0) = let
+//
+val x1 = mytest_arg<a0>()
+val x2 = mytest_arg<a0>()
+val x3 = mytest_arg<a0>()
+//
+in
+  f0(f0(x1, x2), x3) = f0(x1, f0(x2, x3))
+end // end of [mytest_fun_asso]
+//
+(* ****** ****** *)
+//
+#extern
+fun
+<f0:t0>
+mytest_fun_comm(fx: f0): bool
+//
+impltmp
+{a0:t0}
+{r0:vt}
+mytest_fun_comm
+<(a0,a0)-<fnp>r0>
+  (f0) = let
+//
+val x1 =
+mytest_arg<a0>()
+val x2 =
+mytest_arg<a0>() in f0(x1, x2) = f0(x2, x1)
+end // end of [mytest_fun_comm]
+impltmp
+{a0:t0}
+{r0:vt}
+mytest_fun_comm
+<(a0,a0)-<cfr>r0>
+  (f0) = let
+//
+val x1 =
+mytest_arg<a0>()
+val x2 =
+mytest_arg<a0>() in f0(x1, x2) = f0(x2, x1)
+end // end of [mytest_fun_comm]
 //
 (* ****** ****** *)
 
