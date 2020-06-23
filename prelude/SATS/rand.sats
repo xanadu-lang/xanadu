@@ -6,7 +6,7 @@
 
 (*
 ** ATS/Xanadu - Unleashing the Potential of Types!
-** Copyright (C) 2018 Hongwei Xi, ATS Trustful Software, Inc.
+** Copyright (C) 2019 Hongwei Xi, ATS Trustful Software, Inc.
 ** All rights reserved
 **
 ** ATS is free software;  you can  redistribute it and/or modify it under
@@ -27,42 +27,43 @@
 
 (* ****** ****** *)
 //
+// For random values
+//
+(* ****** ****** *)
+//
 // Author: Hongwei Xi
-// Start Time: March, 2020
+// Start Time: June, 2020
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
-//
-impltmp
-char_noteq<>
-  (c1, c2) =
-(
-  not(char_equal<>(c1, c2))
-)
-//
+
+fun
+<a0:vt>
+rand((*void*)): a0
+
 (* ****** ****** *)
 //
-// HX:
-// For implementing
-// some gseq_operations
+fun<>
+rand_nint(): nint
+fun<>
+rand_nint$limit(): sint
+fun<>
+rand_nint_limit
+{n:pos}(l0: int(n)): nintlt(n)
+//
+(* ****** ****** *)
+//
+fun
+<a:t0>
+rand_list(): list_vt(a)
+fun<>
+rand_list$length(): nint
+//
+fun
+<a:t0>
+rand_list_length
+{n:nat}(ln: int(n)): list_vt(a, n)
 //
 (* ****** ****** *)
 
-impltmp
-g_cmp<char> = char_cmp<>
-
-(* ****** ****** *)
-
-impltmp
-g_equal<char> = char_equal<>
-impltmp
-g_noteq<char> = char_noteq<>
-
-(* ****** ****** *)
-
-impltmp
-g_print<char> = char_print<>
-
-(* ****** ****** *)
-
-(* end of [char.dats] *)
+(* end of [rand.sats] *)

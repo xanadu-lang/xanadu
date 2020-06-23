@@ -6,7 +6,7 @@
 
 (*
 ** ATS/Xanadu - Unleashing the Potential of Types!
-** Copyright (C) 2018 Hongwei Xi, ATS Trustful Software, Inc.
+** Copyright (C) 2020 Hongwei Xi, ATS Trustful Software, Inc.
 ** All rights reserved
 **
 ** ATS is free software;  you can  redistribute it and/or modify it under
@@ -26,43 +26,76 @@
 *)
 
 (* ****** ****** *)
-//
-// Author: Hongwei Xi
-// Start Time: March, 2020
-// Authoremail: gmhwxiATgmailDOTcom
-//
-(* ****** ****** *)
-//
-impltmp
-char_noteq<>
-  (c1, c2) =
-(
-  not(char_equal<>(c1, c2))
-)
-//
-(* ****** ****** *)
-//
-// HX:
-// For implementing
-// some gseq_operations
-//
-(* ****** ****** *)
 
-impltmp
-g_cmp<char> = char_cmp<>
+#extern
+fun
+<a0:vt>
+mytest_arg(): a0
+#extern
+fun
+<f0:t0>
+<r0:vt>
+mytest_fun(fx: f0): r0
 
 (* ****** ****** *)
 
 impltmp
-g_equal<char> = char_equal<>
-impltmp
-g_noteq<char> = char_noteq<>
+<a0:vt>
+mytest_arg = rand<a0>
 
 (* ****** ****** *)
 
 impltmp
-g_print<char> = char_print<>
+{r0:vt}
+mytest_fun
+<()-<fnp>r0>(f0) = f0()
+impltmp
+{r0:vt}
+mytest_fun
+<()-<cfr>r0>(f0) = f0()
 
 (* ****** ****** *)
+//
+impltmp
+{a1:vt}
+{r0:vt}
+mytest_fun
+<(a1)-<fnp>r0>(f0) =
+let
+val x1 = mytest_arg<a1>() in f0(x1)
+end
+impltmp
+{a1:vt}
+{r0:vt}
+mytest_fun
+<(a1)-<cfr>r0>(f0) =
+let
+val x1 = mytest_arg<a1>() in f0(x1)
+end
+//
+(* ****** ****** *)
+//
+impltmp
+{a1:vt
+,a2:vt}
+{r0:vt}
+mytest_fun
+<(a1,a2)-<fnp>r0>(f0) =
+let
+val x1 = mytest_arg<a1>()
+val x2 = mytest_arg<a2>() in f0(x1, x2)
+end
+impltmp
+{a1:vt
+,a2:vt}
+{r0:vt}
+mytest_fun
+<(a1,a2)-<cfr>r0>(f0) =
+let
+val x1 = mytest_arg<a1>()
+val x2 = mytest_arg<a2>() in f0(x1, x2)
+end
+//
+(* ****** ****** *)
 
-(* end of [char.dats] *)
+(* end of [mytest.dats] *)
