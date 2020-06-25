@@ -102,6 +102,10 @@ typedef t2xtvlst = List0(t2xtv)
 //
 fun
 t2xtv_get_loc(t2xtv): loc_t
+//
+fun
+t2xtv_get_sort(t2xtv): sort2
+//
 fun
 t2xtv_get_type(t2xtv): t2ype
 fun
@@ -118,10 +122,25 @@ overload = with eq_t2xtv_t2xtv
 //
 overload .loc with t2xtv_get_loc
 //
+overload .sort with t2xtv_get_sort
+//
 overload .type with t2xtv_get_type
 overload .type with t2xtv_set_type
 //
 overload .stamp with t2xtv_get_stamp
+//
+(* ****** ****** *)
+//
+fun
+print_t2xtv: print_type(t2xtv)
+fun
+prerr_t2xtv: prerr_type(t2xtv)
+fun
+fprint_t2xtv: fprint_type(t2xtv)
+//
+overload print with print_t2xtv
+overload prerr with prerr_t2xtv
+overload fprint with fprint_t2xtv
 //
 (* ****** ****** *)
 //
@@ -315,14 +334,22 @@ t2ype_app2
 //
 fun
 t2xtv_stamp_new(): stamp
+//
 fun
 t2xtv_new(loc0: loc_t): t2xtv
 fun
+t2xtv_new_srt
+(loc0: loc_t, s2t: sort2): t2xtv
+//
+fun
 t2ype_new(loc0: loc_t): t2ype
 fun
-t2ype_xtv(xtv0: t2xtv): t2ype
+t2ype_new_xtv(xtv0: t2xtv): t2ype
 fun
-t2ype_srt_xtv
+t2ype_new_loc_var
+(loc0: loc_t, s2v0: s2var): t2ype
+fun
+t2ype_new_srt_xtv
 (s2t0: sort2, xtv0: t2xtv): t2ype
 //
 (* ****** ****** *)

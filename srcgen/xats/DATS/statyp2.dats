@@ -333,6 +333,8 @@ typedef
 t2xtv_struct = @{
   t2xtv_loc= loc_t
 ,
+  t2xtv_sort= sort2
+,
   t2xtv_type= t2ype
 ,
   t2xtv_stamp= stamp
@@ -344,11 +346,24 @@ t2xtv_tbox=ref(t2xtv_struct)
 in (*in-of-local*)
 //
 implement
-t2xtv_new(loc0) =
+t2xtv_new
+  (loc0) =
+let
+val
+s2t0 = the_sort2_none
+in
+t2xtv_new_srt(loc0, s2t0)
+end // end of [t2xtv_new]
+//
+implement
+t2xtv_new_srt
+  (loc0, s2t0) =
 (
 ref<t2xtv_struct>
 @{
   t2xtv_loc= loc0
+,
+  t2xtv_sort= s2t0
 ,
   t2xtv_type= t2p0
 ,
@@ -358,11 +373,16 @@ ref<t2xtv_struct>
 {
 val t2p0 = the_t2ype_none0
 val stamp = t2xtv_stamp_new()
-} (* end of [t2xtv_new0] *)
+} (* end of [t2xtv_new_srt] *)
 //
 implement
 t2xtv_get_loc
   (xtv) = xtv->t2xtv_loc
+//
+implement
+t2xtv_get_sort
+  (xtv) = xtv->t2xtv_sort
+//
 implement
 t2xtv_get_type
   (xtv) = xtv->t2xtv_type
@@ -389,27 +409,48 @@ end // end of [local]
 //
 implement
 t2ype_new(loc0) =
-t2ype_xtv(t2xtv_new(loc0))
+let
+val
+xtv =
+t2xtv_new(loc0)
+in
+  t2ype_new_xtv(xtv)
+end
 //
 implement
-t2ype_xtv(xtv0) = let
+t2ype_new_xtv
+  (xtv0) = let
 //
 val node = T2Pxtv(xtv0)
 val s2t0 = the_sort2_none
 //
 in
   t2ype_make_node(s2t0, node)
-end // end of [t2ype_xtv]
+end // end of [t2ype_new_xtv]
 //
 implement
-t2ype_srt_xtv
+t2ype_new_loc_var
+  (loc0, s2v0) = let
+//
+val
+s2t0 = s2v0.sort()
+val
+xtv0 =
+t2xtv_new_srt(loc0, s2t0)
+//
+in
+t2ype_new_srt_xtv(s2t0, xtv0)
+end
+//
+implement
+t2ype_new_srt_xtv
   (s2t0, xtv0) = let
 //
 val node = T2Pxtv(xtv0)
 //
 in
-  t2ype_make_node(s2t0, node)
-end // end of [t2ype_srt_xtv]
+  t2ype_make_node( s2t0, node )
+end // end of [t2ype_new_srt_xtv]
 //
 (* ****** ****** *)
 //
