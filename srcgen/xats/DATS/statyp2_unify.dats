@@ -425,36 +425,54 @@ auxtv1
 (
 case+
 t2p2.node() of
-| T2Pxtv(xtv2) =>
-  if
-  (xtv1=xtv2)
-  then (true)
-  else let
-    val
-    s2t1 = xtv1.sort()
-    val
-    s2t2 = t2p2.sort()
-  in
+|
+T2Pxtv(xtv2) =>
+(
+if
+(xtv1=xtv2)
+then true else let
+  val
+  s2t1 = xtv1.sort()
+  val
+  s2t2 = t2p2.sort()
+in
+  case+ s2t1 of
+  |
+  S2Tnone0() =>
+  (xtv1.type(t2p2); true)
+  | _(* non-S2Tnone0 *) =>
+  ( case+ s2t2 of
+    |
+    S2Tnone0() =>
+    (xtv2.type(t2p1); true)
+    | _(* non-S2Tnone0 *) =>
+    (
     if
     (s2t2 <= s2t1)
-    then (xtv1.type(t2p2); true)
-    else (xtv2.type(t2p1); true)
-  end // end-of-else // end-of-if
-| _ (* else *) =>
-  let
-    val occurs =
-    t2xtv_occurs(xtv1, t2p2) 
+    then
+    (xtv1.type(t2p2); true)
+    else
+    (xtv2.type(t2p1); true) )
+  )
+end // end-of-else // end-of-if
+)
+|
+_ (* else *) =>
+let
+  val occurs =
+  t2xtv_occurs(xtv1, t2p2) 
 (*
-    val ((*void*)) =
-    println!
-    ("auxtv1: occurs = ", occurs)
+  val ((*void*)) =
+  println!
+  ("auxtv1: occurs = ", occurs)
 *)
 in
-    if occurs then false else
-    let
-      val () = xtv1.type(t2p2) in true
-    end
-  end
+  if
+  occurs
+  then false else let
+    val () = xtv1.type(t2p2) in true
+  end // end-of-else // end-of-if
+end
 )
 //
 fun
