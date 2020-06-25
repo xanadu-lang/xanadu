@@ -6,7 +6,7 @@
 
 (*
 ** ATS/Xanadu - Unleashing the Potential of Types!
-** Copyright (C) 2020 Hongwei Xi, ATS Trustful Software, Inc.
+** Copyright (C) 2019 Hongwei Xi, ATS Trustful Software, Inc.
 ** All rights reserved
 **
 ** ATS is free software;  you can  redistribute it and/or modify it under
@@ -28,31 +28,34 @@
 (* ****** ****** *)
 //
 // Author: Hongwei Xi
-// Start Time: May 24, 2020
+// Start Time: September, 2019
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
-
-#staload "./statyp2.sats"
-#staload "./dynexp3.sats"
-#staload "./intrep0.sats"
-
-(* ****** ****** *)
 //
-fun
-tcomp30_sort(s2t0: sort2): h0srt
-fun
-tcomp30_type(t2p0: t2ype): h0typ
-//
-(* ****** ****** *)
-//
-fun
-tcomp30_dexp(d3e0: d3exp): h0exp
-fun
-tcomp30_dexpopt(d3expopt): h0expopt
-fun
-tcomp30_dexplst(d3explst): h0explst
+#include
+"share/atspre_staload.hats"
+#staload
+UN = "prelude/SATS/unsafe.sats"
 //
 (* ****** ****** *)
 
-(* end of [xats_tcomp30.sats] *)
+#staload "./../SATS/basics.sats"
+
+(* ****** ****** *)
+
+#staload "./../SATS/locinfo.sats"
+
+(* ****** ****** *)
+
+#staload "./../SATS/intrep0.sats"
+
+(* ****** ****** *)
+
+#staload "./../SATS/tcomp30.sats"
+
+(* ****** ****** *)
+
+(* ****** ****** *)
+
+(* end of [xats_tcomp30_dynexp.dats] *)
