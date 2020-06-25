@@ -210,13 +210,13 @@ in (* in-of-let *)
 case+
 t2p1.node() of
 | T2Pxtv(xtv1) =>
-  auxtv1(xtv1, t2p2)
+  auxtv1(xtv1, t2p1, t2p2)
 | _ (* else *) =>
   (
   case+
   t2p2.node() of
   | T2Pxtv(xtv2) =>
-    auxtv2(t2p1, xtv2)
+    auxtv2(t2p1, xtv2, t2p2)
   | _ (* else *) => auxtp0(t2p1, t2p2)
   )
 end where
@@ -420,17 +420,26 @@ t2p1.node() of
 fun
 auxtv1
 ( xtv1: t2xtv
+, t2p1: t2ype
 , t2p2: t2ype): bool =
 (
 case+
 t2p2.node() of
-| T2Pxtv(xtv2) => true where
-  {
-    val () =
-    if xtv1 = xtv2
-      then () else xtv1.type(t2p2)
-    // end of [if]
-  }
+| T2Pxtv(xtv2) =>
+  if
+  (xtv1=xtv2)
+  then (true)
+  else let
+    val
+    s2t1 = xtv1.sort()
+    val
+    s2t2 = t2p2.sort()
+  in
+    if
+    (s2t2 <= s2t1)
+    then (xtv1.type(t2p2); true)
+    else (xtv2.type(t2p1); true)
+  end // end-of-else // end-of-if
 | _ (* else *) =>
   let
     val occurs =
@@ -451,7 +460,8 @@ in
 fun
 auxtv2
 ( t2p1: t2ype
-, xtv2: t2xtv): bool =
+, xtv2: t2xtv
+, t2p2: t2ype): bool =
   let
     val occurs =
     t2xtv_occurs(xtv2, t2p1) 
