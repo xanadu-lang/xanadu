@@ -39,10 +39,11 @@
 
 #staload "./stamp0.sats"
 #staload "./symbol.sats"
+#staload "./locinfo.sats"
 
 (* ****** ****** *)
 
-typedef xerrptr = ptr
+typedef dataptr = ptr
 
 (* ****** ****** *)
 
@@ -118,7 +119,7 @@ h0srt =
   , h0srtlst(*arg*)) // HX: not in use
 *)
 //
-| HSTerror of (xerrptr) // HX: for errors
+| HSTnone1 of (dataptr) // HX: for errors
 //
 where h0srtlst = List0(h0srt)
 
@@ -145,7 +146,7 @@ h0typ_node =
 | H0Tcst of htcst // constant
 | H0Tvar of htvar // variable
 //
-| H0Terror of (xerrptr) // HX: for errors
+| H0Tnone1 of (dataptr) // HX: for errors
 //
 (* ****** ****** *)
 //
@@ -189,19 +190,6 @@ h0typ_make_node
 //
 (* ****** ****** *)
 //
-datatype
-h0exp_node =
-// externally named
-| H0Evar of hdvar // variable
-| H0Econ of hdcon // cnstrctr
-| H0Ecst of hdcst // constant
-//
-| H0Elet of (h0dclist, h0exp)
-//
-| H0Eif0 of (h0exp, h0exp, h0expopt)
-//
-(* ****** ****** *)
-//
 fun
 print_hdvar: hdvar -> void
 fun
@@ -241,6 +229,37 @@ overload fprint with fprint_hdcst
 //
 (* ****** ****** *)
 //
+datatype
+h0exp_node =
+// externally named
+| H0Evar of hdvar // variable
+| H0Econ of hdcon // cnstrctr
+| H0Ecst of hdcst // constant
+//
+| H0Elet of (h0dclist, h0exp)
+//
+| H0Eif0 of (h0exp, h0exp, h0expopt)
+//
+| H0Enone1 of (dataptr) // HX: for errors
+//
+(* ****** ****** *)
+//
+fun
+h0exp_get_loc
+( h0e: h0exp ) : loc_t
+fun
+h0exp_get_type
+( h0e: h0exp ) : h0typ
+fun
+h0exp_get_node
+( h0e: h0exp ) : h0exp_node
+//
+overload .loc with h0exp_get_loc
+overload .type with h0exp_get_type
+overload .node with h0exp_get_node
+//
+(* ****** ****** *)
+//
 fun
 print_h0exp: h0exp -> void
 fun
@@ -251,6 +270,55 @@ fprint_h0exp: fprint_type(h0exp)
 overload print with print_h0exp
 overload prerr with prerr_h0exp
 overload fprint with fprint_h0exp
+//
+(* ****** ****** *)
+//
+fun
+h0exp_make_node
+(loc_t, h0typ, h0exp_node): h0exp
+//
+(* ****** ****** *)
+//
+datatype
+h0dcl_node =
+// externally named
+| H0Cinclude
+//
+| H0Clocal of
+  (h0dclist(*head*), h0dclist(*body*))
+//
+| H0Cnone1 of (dataptr) // HX: for errors
+//
+(* ****** ****** *)
+//
+fun
+h0dcl_get_loc
+( hdcl: h0dcl ) : loc_t
+fun
+h0dcl_get_node
+( hdcl: h0dcl ) : h0dcl_node
+//
+overload .loc with h0dcl_get_loc
+overload .node with h0dcl_get_node
+//
+(* ****** ****** *)
+//
+fun
+print_h0dcl: h0dcl -> void
+fun
+prerr_h0dcl: h0dcl -> void
+fun
+fprint_h0dcl: fprint_type(h0dcl)
+//
+overload print with print_h0dcl
+overload prerr with prerr_h0dcl
+overload fprint with fprint_h0dcl
+//
+(* ****** ****** *)
+//
+fun
+h0dcl_make_node
+(loc0: loc_t, hdcl: h0dcl_node): h0dcl
 //
 (* ****** ****** *)
 

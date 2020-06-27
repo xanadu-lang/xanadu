@@ -732,12 +732,21 @@ loc0 = d3e0.loc()
 val-
 D3Ecst1(d2c1) = d3e0.node()
 //
-val
-t2p0 = d3e0.type()
 (*
 val () =
 println!
-("auxcst1: t2p0 = ", t2p0)
+("auxcst1: d3e0 = ", d3e0)
+*)
+val
+t2p0 = d3e0.type((*void*))
+//
+(*
+val () =
+println!
+("auxcst1: d2e0.t2p0 = ", t2p0)
+val () =
+println!
+("auxcst1: d2c1.type = ", d2c1.type())
 *)
 //
 in
@@ -1607,11 +1616,14 @@ trans33_dexp
 val loc0 = d3e0.loc()
 val t2p0 = d3e0.type()
 //
-(*
-val ((*void*)) =
+// (*
+val () =
 println!
 ("trans33_dexp: d3e0 = ", d3e0)
-*)
+val () =
+println!
+("trans33_dexp: t2p0 = ", t2p0)
+// *)
 //
 in
 //
@@ -2826,16 +2838,6 @@ D3Cextern
   d3c1 = trans33_decl(env0, d3c1)
 }
 //
-| D3Cinclude _ =>
-  let
-  val d3cl =
-  aux_include(env0, d3cl) in d3cl
-  end
-| D3Cstaload _ => let
-  val d3cl =
-  aux_staload(env0, d3cl) in d3cl
-  end
-//
 | D3Clocal
   (head, body) => let
     val () =
@@ -2856,6 +2858,16 @@ D3Cextern
   in
     d3ecl_make_node(loc0, D3Clocal(head, body))
   end
+  end
+//
+| D3Cinclude _ =>
+  let
+  val d3cl =
+  aux_include(env0, d3cl) in d3cl
+  end
+| D3Cstaload _ => let
+  val d3cl =
+  aux_staload(env0, d3cl) in d3cl
   end
 //
 | D3Cabstype _ => d3cl
