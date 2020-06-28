@@ -807,6 +807,18 @@ end // end of [gseq_min2/foldl]
 (* ****** ****** *)
 
 impltmp
+<x0,xs>
+gseq_sortedq(xs) =
+let
+  val xs =
+  gseq_streamize<x0,xs>(xs)
+in
+  stream_vt_sortedq0<x0,xs>(xs)
+end // end of [gseq_sortedq]
+
+(* ****** ****** *)
+
+impltmp
 <x0,xs><r0>
 gseq_foldr
 (xs, r0) = r0 where
@@ -914,6 +926,16 @@ gseq_cons<x0,xs>(x0, r0)
 }
 //
 impltmp
+<x0,xs,xz>
+gseq_concat(xss) =
+gseq_unstream_vt<x0>
+(
+gseq_concat_stream<x0,xs,xz>(xss)
+)
+//
+(* ****** ****** *)
+//
+impltmp
 <x0,xs>
 gseq_reverse(xs) =
 gseq_rappend<x0,xs>
@@ -937,6 +959,46 @@ let
   gseq_cons<x0,xs>(x0, r0) in r0
 end
 }
+//
+(* ****** ****** *)
+//
+impltmp
+<x0,xs>
+gseq_append_stream
+  (xs1, xs2) = let
+//
+val
+xs1 =
+gseq_streamize<x0,xs>(xs1)
+val
+xs2 =
+gseq_streamize<x0,xs>(xs2)
+//
+in
+stream_vt_append<x0>(xs1, xs2)
+end // gseq_append_stream
+//
+impltmp
+<x0,xs,xz>
+gseq_concat_stream
+  (xss) = let
+//
+typedef
+ys = stream_vt(x0)
+//
+val
+xss =
+let
+impltmp
+map$fopr<xs><ys> =
+gseq_streamize<x0,xs>
+in
+gseq_map_stream<xs,xz>(xss)
+end
+//
+in
+  stream_vt_concat<x0>(  xss  )
+end // gseq_concat_stream
 //
 (* ****** ****** *)
 //

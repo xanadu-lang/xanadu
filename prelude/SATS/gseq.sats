@@ -320,10 +320,19 @@ gseq_min_opt(xs): optn_vt(x0)
 //
 fun
 <x0:t0
-,xs:t0>gseq_max2(xs, x0): x0
+,xs:t0>
+gseq_max2(xs, x0): x0
 fun
 <x0:t0
-,xs:t0>gseq_min2(xs, x0): x0
+,xs:t0>
+gseq_min2(xs, x0): x0
+//
+(* ****** ****** *)
+//
+fun
+<x0:t0
+,xs:t0>
+gseq_sortedq(xs): bool
 //
 (* ****** ****** *)
 //
@@ -348,6 +357,11 @@ fun
 ,xs:t0>
 gseq_append
 (xs1: xs, xs2: xs): xs
+fun
+<x0:t0
+,xs:t0
+,xz:t0>
+gseq_concat(xss: xz): xs
 //
 fun
 <x0:t0
@@ -357,6 +371,19 @@ fun
 <x0:t0
 ,xs:t0>
 gseq_rappend(xs1: xs, xs2: xs): xs
+//
+(* ****** ****** *)
+//
+fun
+<x0:t0
+,xs:t0>
+gseq_append_stream
+(xs1: xs, xs2: xs): stream_vt(x0)
+fun
+<x0:t0
+,xs:t0
+,xz:t0>
+gseq_concat_stream(xss: xz): stream_vt(x0)
 //
 (* ****** ****** *)
 //
@@ -593,6 +620,10 @@ length with gseq_length of 0100
 #symload min_opt with gseq_min_opt of 0100
 //
 (* ****** ****** *)
+
+#symload sortedq with gseq_sortedq of 0100
+
+(* ****** ****** *)
 //
 #symload foldr with gseq_foldr of 0100
 #symload rforall with gseq_rforall of 0100
@@ -609,6 +640,20 @@ length with gseq_length of 0100
 #symload map_list with gseq_map_list of 0100
 #symload map_rlist with gseq_map_rlist of 0100
 #symload map_stream with gseq_map_stream of 0100
+
+(* ****** ****** *)
+
+#symload append with gseq_append of 0100
+#symload concat with gseq_append of 0100
+#symload reverse with gseq_append of 0100
+#symload rappend with gseq_append of 0100
+
+(* ****** ****** *)
+
+#symload
+append_stream with gseq_append_stream of 0100
+#symload
+concat_stream with gseq_concat_stream of 0100
 
 (* ****** ****** *)
 
