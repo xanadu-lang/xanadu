@@ -100,10 +100,10 @@ a0ptr_free(A0: a0ptr(a)): void
 (* ****** ****** *)
 //
 fun
-<a:t0>
-a0ref_get(A0: a0ref(a)): a
+<a:vt>
+a0ref_get(A0: a0ref(a)): ~a
 fun
-<a:t0>
+<a:vt>
 a0ref_set(A0: a0ref(a), x0: a): void
 //
 fun
@@ -205,27 +205,27 @@ a1ptr_length(!a1ptr(a, n)): int(n)
 (* ****** ****** *)
 //
 fun
-<a:t0>
+<a:vt>
 a1ref_get_at
 {n:int}
 ( A0
-: a1ref(a, n), i0: nintlt(n)): a
+: a1ref(a, n), i0: nintlt(n)): ~a
 fun
-<a:t0>
+<a:vt>
 a1ptr_get_at
 {n:int}
 ( A0:
-! a1ptr(a, n), i0: nintlt(n)): a
+! a1ptr(a, n), i0: nintlt(n)): ~a
 //
 fun
-<a:t0>
+<a:vt>
 a1ref_set_at
 {n:int}
 ( A0:
   a1ref(a, n)
 , i0: nintlt(n), x0: a(*new*)): void
 fun
-<a:t0>
+<a:vt>
 a1ptr_set_at
 {n:int}
 ( A0:
@@ -240,7 +240,7 @@ a1ptr_set_at_raw
 , i0: nintlt(n), x0: a(*ini*)): void
 //
 fun
-<a:t0>
+<a:vt>
 a1ref_exch_at
 {n:int}
 ( A0:
@@ -276,6 +276,32 @@ fun
 <a:vt>
 a1ptr_print(A0: !a1ptr(a)): void
 //
+(* ****** ****** *)
+
+fun
+<a:t0>
+a1ref_listize
+{n:int}
+(A0: a1ref(a, n)): list_vt(a,n)
+fun
+<a:vt>
+a1ref_listize0
+{n:int}
+(A0: a1ref(a, n)): list_vt(a,n)
+
+(* ****** ****** *)
+
+fun
+<a:t0>
+a1ref_rlistize
+{n:int}
+(A0: a1ref(a, n)): list_vt(a,n)
+fun
+<a:vt>
+a1ref_rlistize0
+{n:int}
+(A0: a1ref(a, n)): list_vt(a,n)
+
 (* ****** ****** *)
 //
 fun
@@ -369,6 +395,12 @@ length with a1ptr_length of 1000
 #symload a1ref with a1ref_make_nval of 1000
 #symload a1ptr with a1ptr_make_nval of 1000
 
+(* ****** ****** *)
+#symload listize with a1ref_listize
+#symload listize0 with a1ref_listize0
+(* ****** ****** *)
+#symload rlistize with a1ref_rlistize
+#symload rlistize0 with a1ref_rlistize0
 (* ****** ****** *)
 
 (* end of [array.sats] *)
