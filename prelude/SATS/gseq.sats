@@ -406,16 +406,29 @@ gseq_concat_stream(xss: xz): stream_vt(x0)
 fun
 <x0:t0
 ,xs:t0>
-gseq_iexists(xs): bool
+<r0:vt>
+gseq_ifoldl(xs, r0): r0
+fun
+<x0:t0
+,xs:t0>
+<r0:vt>
+gseq_ifoldr(xs, r0): r0
+//
+(* ****** ****** *)
 //
 fun
 <x0:t0
 ,xs:t0>
-gseq_iforall(xs): bool
+gseq_iexists(xs: xs): bool
+//
 fun
 <x0:t0
 ,xs:t0>
-gseq_iforeach(xs): void
+gseq_iforall(xs: xs): bool
+fun
+<x0:t0
+,xs:t0>
+gseq_iforeach(xs: xs): void
 //
 (* ****** ****** *)
 //
@@ -786,13 +799,30 @@ concat_stream with gseq_concat_stream of 0100
 
 (* ****** ****** *)
 
+#symload ifoldl with gseq_ifoldl of 0100
+
+(* ****** ****** *)
+
 #symload iforall with gseq_iforall of 0100
 #symload iforeach with gseq_iforeach of 0100
 
 (* ****** ****** *)
 
-#symload z2listize with gseq_z2listize of 0100
-#symload z2streamize with gseq_z2streamize of 0100
+#symload
+imap_list with gseq_imap_list of 0100
+#symload
+imap_rlist with gseq_imap_rlist of 0100
+#symload
+imap_stream with gseq_imap_stream of 0100
+#symload
+imapopt_stream with gseq_imapopt_stream of 0100
+
+(* ****** ****** *)
+
+#symload
+z2listize with gseq_z2listize of 0100
+#symload
+z2streamize with gseq_z2streamize of 0100
 
 (* ****** ****** *)
 
