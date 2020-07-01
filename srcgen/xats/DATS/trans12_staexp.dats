@@ -1438,7 +1438,7 @@ s1e2.node() of
 ) : s1explst // end of [val]
 //
 val
-s2t0 = the_sort2_tflt
+s2t0 = the_sort2_type
 val
 tnm1 =
 (
@@ -1465,7 +1465,7 @@ in
 s2e0 where
 {
   val s2e0 =
-  s2exp_tyext(the_sort2_tflt, tnm1, s2es)
+  s2exp_tyext(the_sort2_type, tnm1, s2es)
 (*
   val ((*void*)) =
   println!("trans12_sexp: ")
@@ -2056,24 +2056,22 @@ _(*rest-of-s1exp*) =>
 let
 val s2e0 =
 trans12_sexp(s1e0)
+val s2t1 = s2e0.sort()
 //
 (*
 val ((*void*)) =
 println!
-("\
-trans12_sexp_ck: \
-s2e0.sort() = ", s2e0.sort())
+("trans12_sexp_ck: s2t1 = ", s2t1)
 *)
 //
 in
-  if
-  s2e0.sort() <= s2t0
-  then s2e0
-  else
-  s2exp_cast(s1e0.loc(), s2e0, s2t0)
+if
+s2t1 <= s2t0
+then s2e0 else
+s2exp_cast(s1e0.loc(), s2e0, s2t0)
 end // end of [let]
 //
-end // end of [trans12_sexp_ck]
+end (* end of [trans12_sexp_ck] *)
 
 (* ****** ****** *)
 

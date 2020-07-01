@@ -2957,22 +2957,21 @@ T_SEXPDEF(knd) = knd.node()
 in
 //
 ifcase
+//
 | (knd < 0) => s2e0
+//
 | (knd=PROPSORT) =>
   auxck2(s2t0, the_sort2_prop)
 | (knd=VIEWSORT) =>
   auxck2(s2t0, the_sort2_view)
-| (knd=TFLTSORT) =>
 (*
-//
-// HX-2020-03-21:
-// TYPEDEF = VTYPEDEF
-//
+| (knd=TFLTSORT) =>
   auxck2(s2t0, the_sort2_tflt)
 *)
-  auxck2(s2t0, the_sort2_vtflt)
-| (knd=VTFLTSORT) =>
-  auxck2(s2t0, the_sort2_vtflt)
+| (knd=TYPESORT) =>
+  auxck2(s2t0, the_sort2_type)
+| (knd=VWTPSORT) =>
+  auxck2(s2t0, the_sort2_vwtp)
 | _(* SEXPDEF *) =>
   let val () = assertloc(false) in s2e0 end
 //
@@ -2983,22 +2982,6 @@ auxck2
 ( s2tf: sort2
 , s2t1: sort2): s2exp =
 (
-let
-//
-(*
-val () =
-println!
-("\
-aux_sexpdef: \
-auxck2: s2tf = ", s2tf)
-val () =
-println!
-("\
-aux_sexpdef: \
-auxck2: s2t1 = ", s2t1)
-*)
-//
-in
 //
 case+ s2tf of
 //
@@ -3013,9 +2996,9 @@ _(*non-S2Efun*) =>
   (s2tf <= s2t1)
   then s2e0 else let
     val
-    s2t0 = auxst0(s2t0)
+    s2t1 = auxst0(s2t1)
   in
-    s2exp_cast(loc0, s2e0, s2t0)
+    s2exp_cast(loc0, s2e0, s2t1)
   end
 ) where
 {
@@ -3028,9 +3011,19 @@ _(*non-S2Efun*) =>
     | _ (* non-S2Tfun *) => s2tf
   )
 }
-end // end-of-let
+) where
+{
 //
-) (* end of auxck2 *)
+(*
+val () =
+println!
+("aux_sexpdef: auxck2: s2tf = ", s2tf)
+val () =
+println!
+("aux_sexpdef: auxck2: s2t1 = ", s2t1)
+*)
+//
+} (* end of auxck2 *)
 //
 } (* end of [where] *) // end of [val]
 //
@@ -3228,10 +3221,13 @@ ifcase
 | (knd=VIEWSORT) => the_sort2_view
 //
 | (knd=TBOXSORT) => the_sort2_tbox
+(*
 | (knd=TFLTSORT) => the_sort2_tflt
+*)
+| (knd=TYPESORT) => the_sort2_type
 //
-| (knd=VTBOXSORT) => the_sort2_vtbox
-| (knd=VTFLTSORT) => the_sort2_vtflt
+| (knd=VTBXSORT) => the_sort2_vtbx
+| (knd=VWTPSORT) => the_sort2_vwtp
 //
 | _(* SEXPDEF *) =>
   let
@@ -3242,7 +3238,7 @@ ifcase
 *)
 //
     val () =
-    assertloc(false) in the_sort2_vtflt
+    assertloc(false) in the_sort2_vwtp
   end
 //
 end // end-of-let
