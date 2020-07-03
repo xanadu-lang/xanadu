@@ -41,6 +41,9 @@ $(CPF) $(XATSHOME)/srcgen/xats/DATS/*.dats ./srcgen/xats/DATS/.
 CATS: ; \
 $(CPF) $(XATSHOME)/srcgen/xats/CATS/*.cats ./srcgen/xats/CATS/.
 
+CONTRIB: ; \
+$(CPFR) $(XATSHOME)/srcgen/xats/DATS/CONTRIB ./srcgen/xats/DATS/.
+
 ######
 #
 PRETOP: ; $(CPF) $(XATSHOME)/prelude/*.?ats ./prelude/.
