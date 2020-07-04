@@ -176,10 +176,10 @@ d3p0.node() of
     , ": TRERR33(D3Ptcast): d3p1 = ", d3p1);
     prerrln!
     ( loc0
-    , ": TRERR33(D3Ptcast): the expected type: ", t2p2);
+    , ": TRERR33(D3Ptcast): the inferred type: ", t2p1);
     prerrln!
     ( loc0
-    , ": TRERR33(D3Ptcast): the inferred type: ", t2p1);
+    , ": TRERR33(D3Ptcast): the expected type: ", t2p2);
   end
 //
 | D3Pnone1(d3p1) =>
@@ -271,6 +271,9 @@ D3Etcast(d3e2, t2p2) =>
 //
 val
 loc2 = d3e2.loc()
+val
+t2pi = d3e2.type()
+//
 val () =
 prerrln!
 ( loc2, ": ***TRERR33***")
@@ -281,11 +284,11 @@ prerrln!
 val () =
 prerrln!
 ( loc2
-, ": TRERR33(D3Eif0): then: the expected type: ", t2p2)
+, ": TRERR33(D3Eif0): then: the inferred type: ", t2pi)
 val () =
 prerrln!
 ( loc2
-, ": TRERR33(D3Eif0): then: the inferred type: ", d3e2.type())
+, ": TRERR33(D3Eif0): then: the expected type: ", t2p2)
 //
 }
 | _ (* else *) => ((*void*))
@@ -307,6 +310,9 @@ D3Etcast(d3e3, t2p3) =>
 //
 val
 loc3 = d3e3.loc()
+val
+t2pi = d3e3.type()
+//
 val () =
 prerrln!
 ( loc3, ": ***TRERR33***")
@@ -317,11 +323,11 @@ prerrln!
 val () =
 prerrln!
 ( loc3
-, ": TRERR33(D3Eif0): else: the expected type: ", t2p3)
+, ": TRERR33(D3Eif0): else: the inferred type: ", t2pi)
 val () =
 prerrln!
 ( loc3
-, ": TRERR33(D3Eif0): else: the inferred type: ", d3e3.type())
+, ": TRERR33(D3Eif0): else: the expected type: ", t2p3)
 //
 }
 | _ (* else *) => ((*void*))
@@ -569,61 +575,16 @@ d3e0.node() of
 // *)
 //
 | D3Elcast(d3e1, lab2) =>
-  let
-//
-    val
-    t2p1 = d3e1.type()
-    val
-    t2p1 = whnfize(t2p1)
-//
+  {
     val () =
-    tread33_d3exp(d3e1)
-    val () =
-    trerr33_add(TRERR33d3exp(d3e0))
-//
-  in
-    prerrln!
-    (loc0, ": ***TRERR33***");
-    prerrln!
-    ( loc0
-    , ": TRERR33(D3Elcast): the d3exp: ", d3e1);
-    prerrln!
-    ( loc0
-    , ": TRERR33(D3Elcast): the missing label: ", lab2);
-    prerrln!
-    ( loc0
-    , ": TRERR33(D3Elcast): the inferred type = ", t2p1);
-  end
+    tread33_d3exp_D3Elcast(d3e0)
+  }
 //
 | D3Etcast(d3e1, t2p2) =>
-  let
-//
-    val
-    t2p1 = d3e1.type()
-    val
-    t2p1 = whnfize(t2p1)
-//
+  {
     val () =
-    tread33_d3exp(d3e1)
-    val () =
-    trerr33_add(TRERR33d3exp(d3e0))
-//
-  in
-    prerrln!
-    (loc0, ": ***TRERR33***");
-    prerrln!
-    ( loc0
-    , ": TRERR33(D3Etcast): type-mismatch");
-    prerrln!
-    ( loc0
-    , ": TRERR33(D3Etcast): the d3exp: ", d3e1);
-    prerrln!
-    ( loc0
-    , ": TRERR33(D3Etcast): the expected type: ", t2p2);
-    prerrln!
-    ( loc0
-    , ": TRERR33(D3Etcast): the inferred type: ", t2p1);
-  end
+    tread33_d3exp_D3Etcast(d3e0)
+  }
 //
 | D3Enone0( ) => ((*void*))
 //
@@ -1163,7 +1124,7 @@ val
 xerrs = the_trerr33lst_get()
 //
 in
-  the_trerr33lst_set(list_cons(xerr, xerrs))
+the_trerr33lst_set(list_cons(xerr, xerrs))
 end // end of [trerr33_add]
 
 in (* in-of-local *)
@@ -1243,6 +1204,17 @@ there are none of trans33-errors!")
 end // end of [tread33_program]
 
 end // end of [local]
+
+(* ****** ****** *)
+//
+//
+// HX-2020-07-02:
+// For contributed code
+//
+(* ****** ****** *)
+
+#include
+"./CONTRIB/tread33_dynexp.dats"
 
 (* ****** ****** *)
 
