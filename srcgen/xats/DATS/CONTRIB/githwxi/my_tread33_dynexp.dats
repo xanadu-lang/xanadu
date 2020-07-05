@@ -25,13 +25,6 @@ UN = "prelude/SATS/unsafe.sats"
 #staload
 "./../../../SATS/tread33.sats"
 (* ****** ****** *)
-
-typedef
-t2ypedff = syndff(t2ype)
-typedef
-t2ypedfflst = syndfflst(t2ype)
-
-(* ****** ****** *)
 //
 extern
 fun{}
@@ -48,12 +41,99 @@ my_tread33_prerr_t2ypedfflst
 {
 //
 fun
+auxpth
+( ps
+: synpth): void =
+(
+ignoret(auxpth2(ps))
+)
+and
+auxpth2
+(ps: synpth): int =
+(
+case+ ps of
+|
+list_nil() => 0
+|
+list_cons(p0, ps) =>
+let
+  val n0 = auxpth2(ps)
+in
+  if
+  (n0 > 0)
+  then
+  prerr('.'); prerr(p0); n0+1
+end // end of [list_cons]
+)
+//
+fun
+auxnil() =
+prerr("*NONE*")
+//
+fun
 auxone
 ( dff0
 : t2ypedff): void =
 (
-  // prerrln!(dff0)
+case+ dff0 of
+|
+T2Pdff01(ps, t2p2) =>
+(
+prerr
+("root@");
+auxpth(ps);
+prerr(": ");
+auxnil(   ); prerrln!();
+prerr
+("root@");
+auxpth(ps);
+prerr(": ");
+prerr(t2p2); prerrln!();
 )
+|
+T2Pdff10(ps, t2p1) =>
+(
+prerr
+("root@");
+auxpth(ps);
+prerr(": ");
+prerr(t2p1); prerrln!();
+prerr
+("root@");
+auxpth(ps);
+prerr(": ");
+auxnil(   ); prerrln!();
+)
+|
+T2Pdff11(ps, t2p1, t2p2) =>
+(
+prerr
+("root@");
+auxpth(ps);
+prerr(": ");
+prerr(t2p1); prerrln!();
+prerr
+("root@");
+auxpth(ps);
+prerr(": ");
+prerr(t2p2); prerrln!();
+)
+|
+T2Pdff11_npf(ps, npf1, npf2) =>
+(
+prerr
+("root@");
+auxpth(ps);
+prerr(": ");
+prerr(npf1); prerrln!();
+prerr
+("root@");
+auxpth(ps);
+prerr(": ");
+prerr(npf2); prerrln!();
+)
+) (* end of [auxone] *)
+//
 and
 auxlst
 ( dffs
@@ -164,7 +244,7 @@ prerrln!
 in
 let
 val dffs =
-t2ype_syndffy
+t2ype_diffize
 (t2p1, t2p2) in my_tread33_prerr_t2ypedfflst<>(dffs)
 end
 end // end of [my_tread33_d3exp_D3Etcast]
