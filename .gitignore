@@ -5,3 +5,10 @@ lib/libxatsopt.a
 srcgen/xats/xatsopt
 srcgen/xats/xatsopt_dats.c
 srcgen/xats/BUILD/*.o
+#
+# ignoring generated files
+#
+bin/xatsopt
+srcgen/xats/xatsopt
+
+###### end of [.gitignore] ######

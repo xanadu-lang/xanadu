@@ -3,23 +3,23 @@
 ** for generics
 *)
 (* ****** ****** *)
-
+(*
 #staload
 "./../SATS/gbas.sats"
 #staload
 "./../SATS/gord.sats"
 #staload
 "./../SATS/gord_vt.sats"
-
+*)
 (* ****** ****** *)
 
 impltmp
 {a:vtype}
-gl_eq00a>(x, y) =
+gl_eq00<a>(x, y) =
 (gl_cmp00<a>(x, y) = 0)
 impltmp
 {a:vtype}
-gl_neq00a>(x, y) =
+gl_neq00<a>(x, y) =
 (gl_cmp00<a>(x, y) != 0)
 
 (* ****** ****** *)

@@ -163,7 +163,7 @@ print_d2con(x0) =
 fprint_d2con(stdout_ref, x0)
 implement
 prerr_d2con(x0) =
-fprint_d2con(stdout_ref, x0)
+fprint_d2con(stderr_ref, x0)
 //
 implement
 fprint_d2con
@@ -187,7 +187,7 @@ print_d2cst(x0) =
 fprint_d2cst(stdout_ref, x0)
 implement
 prerr_d2cst(x0) =
-fprint_d2cst(stdout_ref, x0)
+fprint_d2cst(stderr_ref, x0)
 //
 implement
 fprint_d2cst
@@ -212,7 +212,7 @@ print_d2var(x0) =
 fprint_d2var(stdout_ref, x0)
 implement
 prerr_d2var(x0) =
-fprint_d2var(stdout_ref, x0)
+fprint_d2var(stderr_ref, x0)
 //
 implement
 fprint_d2var
@@ -302,6 +302,8 @@ case- x0.node() of
 | D2Pcon2(d2cs) =>
   fprint!(out, "D2Pcon2(", d2cs, ")")
 //
+| D2Pbang(d2p1) =>
+  fprint!(out, "D2Pbang(", d2p1, ")")
 | D2Pflat(d2p1) =>
   fprint!(out, "D2Pflat(", d2p1, ")")
 | D2Pfree(d2p1) =>
@@ -503,6 +505,8 @@ case- x0.node() of
   fprint!(out, "D2Eeval(", d2e1, ")")
 | D2Efold(d2e1) =>
   fprint!(out, "D2Efold(", d2e1, ")")
+| D2Efree(d2e1) =>
+  fprint!(out, "D2Efree(", d2e1, ")")
 //
 | D2Eraise(d2e1) =>
   fprint!(out, "D2Eraise(", d2e1, ")")
@@ -631,6 +635,11 @@ case- x0.node() of
   (tok, d2c) =>
   fprint!(out, "D2Cextern(", d2c, ")")
 //
+| D2Clocal(head, body) =>
+  fprint!
+  ( out
+  , "D2Clocal(", head, "; ", body, ")")
+//
 | D2Cinclude
   ( tok
   , src, knd
@@ -671,40 +680,41 @@ case- x0.node() of
     | Some _ => "Some(<fmodenv>)"): string
   }
 //
-| D2Clocal(head, body) =>
-  fprint!
-  ( out
-  , "D2Clocal(", head, "; ", body, ")")
-//
 | D2Cabssort(d1c) =>
   fprint!(out, "D2Cabssort(", d1c, ")")
 //
-| D2Cstacst0(s2c, s2t) =>
+| D2Cstacst0(s2c, s2t0) =>
   fprint!
   ( out
-  , "D2Cstacst0(", s2c, "; ", s2t, ")")
+  , "D2Cstacst0(", s2c, "; ", s2t0, ")")
 //
 | D2Csortdef(sym, s2tx) =>
   fprint!
   ( out
   , "D2Csortdef(", sym, "; ", s2tx, ")")
 //
-| D2Csexpdef(s2c, s2e) =>
+| D2Csexpdef(s2c, def0) =>
   fprint!
   ( out
-  , "D2Csexpdef(", s2c, "; ", s2e, ")")
+  , "D2Csexpdef(", s2c, "; ", def0, ")")
 //
-| D2Cabstype(s2c, df2) =>
+| D2Cabstype(s2c, def0) =>
   fprint!
   ( out
-  , "D2Cabstype(", s2c, "; ", df2, ")")
+  , "D2Cabstype(", s2c, "; ", def0, ")")
 //
+| D2Cabsopen
+  (tok, sqid) =>
+  fprint!
+  ( out
+  , "D2Cabsopen("
+  , tok(*absopen*), "; ", sqid, ")")
 | D2Cabsimpl
   (knd, sqid, def0) =>
   fprint!
   ( out
   , "D2Cabsimpl("
-  , knd, "; ", sqid, "; ", def0, ")")
+  , knd(*abskind*), "; ", sqid, "; ", def0, ")")
 //
 | D2Csymload
   (tok, sym0, dpi1) =>
@@ -734,6 +744,13 @@ case- x0.node() of
   , "D2Cynconst("
   , knd, "; ", tqas, "; ", d2cs, ")")
 //
+| D2Cfundecl
+  (knd, mopt, tqas, f2ds) =>
+  fprint!
+  ( out
+  , "D2Cfundecl("
+  , knd, "; ", mopt, "; ", tqas, "; ", f2ds, ")")
+//
 | D2Cvaldecl
   (knd, mopt, v2ds) =>
   fprint!
@@ -746,13 +763,6 @@ case- x0.node() of
   ( out
   , "D2Cvardecl("
   , knd, "; ", mopt, "; ", v2ds, ")")
-//
-| D2Cfundecl
-  (knd, mopt, tqas, f2ds) =>
-  fprint!
-  ( out
-  , "D2Cfundecl("
-  , knd, "; ", mopt, "; ", tqas, "; ", f2ds, ")")
 //
 | D2Cimpdecl1
   ( knd, mopt, sqas, tqas
@@ -784,7 +794,7 @@ print_d2itm(x0) =
 fprint_d2itm(stdout_ref, x0)
 implement
 prerr_d2itm(x0) =
-fprint_d2itm(stdout_ref, x0)
+fprint_d2itm(stderr_ref, x0)
 //
 implement
 fprint_d2itm
@@ -826,7 +836,7 @@ print_sq2arg(x0) =
 fprint_sq2arg(stdout_ref, x0)
 implement
 prerr_sq2arg(x0) =
-fprint_sq2arg(stdout_ref, x0)
+fprint_sq2arg(stderr_ref, x0)
 //
 implement
 fprint_sq2arg
@@ -842,7 +852,7 @@ print_tq2arg(x0) =
 fprint_tq2arg(stdout_ref, x0)
 implement
 prerr_tq2arg(x0) =
-fprint_tq2arg(stdout_ref, x0)
+fprint_tq2arg(stderr_ref, x0)
 //
 implement
 fprint_tq2arg
@@ -858,7 +868,7 @@ print_ti2arg(x0) =
 fprint_ti2arg(stdout_ref, x0)
 implement
 prerr_ti2arg(x0) =
-fprint_ti2arg(stdout_ref, x0)
+fprint_ti2arg(stderr_ref, x0)
 //
 implement
 fprint_ti2arg

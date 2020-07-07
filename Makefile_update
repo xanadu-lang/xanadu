@@ -1,0 +1,87 @@
+######
+#
+# HX-2019-12-18:
+# All the files in xanadu-lang/xanadu
+# are supposed to be copied for ATS-Xanadu
+#
+######
+
+CPF=cp -f
+CPFR=cp -f -r
+
+######
+
+all:: update
+
+######
+
+update:: MISC
+update:: SATS
+update:: DATS
+update:: CATS
+update:: CONTRIB
+
+######
+
+update:: PRETOP
+update:: PRESATS
+update:: PREDATS
+update:: PREDATSCATS
+update:: XATSLIB
+
+######
+
+MISC: ; \
+$(CPF) \
+$(XATSHOME)/srcgen/xats/Makefile_xats ./srcgen/xats/.
+
+######
+
+SATS: ; \
+$(CPF) $(XATSHOME)/srcgen/xats/SATS/*.sats ./srcgen/xats/SATS/.
+
+DATS: ; \
+$(CPF) $(XATSHOME)/srcgen/xats/DATS/*.dats ./srcgen/xats/DATS/.
+
+CATS: ; \
+$(CPF) $(XATSHOME)/srcgen/xats/CATS/*.cats ./srcgen/xats/CATS/.
+
+CONTRIB: ; \
+$(CPFR) $(XATSHOME)/srcgen/xats/DATS/CONTRIB ./srcgen/xats/DATS/.
+
+######
+#
+PRETOP: ; $(CPF) $(XATSHOME)/prelude/*.?ats ./prelude/.
+PRESATS: ; $(CPF) $(XATSHOME)/prelude/SATS/*.sats ./prelude/SATS/.
+#
+PREDATS: ; $(CPF) $(XATSHOME)/prelude/DATS/*.dats ./prelude/DATS/.
+#
+PREDATSCATS:: \
+PREDATSCATS_Xint
+PREDATSCATS_Xint: ; \
+$(CPF) $(XATSHOME)/prelude/DATS/CATS/Xint/*.dats ./prelude/DATS/CATS/Xint/.
+#
+######
+
+XATSLIB:: \
+XATSLIB_libc
+XATSLIB_libc:: ; \
+$(CPF) $(XATSHOME)/xatslib/libc/SATS/*.sats ./xatslib/libc/SATS/.
+XATSLIB_libc:: ; \
+$(CPF) $(XATSHOME)/xatslib/libc/DATS/*.dats ./xatslib/libc/DATS/.
+XATSLIB_libc:: ; \
+$(CPF) $(XATSHOME)/xatslib/libc/DATS/CATS/Xint/*.dats ./xatslib/libc/DATS/CATS/Xint/.
+#
+
+######
+
+XATSLIB:: \
+XATSLIB_githwxi
+XATSLIB_githwxi:: ; \
+$(CPF) $(XATSHOME)/xatslib/githwxi/SATS/*.sats ./xatslib/githwxi/SATS/.
+XATSLIB_githwxi:: ; \
+$(CPF) $(XATSHOME)/xatslib/githwxi/DATS/*.dats ./xatslib/githwxi/DATS/.
+XATSLIB_githwxi:: ; \
+$(CPF) $(XATSHOME)/xatslib/githwxi/TEST/*.dats ./xatslib/githwxi/TEST/.
+
+###### end of [Makefile] ######
