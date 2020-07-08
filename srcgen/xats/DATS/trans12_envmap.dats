@@ -39,6 +39,10 @@
 UN = "prelude/SATS/unsafe.sats"
 //
 (* ****** ****** *)
+
+#include "./../params.hats"
+
+(* ****** ****** *)
 //
 #staload
 SYM = "./../SATS/symbol.sats"
@@ -1461,12 +1465,14 @@ case+ d2i of
 )
 ) : d2cstlst // end of [val]
 //
+#if(__XATS_DEBUG__)
 val () =
 println!
 ("the_dexpenv_add_cst: d2c = ", d2c)
 val () =
 println!
 ("the_dexpenv_add_cst: d2cs = ", d2cs)
+#endif
 //
 val d2i0 = D2ITMcst(list_cons(d2c, d2cs))
 //

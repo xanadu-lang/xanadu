@@ -39,6 +39,10 @@
 UN="prelude/SATS/unsafe.sats"
 //
 (* ****** ****** *)
+
+#include "./../params.hats"
+
+(* ****** ****** *)
 //
 #staload
 STM = "./../SATS/stamp0.sats"
@@ -615,12 +619,12 @@ implement
 s2exp_cast
 (loc, s2e, s2t) = let
 //
-// (*
+#if(__XATS_DEBUG__)
 val () =
 println!("s2exp_cast: s2e = ", s2e)
 val () =
 println!("s2exp_cast: s2t = ", s2t)
-// *)
+#endif
 //
 in
   s2exp_make_node(s2t, S2Ecast(loc, s2e, s2t))

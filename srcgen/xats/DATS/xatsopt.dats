@@ -39,6 +39,10 @@
 UN = "prelude/SATS/unsafe.sats"
 //
 (* ****** ****** *)
+
+#include "./../params.hats"
+
+(* ****** ****** *)
 //
 #staload
 ERR = "./../SATS/xerrory.sats"
@@ -1038,9 +1042,11 @@ println!
 val
 h0cs = tcomp30_program(d3cs)
 //
+#if(__XATS_DEBUG__)
 val () =
 println!
 ("process_fpath: h0cs = ", h0cs)
+#endif
 //
 (* ****** ****** *)
 //
@@ -1074,9 +1080,11 @@ fpath_make(given, fname)
 end
 //
 // (*
+#if(__XATS_DEBUG__)
 val () =
 println!
 ("process_given: arg0 = ", arg0)
+#endif
 // *)
 //
 in
@@ -1612,9 +1620,11 @@ the_basics_load
 in (* nothing *) end where
 {
 //
+#if(__XATS_DEBUG__)
 val () =
 println!
 ("the_basics_load: ", given)
+#endif
 //
   val fname =
     dirbase(XATSHOME, given)
@@ -1668,9 +1678,11 @@ let
 in (* nothing *) end where
 {
 //
+#if(__XATS_DEBUG__)
 val () =
 println!
 ("the_prelude_load: ", given)
+#endif
 //
   val
   fname =
@@ -1860,11 +1872,6 @@ val () =
 the_prelude_load
 ( XATSHOME
 , 0(*static*), "prelude/SATS/stream_vt.sats")
-val () =
-the_prelude_load
-( XATSHOME
-, 0(*static*), "prelude/SATS/str.sats")
-
 //
 (*
 val () =

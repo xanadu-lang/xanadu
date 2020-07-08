@@ -62,6 +62,10 @@ SYM = "./../SATS/symbol.sats"
 
 (* ****** ****** *)
 
+#include "./../params.hats"
+
+(* ****** ****** *)
+
 local
 //
 #include
@@ -103,20 +107,21 @@ fpath_normalize
   (fp0) =
 let
 //
-// (*
+#if(__XATS_DEBUG__)
 val () =
 println!
 ("fpath_normalize: fp0 = ", fp0)
-// *)
+#endif
 //
 val
 fp1 = aux0(fp1)
 //
-// (*
+#if(__XATS_DEBUG__)
 val () =
 println!
 ("fpath_normalize: fp1 = ", fp1)
-// *)
+#endif
+//
 in
   fp1
 end where
@@ -258,11 +263,13 @@ dirln
 : !Strptr1): Size =
 let
 //
+#if(__XATS_DEBUG__)
 val () =
 println!
 (
 "dirln = "
 , UN_string_vt2t(dir))
+#endif
 //
 in
 string_length
@@ -882,10 +889,12 @@ implement
 filpath_dirbase_vt
   (dir0, base) = let
 //
+#if(__XATS_DEBUG__)
 val () =
 println!("filpath_dirbase_vt: dir0 = ", dir0)
 val () =
 println!("filpath_dirbase_vt: base = ", base)
+#endif
 //
 val
 dir0 = g1ofg0(dir0)
