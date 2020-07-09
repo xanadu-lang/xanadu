@@ -13,12 +13,12 @@
 ** the terms of  the GNU GENERAL PUBLIC LICENSE (GPL) as published by the
 ** Free Software Foundation; either version 3, or (at  your  option)  any
 ** later version.
-** 
+**
 ** ATS is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without  even  the  implied  warranty  of MERCHANTABILITY or
 ** FITNESS FOR A PARTICULAR PURPOSE.  See the  GNU General Public License
 ** for more details.
-** 
+**
 ** You  should  have  received  a  copy of the GNU General Public License
 ** along  with  ATS;  see the  file COPYING.  If not, please write to the
 ** Free Software Foundation,  51 Franklin Street, Fifth Floor, Boston, MA
@@ -30,6 +30,11 @@
 // Author: Hongwei Xi
 // Start Time: October, 2018
 // Authoremail: gmhwxiATgmailDOTcom
+//
+(* ****** ****** *)
+//
+#include
+"./../HATS/xatsopt.hats"
 //
 (* ****** ****** *)
 //
@@ -493,25 +498,25 @@ case+
 |
 (
 TYRECbox0()
-, 
+,
 TYRECbox0()) => true
 //
 |
 (
 TYRECbox1()
-, 
+,
 TYRECbox1()) => true
 //
 |
 (
 TYRECflt0()
-, 
+,
 TYRECflt0()) => true
 //
 |
 (
 TYRECflt2(nm1)
-, 
+,
 TYRECflt2(nm2)) => (nm1 = nm2)
 //
 |
@@ -615,12 +620,14 @@ implement
 s2exp_cast
 (loc, s2e, s2t) = let
 //
-// (*
+#if(__XATSOPT_DEBUG__)
+(*
 val () =
 println!("s2exp_cast: s2e = ", s2e)
 val () =
 println!("s2exp_cast: s2t = ", s2t)
-// *)
+*)
+#endif//__XATSOPT_DEBUG__
 //
 in
   s2exp_make_node(s2t, S2Ecast(loc, s2e, s2t))

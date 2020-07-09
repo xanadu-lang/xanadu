@@ -13,12 +13,12 @@
 ** the terms of  the GNU GENERAL PUBLIC LICENSE (GPL) as published by the
 ** Free Software Foundation; either version 3, or (at  your  option)  any
 ** later version.
-** 
+**
 ** ATS is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without  even  the  implied  warranty  of MERCHANTABILITY or
 ** FITNESS FOR A PARTICULAR PURPOSE.  See the  GNU General Public License
 ** for more details.
-** 
+**
 ** You  should  have  received  a  copy of the GNU General Public License
 ** along  with  ATS;  see the  file COPYING.  If not, please write to the
 ** Free Software Foundation,  51 Franklin Street, Fifth Floor, Boston, MA
@@ -31,6 +31,9 @@
 // Start Time: September, 2019
 // Authoremail: gmhwxiATgmailDOTcom
 //
+(* ****** ****** *)
+#include
+"./../HATS/xatsopt.hats"
 (* ****** ****** *)
 //
 #include
@@ -157,7 +160,7 @@ D3Pdapp
 ( d3f0
 , npf1, d3ps) =>
 let
-  val () = 
+  val () =
   d3pat_leftize(d3f0)
 in
   auxd3ps(npf1, d3ps)
@@ -488,7 +491,7 @@ list_cons
   val d3p0 =
   trans33_dpat_dntp(env0, d3p0, t2p0)
   val d3ps = auxlst(env0, d3ps, t2ps)
-}    
+}
 ) (* list_cons *)
 ) (* end of [auxlst] *)
 } (* end of [trans33_dpatlst_dnts] *)
@@ -1582,12 +1585,16 @@ loc0 = d3e0.loc()
 val
 t2p0 = d3e0.type()
 //
+#if(__XATSOPT_DEBUG__)
+(*
 val () =
 println!
 ("aux_anno: d3e0 = ", d3e0)
 val () =
 println!
 ("aux_anno: t2p0 = ", t2p0)
+*)
+#endif//__XATSOPT_DEBUG__
 //
 val-
 D3Eanno
@@ -1641,7 +1648,8 @@ trans33_dexp
 val loc0 = d3e0.loc()
 val t2p0 = d3e0.type()
 //
-// (*
+#if(__XATSOPT_DEBUG__)
+(*
 val () =
 println!
 ("trans33_dexp: loc0 = ", loc0)
@@ -1651,7 +1659,8 @@ println!
 val () =
 println!
 ("trans33_dexp: t2p0 = ", t2p0)
-// *)
+*)
+#endif//__XATSOPT_DEBUG__
 //
 in
 //
@@ -2718,7 +2727,7 @@ d3ecl_make_node
   , sqas, tqas
   , id2c, ti3a, tias, f3as, res0, d3e0
   ) (* d3ecl_make_node *)
-) 
+)
 //
 |
 Some(d2c0) =>

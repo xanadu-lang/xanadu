@@ -13,12 +13,12 @@
 ** the terms of  the GNU GENERAL PUBLIC LICENSE (GPL) as published by the
 ** Free Software Foundation; either version 3, or (at  your  option)  any
 ** later version.
-** 
+**
 ** ATS is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without  even  the  implied  warranty  of MERCHANTABILITY or
 ** FITNESS FOR A PARTICULAR PURPOSE.  See the  GNU General Public License
 ** for more details.
-** 
+**
 ** You  should  have  received  a  copy of the GNU General Public License
 ** along  with  ATS;  see the  file COPYING.  If not, please write to the
 ** Free Software Foundation,  51 Franklin Street, Fifth Floor, Boston, MA
@@ -31,6 +31,9 @@
 // Start Time: May, 2018
 // Authoremail: gmhwxiATgmailDOTcom
 //
+(* ****** ****** *)
+#include
+"./../HATS/xatsopt.hats"
 (* ****** ****** *)
 //
 #include
@@ -64,11 +67,8 @@ SYM = "./../SATS/symbol.sats"
 
 local
 //
-#include
-"./../sysparam.hats"
-//
 #if
-SYSTEM_IS_UNIX_LIKE
+SYSTEM_IS_POSIX_LIKE
 #then
 //
 val theDirSep: char = '/'
@@ -100,23 +100,29 @@ a path is not removed.
 //
 implement
 fpath_normalize
-  (fp0) =
-let
+  (fp0) = let
 //
-// (*
+#if(__XATSOPT_DEBUG__)
+//
+(*
 val () =
 println!
 ("fpath_normalize: fp0 = ", fp0)
-// *)
+*)
+//
+#endif//__XATSOPT_DEBUG__
 //
 val
 fp1 = aux0(fp1)
 //
-// (*
+#if(__XATSOPT_DEBUG__)
+(*
 val () =
 println!
 ("fpath_normalize: fp1 = ", fp1)
-// *)
+*)
+#endif//__XATSOPT_DEBUG__
+//
 in
   fp1
 end where
@@ -258,11 +264,15 @@ dirln
 : !Strptr1): Size =
 let
 //
+#if(__XATSOPT_DEBUG__)
+(*
 val () =
 println!
 (
 "dirln = "
 , UN_string_vt2t(dir))
+*)
+#endif//__XATSOPT_DEBUG__
 //
 in
 string_length
@@ -882,10 +892,16 @@ implement
 filpath_dirbase_vt
   (dir0, base) = let
 //
+#if(__XATSOPT_DEBUG__)
+(*
 val () =
-println!("filpath_dirbase_vt: dir0 = ", dir0)
+println!
+("filpath_dirbase_vt: dir0 = ", dir0)
 val () =
-println!("filpath_dirbase_vt: base = ", base)
+println!
+("filpath_dirbase_vt: base = ", base)
+*)
+#endif//__XATSOPT_DEBUG__
 //
 val
 dir0 = g1ofg0(dir0)
@@ -904,7 +920,7 @@ if
 then (dir0[n1-1] = sep) else false
 ) : bool // end of [val]
 //
-val n12 = 
+val n12 =
 (
 if sepd then (n1+n2+1) else (n1+n2+2)
 ) : Size_t // end of [val]

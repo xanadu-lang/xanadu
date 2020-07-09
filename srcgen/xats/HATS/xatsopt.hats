@@ -33,12 +33,28 @@
 //
 (* ****** ****** *)
 //
-#define SYSTEM_IS_UNIX_LIKE 1
+// For defining
+// various system-wise parameters
 //
 (* ****** ****** *)
+(*
+** HX-2020-07-08:
+** proposed by Richard Kent:
+*)
+#ifndef
+XATSOPT_DEBUG_INFO
+#define
+XATSOPT_DEBUG_INFO
+
+#define
+__XATSOPT_DEBUG__ 1
+
+#endif(*XATSOPT_DEBUG_INFO*)
+(* ****** ****** *)
 //
+#define SYSTEM_IS_POSIX_LIKE 1
 #define SYSTEM_IS_WINDOWS_LIKE 0
 //
 (* ****** ****** *)
 
-(* end of [sysparam.hats] *)
+(* end of [xatsopt.hats] *)
