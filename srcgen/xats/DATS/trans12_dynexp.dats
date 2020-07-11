@@ -2193,6 +2193,51 @@ in
 end // end of [aux_tup2]
 
 (* ****** ****** *)
+fun
+aux_brack
+( d1e0
+: d1exp): d2exp = let
+val
+loc0 = d1e0.loc()
+val-
+D1Ebrack
+( d1es ) = d1e0.node()
+//
+val
+dpis =
+let
+val sym =
+$SYM.LRBRACK_symbol
+val
+opt =
+the_dexpenv_find(sym)
+in
+//
+case+ opt of
+| ~
+None_vt() =>
+(
+  list_nil()
+)
+| ~
+Some_vt(d2i) =>
+(
+case+ d2i of
+|
+D2ITMsym
+(_, dpis) => dpis
+| _ => list_nil(*void*)
+) (* Some_vt *)
+end : d2pitmlst // end of [val]
+//
+val d2es =
+trans12_dexplst(d1es)
+//
+in
+  d2exp_make_node
+  (loc0, D2Ebrack(dpis, d2es))
+end // end of [aux_brack]
+(* ****** ****** *)
 
 fun
 aux_dtsel
@@ -2218,22 +2263,24 @@ auxsym
 ( sym
 : sym_t): d2pitmlst =
 let
-  val
-  opt =
-  the_dexpenv_find(sym)
+val
+opt =
+the_dexpenv_find(sym)
 in
 //
 case+ opt of
-| ~None_vt() =>
-  (
-    list_nil()
-  )
-| ~Some_vt(d2i) =>
-  (
-    case+ d2i of
-    | D2ITMsym
-    (_, dpis) => dpis | _ => list_nil()
-  )
+| ~
+None_vt() =>
+(
+  list_nil()
+)
+| ~
+Some_vt(d2i) =>
+(
+case+ d2i of
+| D2ITMsym(_, dpis) => dpis
+| _ (*non-D2ITMsym*) => list_nil()
+) (* Some_vt *)
 //
 end // end of [auxsym]
 //
@@ -2263,31 +2310,34 @@ val d2es =
 (
 case+
 d1e.node() of
-| D1Elist(d1es1) =>
-  (
-    trans12_dexplst(d1es1)
-  )
-| D1Elist
-  (d1es1, d1es2) =>
-  let
+|
+D1Elist(d1es1) =>
+(
+  trans12_dexplst(d1es1)
+)
+|
+D1Elist
+(d1es1, d1es2) =>
+let
   val () =
   (npf := length(d1es1))
   val d2es1 =
     trans12_dexplst(d1es1)
   val d2es2 =
     trans12_dexplst(d1es2)
-  in
-    list_append(d2es1, d2es2)
-  end
-| _(*non-D1Elist*) =>
-  list_sing(trans12_dexp(d1e))
+in
+  list_append(d2es1, d2es2)
+end
+|
+_(*non-D1Elist*) =>
+list_sing(trans12_dexp(d1e))
 ) : d2explst // end of [val]
 }
 ) : d2explstopt // end of [val]
 //
 in
-  d2exp_make_node
-  (loc0, D2Edtsel(lab, dpis, npf, arg))
+d2exp_make_node
+(loc0, D2Edtsel(lab, dpis, npf, arg))
 end // end of [aux_dtsel]
 
 (* ****** ****** *)
@@ -2450,6 +2500,7 @@ d1e0.node() of
 | D1Etuple
   (k0, _, _) => aux_tup2(d1e0)
 //
+| D1Ebrack _ => aux_brack(d1e0)
 | D1Edtsel _ => aux_dtsel(d1e0)
 //
 | D1Eif0 // simple
@@ -4550,6 +4601,7 @@ x0.node() of
     val-
     I0DNTsome(tok) = id.node()
   }
+(*
 | S0YMBdtlab
   (tok, l0) =>
   (
@@ -4559,6 +4611,7 @@ x0.node() of
     val-
     L0ABLsome(lab) = l0.node()
   }
+*)
 | S0YMBbrack
   (tok1, tok2) => $SYM.LRBRACK_symbol
 ) (* end of [auxsym] *)
