@@ -228,7 +228,21 @@ D3Pflat(d3p1) = d3p0.node()
 val
 d3p1 = trans33_dpat(env0, d3p1)
 //
-val () = d3pat_leftize(d3p1)
+(*
+(*
+HX-2020-07-10:
+Lefitization needs to
+be annotated explicitly;
+in the following patterns,
+[x0] is a val but [xs] is a var:
+//
+@list_cons(x0, !xs) // xs: read-only
+@list_vt_cons(x0, !xs) // xs: writable
+//
+*)
+val
+((*void*)) = d3pat_leftize(d3p1)
+*)
 //
 in
   d3pat_make_node
@@ -1090,26 +1104,25 @@ end // end of [None]
 Some(arg3) =>
 let
 //
+val-
+list_cons
+(d3e1, _) = d3es
 val
-d3es =
-trans33_dexplst(env0, d3es)
+d3e1 =
+trans33_dexp(env0, d3e1)
 val
 arg3 =
 trans33_dexplst(env0, arg3)
 //
 val
 tres = d3e0.type()
-//
-val-
-list_cons
-(d3e1, _) = d3es
-val
-t2p1 = d3e1.type()
 val
 targ =
-list_cons
-( t2p1
-, d3explst_get_type(arg3))
+list_cons(t2p1, t2ps) where
+{
+val t2p1 = d3e1.type()
+val t2ps = d3explst_get_type(arg3)
+}
 //
 val tfun =
 t2ype_fun0(loc0, npf2, targ, tres)
