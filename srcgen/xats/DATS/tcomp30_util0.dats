@@ -28,7 +28,7 @@
 (* ****** ****** *)
 //
 // Author: Hongwei Xi
-// Start Time: June, 2020
+// Start Time: July, 2020
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
@@ -39,115 +39,42 @@
 UN = "prelude/SATS/unsafe.sats"
 //
 (* ****** ****** *)
-//
-#staload "./../SATS/stamp0.sats"
-#staload "./../SATS/symbol.sats"
+
+#staload "./../SATS/basics.sats"
+
+(* ****** ****** *)
+
 #staload "./../SATS/locinfo.sats"
-//
+
 (* ****** ****** *)
-//
+
+#staload "./../SATS/dynexp2.sats"
+#staload "./../SATS/dynexp3.sats"
+
+(* ****** ****** *)
+
 #staload "./../SATS/intrep0.sats"
-//
-(* ****** ****** *)
-
-local
-
-typedef
-hdvar_struct = @{
-//
-  hdvar_loc= loc_t // loc
-, hdvar_sym= sym_t // name
-, hdvar_type= h0typ // type
-, hdvar_stamp= stamp // unicity
-//
-} (* end of [hdvar_tbox] *)
-
-absimpl
-hdvar_tbox = ref(hdvar_struct)
-
-in(* in-of-local *)
-
-implement
-hdvar_make_idtp
-(loc, sym, htp) =
-(
-ref<hdvar_struct>
-@{
-  hdvar_loc=loc
-, hdvar_sym=sym
-, hdvar_type=htp
-, hdvar_stamp=stamp
-}
-) where
-{
-  val stamp = hdvar_stamp_new()
-}
-
-end // end of [local]
 
 (* ****** ****** *)
 
-local
-//
-absimpl
-h0exp_tbox = $rec
-{ h0exp_loc= loc_t
-, h0exp_type= h0typ
-, h0exp_node= h0exp_node
-} (* end of [absimpl] *)
-//
-in (* in-of-local *)
-//
-implement
-h0exp_get_loc
-  (h0e) = h0e.h0exp_loc
-//
-implement
-h0exp_get_type
-  (h0e) = h0e.h0exp_type
-//
-implement
-h0exp_get_node
-  (h0e) = h0e.h0exp_node
-//
-implement
-h0exp_make_node
-(
-loc0, h0t0, node
-) = $rec
-{ h0exp_loc= loc0
-, h0exp_type= h0t0, h0exp_node= node
-} (* h0exp_make_node *)
-//
-end // end of [local]
+#staload "./../SATS/tcomp30.sats"
 
 (* ****** ****** *)
 
-local
-//
-absimpl
-h0dcl_tbox = $rec
-{ h0dcl_loc= loc_t
-, h0dcl_node= h0dcl_node
-} (* end of [absimpl] *)
-//
-in (* in-of-local *)
-//
 implement
-h0dcl_get_loc
-(dcl) = dcl.h0dcl_loc
-implement
-h0dcl_get_node
-(dcl) = dcl.h0dcl_node
+hdvar_make_dvar
+  (d2v) = let
 //
-implement
-h0dcl_make_node
-(loc0, node) = $rec
-{ h0dcl_loc= loc0, h0dcl_node= node
-} (* h0dcl_make_node *)
+val loc = d2v.loc()
+val sym = d2v.sym()
+val t2p = d2v.type()
 //
-end // end of [local]
+val htp = tcomp30_type(t2p)
+//
+in
+  hdvar_make_idtp(loc, sym, htp)
+end // end of [hdvar_make_dvar]
 
 (* ****** ****** *)
 
-(* end of [xats_intrep0_h0typ.dats] *)
+(* end of [xats_tcomp30_util0.dats] *)
