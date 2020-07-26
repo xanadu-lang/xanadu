@@ -71,7 +71,73 @@ tcomp30_declist(prog0)
 //
 (* ****** ****** *)
 
+implement
+tcomp30_dvar
+  (d2v0) =
+let
+val opt =
+the_dvarmap_search_opt(d2v0)
+in
+case+ opt of
+| ~
+Some_vt(hdv1) => hdv1
+| ~
+None_vt((*void*)) =>
+let
+val hdv1 =
+hdvar_make_dvar(d2v0)
+in
+the_dvarmap_insert_any(d2v0, hdv1); hdv1
+end
+end // end of [tcomp30_dvar]
+
+(* ****** ****** *)
+
+implement
+tcomp30_dcon
+  (d2c0) =
+let
+val opt =
+the_dconmap_search_opt(d2c0)
+in
+case+ opt of
+| ~
+Some_vt(hdc1) => hdc1
+| ~
+None_vt((*void*)) =>
+let
+val hdc1 =
+hdcon_make_dcon(d2c0)
+in
+the_dconmap_insert_any(d2c0, hdc1); hdc1
+end
+end // end of [tcomp30_dcon]
+
+implement
+tcomp30_dcst
+  (d2c0) =
+let
+val opt =
+the_dcstmap_search_opt(d2c0)
+in
+case+ opt of
+| ~
+Some_vt(hdc1) => hdc1
+| ~
+None_vt((*void*)) =>
+let
+val hdc1 =
+hdcst_make_dcst(d2c0)
+in
+the_dcstmap_insert_any(d2c0, hdc1); hdc1
+end
+end // end of [tcomp30_dcst]
+
+(* ****** ****** *)
+
 local
+
+(* ****** ****** *)
 
 fun
 auxvar
@@ -86,19 +152,108 @@ val
 h0t0 = tcomp30_type(t2p0)
 //
 val
-hdv =
+hdv1 =
 (
-  hdvar_make_dvar(d2v)
+  tcomp30_dvar(d2v0)
 ) where
 {
   val-
-  D3Evar(d2v) = d3e0.node()
+  D3Evar(d2v0) = d3e0.node()
 }
 //
 in
-  h0exp_make_node
-  (loc0, h0t0, H0Evar(hdv))
+h0exp_make_node(loc0, h0t0, H0Evar(hdv1))
 end
+
+(* ****** ****** *)
+
+fun
+auxfcon
+(d3e0: d3exp): h0exp =
+let
+//
+val
+loc0 = d3e0.loc()
+val
+t2p0 = d3e0.type()
+val
+h0t0 = tcomp30_type(t2p0)
+//
+val
+hdc1 =
+(
+  tcomp30_dcon(d2c0)
+) where
+{
+  val-
+  D3Efcon(d2c0) = d3e0.node()
+}
+//
+in
+h0exp_make_node(loc0, h0t0, H0Efcon(hdc1))
+end
+
+(* ****** ****** *)
+
+fun
+auxfcst
+(d3e0: d3exp): h0exp =
+let
+//
+val
+loc0 = d3e0.loc()
+val
+t2p0 = d3e0.type()
+val
+h0t0 = tcomp30_type(t2p0)
+//
+val
+hdc1 =
+(
+  tcomp30_dcst(d2c0)
+) where
+{
+  val-
+  D3Efcst(d2c0) = d3e0.node()
+}
+//
+in
+h0exp_make_node(loc0, h0t0, H0Efcst(hdc1))
+end
+
+(* ****** ****** *)
+
+fun
+auxdapp
+(d3e0: d3exp): h0exp =
+let
+//
+val
+loc0 = d3e0.loc()
+val
+t2p0 = d3e0.type()
+val
+h0t0 = tcomp30_type(t2p0)
+//
+val
+hend =
+(
+  H0Edapp(h0f0, npf1, h0es)
+) where
+{
+  val-
+  D3Edapp
+  ( d3f0
+  , npf1, d3es) = d3e0.node()
+  val h0f0 = tcomp30_dexp(d3f0)
+  val h0es = tcomp30_dexplst(d3es)
+}
+//
+in
+  h0exp_make_node(loc0, h0t0, hend)
+end
+
+(* ****** ****** *)
 
 in(*in-of-local*)
 
@@ -129,6 +284,14 @@ d3e0.node() of
 |
 D3Evar _ => auxvar(d3e0)
 //
+|
+D3Efcon _ => auxfcon(d3e0)
+|
+D3Efcst _ => auxfcst(d3e0)
+//
+|
+D3Edapp _ => auxdapp(d3e0)
+//
 | _(* rest-of_d3exp *) =>
 let
 //
@@ -142,7 +305,7 @@ hend =
 H0Enone1($UN.cast{ptr}(d3e0))
 //
 in
-h0exp_make_node(loc0, h0t0, hend)
+  h0exp_make_node(loc0, h0t0, hend)
 end // end of [let]
 //
 end // end of [tcomp30_dexp]

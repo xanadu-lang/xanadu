@@ -46,6 +46,13 @@ UN = "prelude/SATS/unsafe.sats"
 //
 (* ****** ****** *)
 
+overload
+fprint with fprint_stamp
+overload
+fprint with fprint_symbol
+
+(* ****** ****** *)
+
 #staload "./../SATS/intrep0.sats"
 
 (* ****** ****** *)
@@ -129,6 +136,72 @@ x0.node() of
 (* ****** ****** *)
 //
 implement
+print_hdcon(x0) =
+fprint_hdcon(stdout_ref, x0)
+implement
+prerr_hdcon(x0) =
+fprint_hdcon(stderr_ref, x0)
+//
+implement
+fprint_hdcon(out, x0) =
+(
+fprint!
+(out, sym, "(", stamp, ")");
+(*
+fprint!(out, ": ", x0.type());
+*)
+) where
+{
+val sym = x0.sym() and stamp = x0.stamp()
+} (* end of [fprint_hdcon] *)
+//
+(* ****** ****** *)
+//
+implement
+print_hdcst(x0) =
+fprint_hdcst(stdout_ref, x0)
+implement
+prerr_hdcst(x0) =
+fprint_hdcst(stderr_ref, x0)
+//
+implement
+fprint_hdcst(out, x0) =
+(
+fprint!
+(out, sym, "(", stamp, ")");
+(*
+fprint!(out, ": ", x0.type());
+*)
+) where
+{
+val sym = x0.sym() and stamp = x0.stamp()
+} (* end of [fprint_hdcst] *)
+//
+(* ****** ****** *)
+//
+implement
+print_hdvar(x0) =
+fprint_hdvar(stdout_ref, x0)
+implement
+prerr_hdvar(x0) =
+fprint_hdvar(stderr_ref, x0)
+//
+implement
+fprint_hdvar(out, x0) =
+(
+fprint!
+(out, sym, "(", stamp, ")");
+(*
+fprint!(out, ": ", x0.type());
+*)
+) where
+{
+val sym = x0.sym() and stamp = x0.stamp()
+} (* end of [fprint_hdvar] *)
+//
+(* ****** ****** *)
+//
+implement
 print_h0exp(x0) =
 fprint_h0exp(stdout_ref, x0)
 implement
@@ -140,6 +213,21 @@ fprint_h0exp(out, x0) =
 (
 case+
 x0.node() of
+//
+| H0Evar(hdv) =>
+  fprint!(out, "H0Evar(", hdv, ")")
+//
+| H0Efcon(hdc) =>
+  fprint!(out, "H0Efcon(", hdc, ")")
+| H0Efcst(hdc) =>
+  fprint!(out, "H0Efcst(", hdc, ")")
+//
+| H0Edapp
+  (h0f0, npf1, h0es) =>
+  fprintln!
+  ( out
+  , "H0Edapp("
+  , h0f0, "; ", npf1, "; ", h0es, ")")
 //
 | H0Enone1(_) =>
   fprint!(out, "H0Enone1(", "...", ")")

@@ -46,19 +46,68 @@
 #staload "./intrep0.sats"
 
 (* ****** ****** *)
-
-fun
-tcomp30_program
-(prog: d3eclist): h0dclist
-
+typedef
+cPtr0(a:vt0p) =
+[l:addr | l >= null] cptr(a,l)
 (* ****** ****** *)
-
-fun
-hdvar_make_dvar(d2var): hdvar
+//
 fun
 hdcon_make_dcon(d2con): hdcon
 fun
 hdcst_make_dcst(d2cst): hdcst
+//
+fun
+the_dconmap_search_ref
+(d2c: d2con): cPtr0(hdcon)
+fun
+the_dconmap_search_opt
+(d2c: d2con): Option_vt(hdcon)
+//
+fun
+the_dconmap_insert_any
+(d2c0: d2con, hdv1: hdcon): void
+fun
+the_dconmap_insert_exn
+(d2c0: d2con, hdv1: hdcon): void
+//
+fun
+the_dcstmap_search_ref
+(d2c: d2cst): cPtr0(hdcst)
+fun
+the_dcstmap_search_opt
+(d2c: d2cst): Option_vt(hdcst)
+//
+fun
+the_dcstmap_insert_any
+(d2c0: d2cst, hdv1: hdcst): void
+fun
+the_dcstmap_insert_exn
+(d2c0: d2cst, hdv1: hdcst): void
+//
+(* ****** ****** *)
+//
+fun
+hdvar_make_dvar(d2var): hdvar
+//
+fun
+the_dvarmap_search_ref
+(d2v: d2var): cPtr0(hdvar)
+fun
+the_dvarmap_search_opt
+(d2v: d2var): Option_vt(hdvar)
+//
+fun
+the_dvarmap_insert_any
+(d2v0: d2var, hdv1: hdvar): void
+fun
+the_dvarmap_insert_exn
+(d2v0: d2var, hdv1: hdvar): void
+//
+(* ****** ****** *)
+//
+fun
+tcomp30_program
+(prog: d3eclist): h0dclist
 
 (* ****** ****** *)
 //
@@ -80,6 +129,15 @@ tcomp30_typelst
 //
 (* ****** ****** *)
 //
+fun
+tcomp30_dvar(d2v0: d2var): hdvar
+fun
+tcomp30_dcon(d2c0: d2con): hdcon
+fun
+tcomp30_dcst(d2c0: d2cst): hdcst
+//
+(* ****** ****** *)
+
 fun
 tcomp30_dexp(d3e0: d3exp): h0exp
 fun
