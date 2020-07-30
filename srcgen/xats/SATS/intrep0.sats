@@ -51,11 +51,14 @@ typedef dataptr = ptr
 
 (* ****** ****** *)
 
-abstype htcst_tbox = ptr
-abstype htvar_tbox = ptr
+abstbox htcst_tbox = ptr
+abstbox htvar_tbox = ptr
 typedef htcst = htcst_tbox
 typedef htvar = htvar_tbox
 
+(* ****** ****** *)
+typedef htvarlst = List0(htvar)
+typedef htcstlst = List0(htcst)
 (* ****** ****** *)
 //
 fun
@@ -65,7 +68,27 @@ htvar_stamp_new(): stamp
 //
 (* ****** ****** *)
 //
-abstype h0typ_tbox = ptr
+fun
+htcst_get_sym(htcst): sym_t
+fun
+htvar_get_sym(htvar): sym_t
+//
+overload .sym with htcst_get_sym
+overload .sym with htvar_get_sym
+//
+(* ****** ****** *)
+//
+fun
+htcst_get_stamp(htcst): stamp
+fun
+htvar_get_stamp(htvar): stamp
+//
+overload .stamp with htcst_get_stamp
+overload .stamp with htvar_get_stamp
+//
+(* ****** ****** *)
+//
+abstbox h0typ_tbox = ptr
 //
 typedef h0typ = h0typ_tbox
 typedef h0typlst = List0(h0typ)
@@ -73,13 +96,44 @@ typedef h0typopt = Option(h0typ)
 //
 (* ****** ****** *)
 //
-abstype hdcon_tbox = ptr
-abstype hdcst_tbox = ptr
+abstbox hdcon_tbox = ptr
+abstbox hdcst_tbox = ptr
 typedef hdcon = hdcon_tbox
 typedef hdcst = hdcst_tbox
 //
-abstype hdvar_tbox = ptr
+abstbox hdvar_tbox = ptr
 typedef hdvar = hdvar_tbox
+typedef hdvarlst = List0(hdvar)
+typedef hdvaropt = Option(hdvar)
+//
+(* ****** ****** *)
+//
+abstbox h0pat_tbox = ptr
+typedef h0pat = h0pat_tbox
+typedef h0patlst = List0(h0pat)
+typedef h0patopt = Option(h0pat)
+//
+(* ****** ****** *)
+//
+abstbox hfarg_tbox = ptr
+//
+typedef hfarg = hfarg_tbox
+typedef hfarglst = List0(hfarg)
+typedef hfargopt = Option(hfarg)
+//
+(* ****** ****** *)
+//
+abstbox h0exp_tbox = ptr
+typedef h0exp = h0exp_tbox
+typedef h0explst = List0(h0exp)
+typedef h0expopt = Option(h0exp)
+//
+(* ****** ****** *)
+//
+abstbox h0dcl_tbox = ptr
+typedef h0dcl = h0dcl_tbox
+typedef h0dclist = List0(h0dcl)
+typedef h0dclopt = Option(h0dcl)
 //
 (* ****** ****** *)
 //
@@ -118,20 +172,6 @@ overload .stamp with hdvar_get_stamp
 //
 (* ****** ****** *)
 //
-abstype h0exp_tbox = ptr
-typedef h0exp = h0exp_tbox
-typedef h0explst = List0(h0exp)
-typedef h0expopt = Option(h0exp)
-//
-(* ****** ****** *)
-//
-abstype h0dcl_tbox = ptr
-typedef h0dcl = h0dcl_tbox
-typedef h0dclist = List0(h0dcl)
-typedef h0dclopt = Option(h0dcl)
-//
-(* ****** ****** *)
-//
 datatype
 h0srt =
 //
@@ -151,12 +191,12 @@ h0srt =
   , h0srtlst(*arg*)) // HX: not in use
 *)
 //
-| HSTnone1 of (dataptr) // HX: for errors
+| HSTnone1 of (dataptr) // HX: for ignores
 //
 where h0srtlst = List0(h0srt)
 
 (* ****** ****** *)
-
+//
 fun
 print_h0srt: h0srt -> void
 fun
@@ -178,7 +218,7 @@ h0typ_node =
 | H0Tcst of htcst // constant
 | H0Tvar of htvar // variable
 //
-| H0Tnone1 of (dataptr) // HX: for errors
+| H0Tnone1 of (dataptr) // HX: for ignores
 //
 (* ****** ****** *)
 //
@@ -193,6 +233,10 @@ overload print with print_htvar
 overload prerr with prerr_htvar
 overload fprint with fprint_htvar
 //
+(* ****** ****** *)
+fun
+htvar_make_idst
+(sym: symbol, hst: h0srt): htvar
 (* ****** ****** *)
 //
 fun
@@ -280,9 +324,105 @@ overload fprint with fprint_hdcst
 (* ****** ****** *)
 //
 datatype
+h0pat_node =
+//
+| H0Pnil of ()
+| H0Pany of () // wildcard
+| H0Pvar of hdvar // variable
+//
+| H0Pfcon of hdcon // cnstrctr
+//
+| H0Pdapp of
+  (h0pat, int(*npf*), h0patlst)
+//
+| H0Pnone1 of (dataptr) // HX: for ignores
+//
+(* ****** ****** *)
+//
+fun
+h0pat_get_loc
+( h0p: h0pat ) : loc_t
+fun
+h0pat_get_type
+( h0p: h0pat ) : h0typ
+fun
+h0pat_get_node
+( h0p: h0pat ) : h0pat_node
+//
+overload .loc with h0pat_get_loc
+overload .type with h0pat_get_type
+overload .node with h0pat_get_node
+//
+(* ****** ****** *)
+//
+fun
+print_h0pat: h0pat -> void
+fun
+prerr_h0pat: h0pat -> void
+fun
+fprint_h0pat: fprint_type(h0pat)
+//
+overload print with print_h0pat
+overload prerr with prerr_h0pat
+overload fprint with fprint_h0pat
+//
+(* ****** ****** *)
+//
+fun
+h0pat_make_node
+(loc_t, h0typ, h0pat_node): h0pat
+//
+(* ****** ****** *)
+//
+datatype
+hfarg_node =
+//
+| HFARGnpats of
+  (int(*npf*), h0patlst)
+//
+| HFARGnone1 of (dataptr) // for ignores
+//
+(* ****** ****** *)
+fun
+hfarg_get_loc
+( hfa: hfarg ) : loc_t
+fun
+hfarg_get_node
+( hfa: hfarg ) : hfarg_node
+//
+overload .loc with hfarg_get_loc
+overload .node with hfarg_get_node
+(* ****** ****** *)
+//
+fun
+print_hfarg: hfarg -> void
+fun
+prerr_hfarg: hfarg -> void
+fun
+fprint_hfarg: fprint_type(hfarg)
+//
+overload print with print_hfarg
+overload prerr with prerr_hfarg
+overload fprint with fprint_hfarg
+//
+(* ****** ****** *)
+fun
+hfarg_make_node
+(loc0: loc_t, node: hfarg_node): hfarg
+(* ****** ****** *)
+//
+datatype
 h0exp_node =
-// externally named
-| H0Evar of hdvar // variable
+//
+| H0Eint of token
+| H0Ebtf of token
+| H0Echr of token
+| H0Eflt of token
+| H0Estr of token
+//
+| H0Evar of hdvar
+| H0Evknd of
+  (int(*knd*), hdvar)
 //
 | H0Efcon of hdcon // cnstrctr
 | H0Efcst of hdcst // constant
@@ -293,9 +433,23 @@ h0exp_node =
 | H0Elet of
   (h0dclist, h0exp(*sequence*))
 //
-| H0Eif0 of (h0exp, h0exp, h0expopt)
+| H0Eseqn of
+  (h0explst(*semi*), h0exp(*last*))
 //
-| H0Enone1 of (dataptr) // HX: for errors
+| H0Eif0 of
+  ( h0exp
+  , h0exp(*then*)
+  , h0expopt(*else*))
+//
+| H0Elam of
+  ( token(*knd*)
+  , hfarglst(*arg*), h0exp(*body*))
+| H0Efix of
+  ( token(*knd*)
+  , hdvar(*fid*)
+  , hfarglst(*arg*), h0exp(*body*))
+//
+| H0Enone1 of (dataptr) // HX: for ignores
 //
 (* ****** ****** *)
 //
@@ -334,15 +488,161 @@ h0exp_make_node
 //
 (* ****** ****** *)
 //
+abstype htqarg_tbox = ptr
+//
+typedef htqarg = htqarg_tbox
+typedef htqarglst = List0(htqarg)
+//
+(* ****** ****** *)
+//
+fun
+htqarg_get_loc(htqarg): loc_t
+fun
+htqarg_get_htvs(htqarg): htvarlst
+//
+overload .loc with htqarg_get_loc
+overload .htvs with htqarg_get_htvs
+//
+(* ****** ****** *)
+//
+fun
+print_htqarg: print_type(htqarg)
+fun
+prerr_htqarg: prerr_type(htqarg)
+fun
+fprint_htqarg: fprint_type(htqarg)
+//
+overload print with print_htqarg
+overload prerr with prerr_htqarg
+overload fprint with fprint_htqarg
+//
+(* ****** ****** *)
+fun
+htqarg_make
+(loc0: loc_t, htvs: htvarlst): htqarg
+(* ****** ****** *)
+//
+datatype
+hfundecl =
+HFUNDECL of @{
+  loc= loc_t
+, nam= hdvar
+, hdc= hdcst
+, hag=
+  hfarglstopt
+, def= h0expopt, rtp= h0typ
+} where
+  hfarglstopt = Option(hfarglst)
+//
+typedef hfundeclist = List0(hfundecl)
+//
+(* ****** ****** *)
+//
+fun
+print_hfundecl: print_type(hfundecl)
+fun
+prerr_hfundecl: prerr_type(hfundecl)
+fun
+fprint_hfundecl: fprint_type(hfundecl)
+//
+overload print with print_hfundecl
+overload prerr with prerr_hfundecl
+overload fprint with fprint_hfundecl
+//
+(* ****** ****** *)
+//
+datatype
+hvaldecl =
+HVALDECL of @{
+  loc= loc_t
+, pat= h0pat
+, def= h0expopt
+(*
+, ctp= t2pcast
+*)
+}
+//
+typedef
+hvaldeclist = List0(hvaldecl)
+//
+(* ****** ****** *)
+//
+fun
+hvaldecl_get_loc(hvaldecl): loc_t
+//
+overload .loc with hvaldecl_get_loc
+//
+(* ****** ****** *)
+//
+fun
+print_hvaldecl: print_type(hvaldecl)
+fun
+prerr_hvaldecl: prerr_type(hvaldecl)
+fun
+fprint_hvaldecl: fprint_type(hvaldecl)
+//
+overload print with print_hvaldecl
+overload prerr with prerr_hvaldecl
+overload fprint with fprint_hvaldecl
+//
+(* ****** ****** *)
+//
+datatype
+hvardecl =
+HVARDECL of @{
+  loc= loc_t
+, hdv= hdvar
+, wth= hdvaropt
+, ini= h0expopt
+}
+//
+typedef
+hvardeclist = List0(hvardecl)
+//
+(* ****** ****** *)
+//
+fun
+hvardecl_get_loc(hvardecl): loc_t
+//
+overload .loc with hvardecl_get_loc
+//
+(* ****** ****** *)
+//
+fun
+print_hvardecl: print_type(hvardecl)
+fun
+prerr_hvardecl: prerr_type(hvardecl)
+fun
+fprint_hvardecl: fprint_type(hvardecl)
+//
+overload print with print_hvardecl
+overload prerr with prerr_hvardecl
+overload fprint with fprint_hvardecl
+//
+(* ****** ****** *)
+//
 datatype
 h0dcl_node =
 // externally named
 | H0Cinclude
 //
 | H0Clocal of
-  (h0dclist(*head*), h0dclist(*body*))
+  ( h0dclist(*head*)
+  , h0dclist(*body*))
 //
-| H0Cnone1 of (dataptr) // HX: for errors
+|
+H0Cfundecl of
+( token(*knd*)
+, decmodopt, htqarglst, hfundeclist)
+//
+|
+H0Cvaldecl of
+(token(*knd*), decmodopt, hvaldeclist)
+|
+H0Cvardecl of
+(token(*knd*), decmodopt, hvardeclist)
+//
+| H0Cnone1 of (dataptr) // HX: for ignores
 //
 (* ****** ****** *)
 //
@@ -373,7 +673,7 @@ overload fprint with fprint_h0dcl
 //
 fun
 h0dcl_make_node
-(loc0: loc_t, hdcl: h0dcl_node): h0dcl
+(loc0: loc_t, node: h0dcl_node): h0dcl
 //
 (* ****** ****** *)
 

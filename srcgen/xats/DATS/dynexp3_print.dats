@@ -716,11 +716,11 @@ local
 implement
 fprint_val<d3ecl> = fprint_d3ecl
 implement
+fprint_val<f3undecl> = fprint_f3undecl
+implement
 fprint_val<v3aldecl> = fprint_v3aldecl
 implement
 fprint_val<v3ardecl> = fprint_v3ardecl
-implement
-fprint_val<f3undecl> = fprint_f3undecl
 
 in(*in-of-local*)
 
@@ -814,12 +814,14 @@ x0.node() of
   (knd, mopt, v3ds) =>
   fprint!
   ( out
-  , "D3Cvaldecl(", knd, "; ", mopt, "; ", v3ds, ")")
+  , "D3Cvaldecl("
+  , knd, "; ", mopt, "; ", v3ds, ")")
 | D3Cvardecl
   (knd, mopt, v3ds) =>
   fprint!
   ( out
-  , "D3Cvardecl(", knd, "; ", mopt, "; ", v3ds, ")")
+  , "D3Cvardecl("
+  , knd, "; ", mopt, "; ", v3ds, ")")
 //
 | D3Cimpdecl1
   ( knd, mopt
@@ -952,16 +954,34 @@ fprint_f3undecl
 val+F3UNDECL(rcd) = x0
 //
 in
+//
+case+
+rcd.a3g of
+|
+None() =>
+(
   fprint!
   ( out
   , "F3UNDECL@{"
   , "nam=", rcd.nam, ", "
   , "d2c=", rcd.d2c, ", "
-  , "a2g=", rcd.a2g, ", "
+  , "a2g=", rcd.a2g, ", ", "}")
+)
+|
+Some(rcd_a3g) =>
+(
+  fprint!
+  ( out
+  , "F3UNDECL@{"
+  , "nam=", rcd.nam, ", "
+  , "d2c=", rcd.d2c, ", "
+  , "a3g=", rcd_a3g, ", "
   , "res=", rcd.res, ", "
   , "def=", rcd.def, ", "
   , "rtp=", rcd.rtp, ", "
   , "wtp=", rcd.wtp, ", ", "ctp=", rcd.ctp, "}")
+)
+//
 end // end of [fprint_f3undecl]
 
 (* ****** ****** *)

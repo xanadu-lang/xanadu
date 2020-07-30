@@ -1952,13 +1952,13 @@ D3Elet _ => aux_let(env0, d3e0)
 |
 D3Ewhere _ => aux_where(env0, d3e0)
 //
-| D3Eseqn _ => aux_seqn(env0, d3e0)
+|
+D3Eseqn _ => aux_seqn(env0, d3e0)
 //
 |
 D3Eassgn _ => aux_assgn(env0, d3e0)
 //
-|
-D3Eif0 _ => aux_if0(env0, d3e0)
+| D3Eif0 _ => aux_if0(env0, d3e0)
 //
 |
 D3Ecase _ => aux_case(env0, d3e0)
@@ -2514,11 +2514,10 @@ F3UNDECL(rcd) = f3d0
 //
 val loc = rcd.loc
 val nam = rcd.nam
+val d2c = rcd.d2c
 val a2g = rcd.a2g
 val a3g = rcd.a3g
 val res = rcd.res
-val rtp = rcd.rtp
-val d2c = rcd.d2c
 val def = rcd.def
 val rtp = rcd.rtp
 val wtp = rcd.wtp

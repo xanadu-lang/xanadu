@@ -185,6 +185,71 @@ end // end of [local]
 local
 //
 absimpl
+h0pat_tbox = $rec
+{ h0pat_loc= loc_t
+, h0pat_type= h0typ
+, h0pat_node= h0pat_node
+} (* end of [absimpl] *)
+//
+in (* in-of-local *)
+//
+implement
+h0pat_get_loc
+  (h0p) = h0p.h0pat_loc
+//
+implement
+h0pat_get_type
+  (h0p) = h0p.h0pat_type
+//
+implement
+h0pat_get_node
+  (h0p) = h0p.h0pat_node
+//
+implement
+h0pat_make_node
+(
+loc0, h0t0, node
+) = $rec
+{ h0pat_loc= loc0
+, h0pat_type= h0t0, h0pat_node= node
+} (* h0pat_make_node *)
+//
+end // end of [local]
+
+(* ****** ****** *)
+
+local
+//
+absimpl
+hfarg_tbox = $rec
+{ hfarg_loc= loc_t
+, hfarg_node= hfarg_node
+} (* end of [absimpl] *)
+//
+in (* in-of-local *)
+//
+implement
+hfarg_get_loc
+  (hfa) = hfa.hfarg_loc
+//
+implement
+hfarg_get_node
+  (hfa) = hfa.hfarg_node
+//
+implement
+hfarg_make_node
+(loc0, node) = $rec
+{
+hfarg_loc= loc0, hfarg_node= node
+} (* hfarg_make_node *)
+//
+end // end of [local]
+
+(* ****** ****** *)
+
+local
+//
+absimpl
 h0exp_tbox = $rec
 { h0exp_loc= loc_t
 , h0exp_type= h0typ
@@ -241,6 +306,34 @@ h0dcl_make_node
 { h0dcl_loc= loc0, h0dcl_node= node
 } (* h0dcl_make_node *)
 //
+end // end of [local]
+
+(* ****** ****** *)
+
+local
+
+absimpl
+htqarg_tbox = $rec
+{
+htqarg_loc= loc_t
+,
+htqarg_htvs= htvarlst
+}
+
+in (* in-of-local *)
+
+implement
+htqarg_make
+(loc, htvs) = $rec
+{
+htqarg_loc= loc, htqarg_htvs= htvs
+}
+
+implement
+htqarg_get_loc(x0) = x0.htqarg_loc
+implement
+htqarg_get_htvs(x0) = x0.htqarg_htvs
+
 end // end of [local]
 
 (* ****** ****** *)
