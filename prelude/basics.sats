@@ -310,6 +310,8 @@ gt_a0_a0: (a0, a0) -> b0
 gt_a0_i0: (a0, i0) -> b0
 #stacst
 eq_a0_a0: (a0, a0) -> b0
+#stacst
+eq_a0_i0: (a0, i0) -> b0
 //
 #stacst
 lte_a0_a0: (a0, a0) -> b0
@@ -319,16 +321,20 @@ gte_a0_a0: (a0, a0) -> b0
 gte_a0_i0: (a0, i0) -> b0
 #stacst
 neq_a0_a0: (a0, a0) -> b0
+#stacst
+neq_a0_i0: (a0, i0) -> b0
 //
 sexpdef < = lt_a0_a0 // overloading
 sexpdef > = gt_a0_a0 // overloading
 sexpdef > = gt_a0_i0 // overloading
 sexpdef = = eq_a0_a0 // overloading
+sexpdef = = eq_a0_i0 // overloading
 //
 sexpdef <= = lte_a0_a0 // overloading
 sexpdef >= = gte_a0_a0 // overloading
 sexpdef >= = gte_a0_i0 // overloading
 sexpdef != = neq_a0_a0 // overloading
+sexpdef != = neq_a0_i0 // overloading
 //
 (* ****** ****** *)
 //
@@ -433,9 +439,11 @@ typedef
 p1tr1(l: a0) = p1tr_tbox(l)
 //
 typedef
-p2tr0(x: vt) = [l:a0] p2tr_tbox(x, l)
+p2tr0
+(a:vt) = [l:a0] p2tr_tbox(a, l)
 typedef
-p2tr1(x: vt, l: a0) = p2tr_tbox(x, l)
+p2tr1
+(a: vt, l: a0) = p2tr_tbox(a, l)
 //
 typedef p1tr = p1tr0
 typedef p1tr(l:a0) = p1tr1(l)
@@ -603,6 +611,26 @@ typedef
 sintbtwe
 (m:int
 ,n:int) = [i:int | m <= i; i <= n] sint(i)
+//
+(* ****** ****** *)
+//
+typedef
+sizelt(n:int) = [i:int | i < n] size(i)
+typedef
+sizegt(n:int) = [i:int | i > n] size(i)
+typedef
+sizelte(n:int) = [i:int | i <= n] size(i)
+typedef
+sizegte(n:int) = [i:int | i >= n] size(i)
+//
+typedef
+sizebtw
+(m:int
+,n:int) = [i:int | m <= i; i < n] size(i)
+typedef
+sizebtwe
+(m:int
+,n:int) = [i:int | m <= i; i <= n] size(i)
 //
 (* ****** ****** *)
 

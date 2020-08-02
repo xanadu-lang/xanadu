@@ -57,8 +57,8 @@ typedef htcst = htcst_tbox
 typedef htvar = htvar_tbox
 
 (* ****** ****** *)
-typedef htvarlst = List0(htvar)
 typedef htcstlst = List0(htcst)
+typedef htvarlst = List0(htvar)
 (* ****** ****** *)
 //
 fun
@@ -210,16 +210,22 @@ overload fprint with fprint_h0srt
 //
 (* ****** ****** *)
 //
-datatype
-h0typ_node =
-// externally named
-| H0Tbas of sym_t // type
+fun
+print_htcst: htcst -> void
+fun
+prerr_htcst: htcst -> void
+fun
+fprint_htcst: fprint_type(htcst)
 //
-| H0Tcst of htcst // constant
-| H0Tvar of htvar // variable
+overload print with print_htcst
+overload prerr with prerr_htcst
+overload fprint with fprint_htcst
 //
-| H0Tnone1 of (dataptr) // HX: for ignores
-//
+(* ****** ****** *)
+fun
+htcst_make_idst
+( loc: loc_t
+, sym: symbol, hst: h0srt): htcst
 (* ****** ****** *)
 //
 fun
@@ -234,9 +240,36 @@ overload prerr with prerr_htvar
 overload fprint with fprint_htvar
 //
 (* ****** ****** *)
+//
 fun
 htvar_make_idst
 (sym: symbol, hst: h0srt): htvar
+//
+(* ****** ****** *)
+typedef labh0typ = slabeled(h0typ)
+typedef labh0typlst = List0(labh0typ)
+(* ****** ****** *)
+datatype
+h0typ_node =
+// externally named
+| H0Tbas of sym_t // type
+//
+| H0Tcst of htcst // constant
+| H0Tvar of htvar // variable
+//
+| H0Tfun of
+  ( int(*npf*)
+  , h0typlst(*arg*),h0typ(*res*)
+  ) (* end of H0Tfun *)
+//
+| H0Tapp of (h0typ, h0typlst) // inst
+| H0Tlam of (htvarlst, h0typ) // poly
+//
+| H0Ttyrec of
+  (tyrec(*knd*), int(*npf*), labh0typlst)
+//
+| H0Tnone1 of (dataptr) // HX: for ignores
+//
 (* ****** ****** *)
 //
 fun
@@ -249,6 +282,19 @@ fprint_h0typ: fprint_type(h0typ)
 overload print with print_h0typ
 overload prerr with prerr_h0typ
 overload fprint with fprint_h0typ
+//
+(* ****** ****** *)
+//
+fun
+print_labh0typ: labh0typ -> void
+fun
+prerr_labh0typ: labh0typ -> void
+fun
+fprint_labh0typ: fprint_type(labh0typ)
+//
+overload print with print_labh0typ
+overload prerr with prerr_labh0typ
+overload fprint with fprint_labh0typ
 //
 (* ****** ****** *)
 //
@@ -410,6 +456,26 @@ fun
 hfarg_make_node
 (loc0: loc_t, node: hfarg_node): hfarg
 (* ****** ****** *)
+
+datatype
+htiarg =
+| HTIARGnone of ()
+| HTIARGsome of h0typlst
+
+(* ****** ****** *)
+//
+fun
+print_htiarg: print_type(htiarg)
+fun
+prerr_htiarg: prerr_type(htiarg)
+fun
+fprint_htiarg: fprint_type(htiarg)
+//
+overload print with print_htiarg
+overload prerr with prerr_htiarg
+overload fprint with fprint_htiarg
+//
+(* ****** ****** *)
 //
 datatype
 h0exp_node =
@@ -427,19 +493,23 @@ h0exp_node =
 | H0Efcon of hdcon // cnstrctr
 | H0Efcst of hdcst // constant
 //
+| H0Etcon of (htiarg, hdcon)
+| H0Etcst of (htiarg, hdcst)
+//
 | H0Edapp of
   (h0exp, int(*npf*), h0explst)
 //
-| H0Elet of
-  (h0dclist, h0exp(*sequence*))
-//
 | H0Eseqn of
-  (h0explst(*semi*), h0exp(*last*))
+  (h0explst, h0exp(*last*))
+//
+| H0Etuple of
+  (int(*knd*), int(*npf*), h0explst)
+//
+| H0Elet of
+  (h0dclist, h0exp(*seqn*))
 //
 | H0Eif0 of
-  ( h0exp
-  , h0exp(*then*)
-  , h0expopt(*else*))
+  (h0exp, h0exp, h0expopt(*else*))
 //
 | H0Elam of
   ( token(*knd*)

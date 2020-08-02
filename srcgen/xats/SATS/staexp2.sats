@@ -656,10 +656,16 @@ s2txtopt_vt = Option_vt(s2txt)
 (* ****** ****** *)
 
 datatype
+slabeled(a:type) =
+| SLABELED of (label, a)
+
+(* ****** ****** *)
+
+datatype
 tyrec =
 //
-| TYRECbox0 (* box *)
-| TYRECbox1 (* box *)
+| TYRECbox0 (* box *) // nonlin
+| TYRECbox1 (* box *) // linear
 //
 | TYRECflt0 (* flat *)
 (*
@@ -668,10 +674,9 @@ tyrec =
 | TYRECflt2 of string  (* flat *)
 // end of [tyrec]
 
-datatype
-labs2exp =
-| SLABELED of (label, s2exp)
-where
+typedef
+labs2exp = slabeled(s2exp)
+typedef
 labs2explst = List0(labs2exp)
 
 vtypedef

@@ -43,12 +43,17 @@ UN = "prelude/SATS/unsafe.sats"
 #staload "./../SATS/symbol.sats"
 //
 (* ****** ****** *)
-
+#staload "./../SATS/label0.sats"
+(* ****** ****** *)
 #staload "./../SATS/lexing.sats"
-
 (* ****** ****** *)
 
 #staload "./../SATS/dynexp0.sats"
+
+(* ****** ****** *)
+
+#staload "./../SATS/staexp2.sats"
+#staload "./../SATS/statyp2.sats"
 
 (* ****** ****** *)
 
@@ -57,9 +62,17 @@ UN = "prelude/SATS/unsafe.sats"
 (* ****** ****** *)
 
 implement
-fprint_val<htvar> = fprint_htvar
-implement
 fprint_val<h0srt> = fprint_h0srt
+
+(* ****** ****** *)
+
+implement
+fprint_val<htcst> = fprint_htcst
+implement
+fprint_val<htvar> = fprint_htvar
+
+(* ****** ****** *)
+
 implement
 fprint_val<h0typ> = fprint_h0typ
 
@@ -132,6 +145,28 @@ fprint!(out, "HSTnone1(", "...", ")")
 (* ****** ****** *)
 //
 implement
+print_htcst(x0) =
+fprint_htcst(stdout_ref, x0)
+implement
+prerr_htcst(x0) =
+fprint_htcst(stderr_ref, x0)
+//
+implement
+fprint_htcst(out, x0) =
+(
+fprint!
+(out, sym, "(", stamp, ")");
+(*
+fprint!(out, ": ", x0.sort());
+*)
+) where
+{
+val sym = x0.sym() and stamp = x0.stamp()
+} (* end of [fprint_htcst] *)
+//
+(* ****** ****** *)
+//
+implement
 print_htvar(x0) =
 fprint_htvar(stdout_ref, x0)
 implement
@@ -166,14 +201,68 @@ fprint_h0typ(out, x0) =
 case+
 x0.node() of
 //
+| H0Tbas(sym) =>
+  fprint!(out, "H0Tsym(", sym, ")")
+//
+| H0Tcst(htc) =>
+  fprint!(out, "H0Tcst(", htc, ")")
+//
 | H0Tvar(htv) =>
   fprint!(out, "H0Tvar(", htv, ")")
+//
+| H0Tfun
+  (npf, h0ts, h0t1) =>
+  fprint!
+  ( out
+  , "H0Tfun("
+  , npf, "; ", h0ts, "; ", h0t1, ")")
+//
+| H0Tapp
+  (h0t1, h0ts) =>
+  fprint!
+  ( out
+  , "H0Tapp(", h0t1, "; ", h0ts, ")")
+| H0Tlam
+  (htvs, h0t1) =>
+  fprint!
+  ( out
+  , "H0Tlam(", htvs, "; ", h0t1, ")")
+//
+| H0Ttyrec
+  (knd0, npf1, lhts) =>
+  fprint!
+  ( out
+  , "H0Ttyrec("
+  , knd0, "; ", npf1, "; ", lhts, ")")  
 //
 | H0Tnone1(_) =>
   fprint!(out, "H0Tnone1(", "...", ")")
 //
+(*
 | _(* H0T... *) => fprint!(out, "H0T...(...)")
-)
+*)
+) where
+{
+  implement
+  fprint_val<labh0typ> = fprint_labh0typ
+}
+//
+(* ****** ****** *)
+//
+implement
+print_labh0typ(lx) =
+fprint_labh0typ(stdout_ref, lx)
+implement
+prerr_labh0typ(lx) =
+fprint_labh0typ(stderr_ref, lx)
+//
+implement
+fprint_labh0typ(out, lx) =
+(
+case+ lx of
+| SLABELED
+  (l0, x0) => fprint!(out, l0, "=", x0)
+) (* end of [fprint_labh0typ] *)
 //
 (* ****** ****** *)
 //
@@ -300,6 +389,29 @@ fprint!
 (* ****** ****** *)
 //
 implement
+print_htiarg(x0) =
+fprint_htiarg(stdout_ref, x0)
+implement
+prerr_htiarg(x0) =
+fprint_htiarg(stderr_ref, x0)
+//
+implement
+fprint_htiarg(out, x0) =
+(
+case+ x0 of
+//
+| HTIARGnone() =>
+  fprint!
+  (out, "HTIARGnone(", ")")
+| HTIARGsome(h0ts) =>
+  fprint!
+  (out, "HTIARGsome(", h0ts, ")")
+//
+)
+//
+(* ****** ****** *)
+//
+implement
 print_h0exp(x0) =
 fprint_h0exp(stdout_ref, x0)
 implement
@@ -335,6 +447,15 @@ x0.node() of
 | H0Efcst(hdc) =>
   fprint!(out, "H0Efcst(", hdc, ")")
 //
+| H0Etcon(tia, hdc) =>
+  fprint!
+  ( out
+  , "H0Etcon(", tia, "; ", hdc, ")")
+| H0Etcst(tia, hdc) =>
+  fprint!
+  ( out
+  , "H0Etcst(", tia, "; ", hdc, ")")
+//
 | H0Edapp
   (h0f0, npf1, h0es) =>
   fprint!
@@ -342,10 +463,19 @@ x0.node() of
   , "H0Edapp("
   , h0f0, "; ", npf1, "; ", h0es, ")")
 //
-| H0Eseqn(h0es, h0e1) =>
+| H0Eseqn
+  ( h0es(*semi*)
+  , h0e1(*last*) ) =>
   fprint!
   ( out
   , "H0Eseqn(", h0es, "; ", h0e1, ")")
+//
+| H0Etuple
+  (knd0, npf1, h0es) =>
+  fprint!
+  ( out
+  , "H0Etuple("
+  , knd0, "; ", npf1, "; ", h0es, ")")
 //
 | H0Elet(hdcl, h0e1) =>
   fprint!

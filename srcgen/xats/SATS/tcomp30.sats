@@ -52,6 +52,25 @@ cPtr0(a:vt0p) =
 (* ****** ****** *)
 //
 fun
+htcst_make_scst(s2cst): htcst
+//
+fun
+the_scstmap_search_ref
+(s2v: s2cst): cPtr0(htcst)
+fun
+the_scstmap_search_opt
+(s2v: s2cst): Option_vt(htcst)
+//
+fun
+the_scstmap_insert_any
+(s2v0: s2cst, htc1: htcst): void
+fun
+the_scstmap_insert_exn
+(s2v0: s2cst, htc1: htcst): void
+//
+(* ****** ****** *)
+//
+fun
 htvar_make_svar(s2var): htvar
 //
 fun
@@ -140,6 +159,15 @@ tcomp30_sortlst
 (* ****** ****** *)
 //
 fun
+tcomp30_scst
+  (s2c0: s2cst): htcst
+fun
+tcomp30_scstlst
+  (s2cs: s2cstlst): htcstlst
+//
+(* ****** ****** *)
+//
+fun
 tcomp30_svar
   (s2v0: s2var): htvar
 fun
@@ -154,6 +182,15 @@ tcomp30_type
 fun
 tcomp30_typelst
   (t2ps: t2ypelst): h0typlst
+//
+(* ****** ****** *)
+//
+fun
+tcomp30_labtype
+  (labt2ype): labh0typ
+fun
+tcomp30_labtypelst
+  (labt2ypelst): labh0typlst
 //
 (* ****** ****** *)
 //
@@ -183,6 +220,11 @@ fun
 tcomp30_farg(f3a0: f3arg): hfarg
 fun
 tcomp30_farglst(f3arglst): hfarglst
+//
+(* ****** ****** *)
+//
+fun
+tcomp30_ti3arg(tia: ti3arg): htiarg
 //
 (* ****** ****** *)
 //
