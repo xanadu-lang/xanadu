@@ -663,6 +663,11 @@ d2pat_make_node
 //
 (* ****** ****** *)
 //
+fun
+d2cimp_stamp_new(): stamp
+//
+(* ****** ****** *)
+//
 datatype
 f2arg_node =
 (*
@@ -1190,11 +1195,13 @@ d2ecl_node =
 //
 | D2Cimpdecl1 of
   ( token(*impkind*)
+  , stamp(*unicity*)
   , decmodopt
   , sq2arglst, tq2arglst
   , impld2cst, ti2arglst, f2arglst, effs2expopt, d2exp)
 | D2Cimpdecl2 of
   ( token(*impkind*)
+  , stamp(*unicity*)
   , decmodopt
   , sq2arglst, tq2arglst
   , impld2cst, ti2arglst, f2arglst, effs2expopt, d2exp)

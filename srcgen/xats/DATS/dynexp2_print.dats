@@ -320,7 +320,7 @@ case- x0.node() of
 | D2Psapp(d2f0, s2vs) =>
   fprint!
   ( out, "D2Psapp("
-  , d2f0, "; ", s2vs, ")")
+  , d2f0, "; ", s2vs(*sarg*), ")")
 //
 | D2Pdap0(d2f0) =>
   fprint!(out, "D2Pdap0(", d2f0, ")")
@@ -776,21 +776,25 @@ case- x0.node() of
   , knd, "; ", mopt, "; ", v2ds, ")")
 //
 | D2Cimpdecl1
-  ( knd, mopt, sqas, tqas
+  ( knd
+  , stmp, mopt, sqas, tqas
   , dqid, tias, f2as, res0, d2e1) =>
   fprint!
   ( out
   , "D2Cimpdecl1("
-  , knd, "; ", mopt, "; "
+  , knd, "; "
+  , stmp, "; ", mopt, "; "
   , sqas, "; ", tqas, "; "
   , dqid, "; ", tias, "; ", f2as, "; ", d2e1, ")")
 | D2Cimpdecl2
-  ( knd, mopt, sqas, tqas
+  ( knd
+  , stmp, mopt, sqas, tqas
   , dqid, tias, f2as, res0, d2e1) =>
   fprint!
   ( out
   , "D2Cimpdecl2("
-  , knd, "; ", mopt, "; "
+  , knd, "; "
+  , stmp, "; ", mopt, "; "
   , sqas, "; ", tqas, "; "
   , dqid, "; ", tias, "; ", f2as, "; ", d2e1, ")")
 //

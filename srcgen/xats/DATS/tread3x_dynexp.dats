@@ -266,10 +266,9 @@ let
 //
 val-
 D3Etimp
-( tcst
-, targ
-, timp
-, tsub) = d3e0.node()
+( stmp
+, tcst, targ
+, timp, tsub) = d3e0.node()
 //
 in
 //
@@ -292,14 +291,13 @@ loc0 = d3e0.loc()
 //
 val-
 D3Etimp
-( tcst
-, targ
-, timp
-, tsub) = d3e0.node()
+( stmp
+, tcst, targ
+, timp, tsub) = d3e0.node()
 //
 val-
 D3Etcst
-(d2c0, _, _) = tcst.node()
+( d2c0, _, _) = tcst.node()
 //
 val-
 D3Cfundecl
@@ -374,14 +372,14 @@ let
 //
 val-
 D3Etimp
-( tcst
-, targ
-, timp
-, tsub) = d3e0.node()
+( stmp
+, tcst, targ
+, timp, tsub) = d3e0.node()
 //
 val-
 D3Cimpdecl3
-( knd0, mopt
+( tok0
+, stmp, mopt
 , sqas, tqas
 , id2c, ti3a, ti2s
 , f3as, res1, def2) = timp.node()
@@ -875,7 +873,8 @@ val () = tread3x_d3eclist(body)
   }
 //
 | D3Cimpdecl3
-  ( tok, mopt
+  ( tok0
+  , stmp, mopt
   , sqas, tqas
   , id2c, ti3a, ti2s
   , f3as, res0, d3e0) =>

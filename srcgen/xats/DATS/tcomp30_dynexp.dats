@@ -167,7 +167,7 @@ t2p0 = d3p0.type()
 val
 h0t0 = tcomp30_type(t2p0)
 in
-h0pat_make_node(loc0, h0t0, H0Pnil())
+h0pat_make_node(loc0, h0t0, H0Pnil)
 end
 fun
 auxany
@@ -180,7 +180,7 @@ t2p0 = d3p0.type()
 val
 h0t0 = tcomp30_type(t2p0)
 in
-h0pat_make_node(loc0, h0t0, H0Pany())
+h0pat_make_node(loc0, h0t0, H0Pany)
 end
 
 (* ****** ****** *)
@@ -207,13 +207,48 @@ hdv1 =
   D3Pvar(d2v0) = d3p0.node()
 }
 //
+val hend = H0Pvar(hdv1)
+//
 in
-h0pat_make_node(loc0, h0t0, H0Pvar(hdv1))
+  h0pat_make_node(loc0, h0t0, hend)
 end
 
 (* ****** ****** *)
 
+fun
+auxdapp
+(d3p0: d3pat): h0pat =
+let
+//
+val
+loc0 = d3p0.loc()
+val
+t2p0 = d3p0.type()
+val
+h0t0 = tcomp30_type(t2p0)
+//
+val-
+D3Pdapp
+( d3f0
+, npf1, d3ps) = d3p0.node()
+//
+val
+h0f0 = tcomp30_dpat(d3f0)
+val
+h0ps = tcomp30_dpatlst(d3ps)
+//
+val
+hend = H0Pdapp(h0f0, npf1, h0ps)
+//
 in
+  h0pat_make_node(loc0, h0t0, hend)
+end // end of [auxdapp]
+
+(* ****** ****** *)
+
+in
+
+(* ****** ****** *)
 
 implement
 tcomp30_dpat
@@ -232,7 +267,7 @@ println!
 ("tcomp30_dpat: t2p0 = ", t2p0)
 *)
 //
-in
+in(*in-of-let*)
 //
 case+
 d3p0.node() of
@@ -245,6 +280,79 @@ D3Pany() => auxany(d3p0)
 |
 D3Pvar _ => auxvar(d3p0)
 //
+|
+D3Pcon1(d2c0) =>
+let
+val
+loc0 = d3p0.loc()
+val
+t2p0 = d3p0.type()
+val
+h0t0 = tcomp30_type(t2p0)
+val
+hdc0 = tcomp30_dcon(d2c0)
+in
+h0pat_make_node
+(loc0, h0t0, H0Pfcon(hdc0))
+end
+//
+|
+D3Pbang(d3p1) =>
+let
+val
+loc0 = d3p0.loc()
+val
+t2p0 = d3p0.type()
+val
+h0t0 = tcomp30_type(t2p0)
+val
+h0p1 = tcomp30_dpat(d3p1)
+in
+h0pat_make_node
+(loc0, h0t0, H0Pbang(h0p1))
+end
+|
+D3Pflat(d3p1) =>
+let
+val
+loc0 = d3p0.loc()
+val
+t2p0 = d3p0.type()
+val
+h0t0 = tcomp30_type(t2p0)
+val
+h0p1 = tcomp30_dpat(d3p1)
+in
+h0pat_make_node
+(loc0, h0t0, H0Pflat(h0p1))
+end
+|
+D3Pfree(d3p1) =>
+let
+val
+loc0 = d3p0.loc()
+val
+t2p0 = d3p0.type()
+val
+h0t0 = tcomp30_type(t2p0)
+val
+h0p1 = tcomp30_dpat(d3p1)
+in
+h0pat_make_node
+(loc0, h0t0, H0Pfree(h0p1))
+end
+|
+D3Psap0
+( d3p1
+, sarg) => tcomp30_dpat(d3p1)
+|
+D3Psap1
+( d3p1
+, sarg) => tcomp30_dpat(d3p1)
+|
+D3Pdapp
+( d3f0
+, npf1, d3ps) => auxdapp(d3p0)
 |
 D3Panno
 (d3p1, _) => tcomp30_dpat(d3p1)
@@ -275,10 +383,10 @@ end // end of [local]
 implement
 tcomp30_dpatlst
   (d3ps) =
-list_vt2t(d3ps) where
+list_vt2t(h0ps) where
 {
 val
-d3ps =
+h0ps =
 list_map<d3pat><h0pat>
   (d3ps) where
 {
@@ -321,10 +429,10 @@ end // end of [tcomp30_farg]
 implement
 tcomp30_farglst
   (f3as) =
-list_vt2t(f3as) where
+list_vt2t(hfas) where
 {
 val
-f3as =
+hfas =
 list_map<f3arg><hfarg>
   (f3as) where
 {
@@ -615,6 +723,37 @@ end
 (* ****** ****** *)
 
 fun
+auxtimp
+(d3e0: d3exp): h0exp =
+let
+//
+val
+loc0 = d3e0.loc()
+val
+t2p0 = d3e0.type()
+val
+h0t0 = tcomp30_type(t2p0)
+//
+val-
+D3Etimp
+( stmp
+, d3e1, targ
+, d3cl, tsub) = d3e0.node()
+//
+val h0e1 = tcomp30_dexp(d3e1)
+val targ = tcomp30_typelst(targ)
+//
+val hdcl = tcomp30_decl(d3cl)
+val tsub = tcomp30_typelst(tsub)
+//
+in
+h0exp_make_node
+(loc0, h0t0, H0Etimp(stmp, h0e1, targ, hdcl, tsub))
+end // end of [auxtimp]
+
+(* ****** ****** *)
+
+fun
 auxdapp
 (d3e0: d3exp): h0exp =
 let
@@ -741,6 +880,37 @@ in
   h0exp_make_node(loc0, h0t0, hend)
 end // end of [aux_let]
 
+fun
+aux_where
+(d3e0: d3exp): h0exp =
+let
+//
+val
+loc0 = d3e0.loc()
+val
+t2p0 = d3e0.type()
+val
+h0t0 = tcomp30_type(t2p0)
+//
+val
+hend =
+(
+  H0Elet(hdcl, h0e1)
+) where
+{
+val-
+D3Ewhere
+(d3e1, d3cs) = d3e0.node()
+//
+val
+hdcl = tcomp30_declist(d3cs)
+//
+val h0e1 = tcomp30_dexp(d3e1)
+}
+in
+  h0exp_make_node(loc0, h0t0, hend)
+end // end of [aux_where]
+
 (* ****** ****** *)
 
 fun
@@ -772,6 +942,38 @@ val opt3 = tcomp30_dexpopt(opt3)
 in
   h0exp_make_node(loc0, h0t0, hend)
 end // end of [aux_if0]
+
+(* ****** ****** *)
+
+fun
+aux_case
+(d3e0: d3exp): h0exp =
+let
+//
+val
+loc0 = d3e0.loc()
+val
+t2p0 = d3e0.type()
+val
+h0t0 = tcomp30_type(t2p0)
+//
+val
+hend =
+(
+  H0Ecase(knd0, h0e1, hcls)
+) where
+{
+val-
+D3Ecase
+( knd0
+, d3e1, dcls) = d3e0.node()
+val h0e1 = tcomp30_dexp(d3e1)
+val hcls = tcomp30_dclaulst(dcls)
+}
+//
+in
+  h0exp_make_node(loc0, h0t0, hend)
+end // end of [aux_case]
 
 (* ****** ****** *)
 
@@ -899,6 +1101,9 @@ D3Etcon _ => auxtcon(d3e0)
 D3Etcst _ => auxtcst(d3e0)
 //
 |
+D3Etimp _ => auxtimp(d3e0)
+//
+|
 D3Edapp _ => auxdapp(d3e0)
 //
 |
@@ -908,8 +1113,12 @@ D3Eseqn _ => aux_seqn(d3e0)
 D3Etuple _ => aux_tuple(d3e0)
 //
 | D3Elet _ => aux_let(d3e0)
+|
+D3Ewhere _ => aux_where(d3e0)
 //
 | D3Eif0 _ => aux_if0(d3e0)
+//
+| D3Ecase _ => aux_case(d3e0)
 //
 | D3Elam _ => aux_lam(d3e0)
 | D3Efix _ => aux_fix(d3e0)
@@ -950,10 +1159,10 @@ case+ opt0 of
 implement
 tcomp30_dexplst
   (d3es) =
-list_vt2t(d3es) where
+list_vt2t(h0es) where
 {
 val
-d3es =
+h0es =
 list_map<d3exp><h0exp>
   (d3es) where
 {
@@ -961,6 +1170,136 @@ implement
 list_map$fopr<d3exp><h0exp>(d3e) = tcomp30_dexp(d3e)
 }
 } (* end of [tcomp30_dexplst] *)
+//
+(* ****** ****** *)
+//
+implement
+tcomp30_dgua
+  (d3g0) =
+let
+val
+loc0 = d3g0.loc()
+in
+case+
+d3g0.node() of
+|
+D3GUAexp(d3e1) =>
+let
+  val
+  h0e1 = tcomp30_dexp(d3e1)
+in
+  h0gua_make_node(loc0, H0GUAexp(h0e1))
+end
+|
+D3GUAmat(d3e1, d3p2) =>
+let
+val
+h0e1 = tcomp30_dexp(d3e1)
+val
+h0p2 = tcomp30_dpat(d3p2)
+in
+h0gua_make_node(loc0, H0GUAmat(h0e1, h0p2))
+end
+end // end of [tcomp30_dgua]
+//
+implement
+tcomp30_dgualst
+  (d3gs) =
+list_vt2t(h0gs) where
+{
+val
+h0gs =
+list_map<d3gua><h0gua>
+  (d3gs) where
+{
+implement
+list_map$fopr<d3gua><h0gua>(d3g) = tcomp30_dgua(d3g)
+}
+} (* end of [tcomp30_dgualst] *)
+//
+(* ****** ****** *)
+//
+implement
+tcomp30_dclau
+  (d3cl) =
+let
+val
+loc0 = d3cl.loc()
+in
+//
+case+
+d3cl.node() of
+|
+D3CLAUpat(d3gp) =>
+let
+val
+h0gp =
+tcomp30_dgpat(d3gp)
+in
+h0clau_make_node(loc0, H0CLAUpat(h0gp))
+end
+|
+D3CLAUexp(d3gp, d3e1) =>
+let
+val
+h0gp =
+tcomp30_dgpat(d3gp)
+val
+h0e1 = tcomp30_dexp(d3e1)
+in
+h0clau_make_node(loc0, H0CLAUexp(h0gp, h0e1))
+end
+//
+end // end of [tcomp30_dclau]
+//
+implement
+tcomp30_dgpat
+  (d3gp) =
+let
+val
+loc0 = d3gp.loc()
+in
+//
+case+
+d3gp.node() of
+|
+D3GPATpat(d3p1) =>
+let
+val
+h0p1 =
+tcomp30_dpat(d3p1)
+in
+h0gpat_make_node(loc0, H0GPATpat(h0p1))
+end
+|
+D3GPATgua(d3p1, d3gs) =>
+let
+val
+h0p1 =
+tcomp30_dpat(d3p1)
+val
+h0gs =
+tcomp30_dgualst(d3gs)
+in
+h0gpat_make_node(loc0, H0GPATgua(h0p1, h0gs))
+end
+//
+end // end of [tcomp30_dgpat]
+//
+implement
+tcomp30_dclaulst
+  (dcls) =
+list_vt2t(hcls) where
+{
+val
+hcls =
+list_map<d3clau><h0clau>
+  (dcls) where
+{
+implement
+list_map$fopr<d3clau><h0clau>(dcl) = tcomp30_dclau(dcl)
+}
+} (* end of [tcomp30_dclaulst] *)
 //
 (* ****** ****** *)
 
@@ -1101,15 +1440,14 @@ list_map<v3aldecl><hvaldecl>(v3ds)
 ) where
 {
 implement
-list_map$fopr<
-  v3aldecl><hvaldecl>(x0) = auxv3d0(x0)
+list_map$fopr<v3aldecl><hvaldecl>(x0) = auxv3d0(x0)
 }
 //
 val hvds = auxv3ds(v3ds)
 //
 in
-h0dcl_make_node
-(loc0, H0Cvaldecl(knd, mopt, hvds))
+  h0dcl_make_node
+  (loc0, H0Cvaldecl(knd, mopt, hvds))
 end // end of [aux_valdecl]
 
 (* ****** ****** *)
@@ -1171,16 +1509,107 @@ list_map<v3ardecl><hvardecl>(v3ds)
 ) where
 {
 implement
-list_map$fopr<
-  v3ardecl><hvardecl>(x0) = auxv3d0(x0)
+list_map$fopr<v3ardecl><hvardecl>(x0) = auxv3d0(x0)
 }
 //
 val hvds = auxv3ds(v3ds)
 //
 in
-h0dcl_make_node
-(loc0, H0Cvardecl(knd, mopt, hvds))
+  h0dcl_make_node
+  (loc0, H0Cvardecl(knd, mopt, hvds))
 end // end of [aux_vardecl]
+
+(* ****** ****** *)
+
+fun
+aux_impdecl3
+( d3cl
+: d3ecl): h0dcl =
+let
+//
+val
+loc0 = d3cl.loc()
+//
+val-
+D3Cimpdecl3
+( knd
+, stmp, mopt
+, sqas, tqas
+, id2c, ti3a
+, ti2s, f3as
+, res1, body) = d3cl.node()
+//
+local
+//
+fun
+auxs2vs
+( s2vs
+: s2varlst
+, htvs
+: htvarlst): htvarlst =
+(
+case+ s2vs of
+|
+list_nil() => htvs
+|
+list_cons(s2v1, s2vs) =>
+let
+val
+htv1 = tcomp30_svar(s2v1)
+in
+list_cons
+(htv1, auxs2vs(s2vs, htvs))
+end // end of [list_cons]
+)
+//
+in
+//
+val
+htvs = list_nil()
+val
+htvs =
+auxs2vs(tqas.s2vs(), htvs)
+val
+htvs =
+auxs2vs(sqas.s2vs(), htvs)
+//
+end // end of [local]
+//
+val
+d2c0 =
+(
+case+ id2c of
+|
+IMPLD2CST1(_, d2cs) =>
+let
+  val-
+  list_cons
+  (d2c0, _) = d2cs in d2c0
+end
+|
+IMPLD2CST2
+(_, d2cs, opt0) =>
+let
+val-Some(d2c0) = opt0 in d2c0
+end
+) : d2cst // end-of-val
+//
+val
+hdc0 = tcomp30_dcst(d2c0)
+val
+hfas = tcomp30_farglst(f3as)
+//
+val body = tcomp30_dexp(body)
+//
+val
+hend =
+H0Cimpdecl3
+( knd
+, stmp, mopt
+, htvs, hdc0, hfas, body)
+in
+  h0dcl_make_node(loc0, hend(*impdecl*))
+end // end of [aux_impdecl3]
 
 (* ****** ****** *)
 
@@ -1204,26 +1633,53 @@ in(*in-of-local*)
 case+
 d3cl.node() of
 //
-| D3Cfundecl _ =>
-  (
-    aux_fundecl(d3cl)
-  )
+|
+D3Cstatic
+(tok, d3c1) => let
+  val
+  h0c1 = tcomp30_decl(d3c1)
+in
+  h0dcl_make_node
+  (loc0, H0Cstatic(tok, h0c1))
+end
+|
+D3Cextern
+(tok, d3c1) => let
+  val
+  h0c1 = tcomp30_decl(d3c1)
+in
+  h0dcl_make_node
+  (loc0, H0Cextern(tok, h0c1))
+end
 //
-| D3Cvaldecl _ =>
-  (
-    aux_valdecl(d3cl)
-  )
-| D3Cvardecl _ =>
-  (
-    aux_vardecl(d3cl)
-  )
+|
+D3Clocal
+(head, body) => let
+  val
+  head = tcomp30_declist(head)
+  val
+  body = tcomp30_declist(body)
+in
+  h0dcl_make_node
+  ( loc0, H0Clocal(head, body) )
+end
 //
+|
+D3Cfundecl _ => aux_fundecl(d3cl)
+//
+|
+D3Cvaldecl _ => aux_valdecl(d3cl)
+|
+D3Cvardecl _ => aux_vardecl(d3cl)
+//
+|
+D3Cimpdecl3 _ => aux_impdecl3(d3cl)
 |
 _(* rest-of_d3exp *) =>
 let
-val
-node =
-H0Cnone1($UN.cast{ptr}(d3cl))
+  val
+  node =
+  H0Cnone1($UN.cast{ptr}(d3cl))
 in h0dcl_make_node(loc0, node) end
 //
 end // end of [tcomp30_decl]
@@ -1235,10 +1691,10 @@ end // end of [local]
 implement
 tcomp30_declist
   (d3cs) =
-list_vt2t(d3cs) where
+list_vt2t(h0cs) where
 {
 val
-d3cs =
+h0cs =
 list_map<d3ecl><h0dcl>
   (d3cs) where
 {

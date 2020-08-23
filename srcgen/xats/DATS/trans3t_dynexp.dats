@@ -228,6 +228,8 @@ implenv_push_timp
 (env0, d3e0, s2vs, tsub)
 //
 val
+stmp = d3timp_stamp_new()
+val
 d3cl = trans3t_timp(env0, d3cl)
 //
 val () = implenv_pop0_timp(env0)
@@ -235,7 +237,8 @@ val () = implenv_pop0_timp(env0)
 in
   d3exp_make_node
   ( loc0, t2p0
-  , D3Etimp(d3e0, targ, d3cl, tsub)
+  , D3Etimp
+    (stmp, d3e0, targ, d3cl, tsub)
  )
 end
 //
@@ -1041,7 +1044,8 @@ aux_impdecl3
 //
 val-
 D3Cimpdecl3
-( tok0, mopt
+( tok0
+, stmp, mopt
 , sqas, tqas
 , id2c, ti3a, ti2s
 , f3as, res1, body) = d3cl.node()
@@ -1074,7 +1078,8 @@ aux_impdecl3_fun
 //
 val-
 D3Cimpdecl3
-( tok0, mopt
+( tok0
+, stmp, mopt
 , sqas, tqas
 , id2c, ti3a, ti2s
 , f3as, res1, body) = d3cl.node()
@@ -1088,7 +1093,8 @@ d3ecl_make_node
 d3cl.loc()
 ,
 D3Cimpdecl3
-( tok0, mopt
+( tok0
+, stmp, mopt
 , sqas, tqas
 , id2c, ti3a, ti2s, f3as, res1, body)
 )
@@ -1104,7 +1110,8 @@ val
 loc0 = d3cl.loc()
 val-
 D3Cimpdecl3
-( tok0, mopt
+( tok0
+, stmp, mopt
 , sqas, tqas
 , id2c, ti3a, ti2s
 , f3as, res1, body) = d3cl.node()
@@ -1392,7 +1399,7 @@ let
 val-
 D3Cimpdecl3
 ( knd
-, mopt
+, stmp, mopt
 , sqas, tqas
 , id2c, ti3a, ti2s
 , f3as, res0, body) = d3cl.node()
@@ -1403,7 +1410,8 @@ in
 d3ecl_make_node
 ( d3cl.loc()
 , D3Cimpdecl3
-  ( knd, mopt
+  ( knd
+  , stmp, mopt
   , sqas, tqas
   , id2c, ti3a, ti2s, f3as, res0, body))
 end // end of [aux_impdecl3]

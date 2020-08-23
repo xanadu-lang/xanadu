@@ -42,7 +42,8 @@ UN = "prelude/SATS/unsafe.sats"
 //
 #staload
 STM = "./../SATS/stamp0.sats"
-overload print with $STM.print_stamp
+overload
+fprint with $STM.fprint_stamp
 //
 (* ****** ****** *)
 
@@ -343,10 +344,10 @@ d2pat_sym0
 //
 implement
 d2pat_sapp
-(loc0, d2f0, s2vs) =
+(loc0, d2f0, s2es) =
 (
   d2pat_make_node
-  (loc0, D2Psapp(d2f0, s2vs))
+  (loc0, D2Psapp(d2f0, s2es))
 )
 //
 implement
@@ -378,6 +379,21 @@ else
 )
 end // end of [d2pat_tuple]
 //
+(* ****** ****** *)
+
+local
+
+val
+stamper = $STM.stamper_new()
+
+in (* in-of-local *)
+
+implement
+d2cimp_stamp_new
+() = $STM.stamper_getinc(stamper)
+
+end // end of [local]
+
 (* ****** ****** *)
 
 local

@@ -907,7 +907,10 @@ d33exp_proj1_up
 end // end of [d33exp_proj_up]
 
 (* ****** ****** *)
-
+(*
+HX-2020-08-05:
+[d3e1] is a non-pointer
+*)
 implement
 d33exp_proj0_up
 ( loc0
@@ -1009,7 +1012,10 @@ end
 end // end of [d33exp_proj0_up]
 
 (* ****** ****** *)
-
+(*
+HX-2020-08-05:
+[d3e1] is a pointer(p2tr)
+*)
 implement
 d33exp_proj1_up
 ( loc0
@@ -1017,7 +1023,7 @@ d33exp_proj1_up
 , d3e1, t2p1, lab2) =
 let
 //
-// (*
+(*
 val () =
 println!
 ("d33exp_proj1_up: loc0 = ", loc0)
@@ -1030,7 +1036,7 @@ println!
 val () =
 println!
 ("d33exp_proj1_up: lab2 = ", lab2)
-// *)
+*)
 //
 (*
 val
@@ -1382,7 +1388,7 @@ let
 val-
 D3Cimpdecl3
 ( tok0
-, mopt
+, stmp, mopt
 , sqas, tqas
 , id2c, ti3a, ti2s
 , f3as, res1, body) = d3cl.node()
@@ -1431,7 +1437,7 @@ loc0 = d3cl.loc()
 val-
 D3Cimpdecl3
 ( tok0
-, mopt
+, stmp, mopt
 , sqas, tqas
 , id2c, ti3a, ti2s
 , f3as, res1, body) = d3cl.node()

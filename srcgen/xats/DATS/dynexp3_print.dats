@@ -49,6 +49,13 @@ FP0 = "./../SATS/filpath.sats"
 //
 #staload "./../SATS/basics.sats"
 //
+(* ****** ****** *)
+//
+#staload "./../SATS/stamp0.sats"
+overload fprint with fprint_stamp
+//
+(* ****** ****** *)
+
 #staload "./../SATS/label0.sats"
 //
 #staload "./../SATS/lexing.sats"
@@ -224,6 +231,17 @@ case- x0.node() of
 *)
   )
 //
+| D3Psap0
+  (d3f0, s2vs) =>
+  fprint!
+  ( out
+  , "D3Psapp(", d3f0, "; ", s2vs, ")")
+| D3Psap1
+  (d3f0, s2vs) =>
+  fprint!
+  ( out
+  , "D3Psapp(", d3f0, "; ", s2vs, ")")
+//
 | D3Pdapp
   (d3f0, npf0, d3ps) =>
   fprint!
@@ -379,12 +397,13 @@ x0.node() of
   , "D3Etrec(", d2e1, "; ", d3es, ")")
 //
 | D3Etimp
-  (d2e1, tsub1, d2c2, tsub2) =>
+  ( stmp
+  , d2e1, tsub1
+  , d2c2, tsub2) =>
   fprint!
   ( out
-  , "D3Etimp("
-  , d2e1, "; "
-  , tsub1, "; ", d2c2, "; ", tsub2, ")")
+  , "D3Etimp(", stmp, "; "
+  , d2e1, "; ", tsub1, "; ", d2c2, "; ", tsub2, ")")
 //
 | D3Esap0
   (d3e1, s2es) =>
@@ -824,38 +843,44 @@ x0.node() of
   , knd, "; ", mopt, "; ", v3ds, ")")
 //
 | D3Cimpdecl1
-  ( knd, mopt
+  ( knd
+  , stmp, mopt
   , sqas, tqas
   , id2c, ti3a, ti2s
   , f3as, res0, d3e0) =>
   fprint!
   ( out
   , "D3Cimpdecl1("
-  , knd, "; ", mopt, "; "
+  , knd, "; "
+  , stmp, "; ", mopt, "; "
   , sqas, "; ", tqas, "; "
   , id2c, "; ", ti3a, "; ", ti2s, "; ", f3as, "; ", res0, "; ", d3e0, ")"
   ) (* end of [D3Cimpdecl1] *)
 | D3Cimpdecl2
-  ( knd, mopt
+  ( knd
+  , stmp, mopt
   , sqas, tqas
   , id2c, ti3a, ti2s
   , f3as, res0, d3e0) =>
   fprint!
   ( out
   , "D3Cimpdecl2("
-  , knd, "; ", mopt, "; "
+  , knd, "; "
+  , stmp, "; ", mopt, "; "
   , sqas, "; ", tqas, "; "
   , id2c, "; ", ti3a, "; ", ti2s, "; ", f3as, "; ", res0, "; ", d3e0, ")"
   ) (* end of [D3Cimpdecl2] *)
 | D3Cimpdecl3
-  ( knd, mopt
+  ( knd
+  , stmp, mopt
   , sqas, tqas
   , id2c, ti3a, ti2s
   , f3as, res0, d3e0) =>
   fprint!
   ( out
   , "D3Cimpdecl3("
-  , knd, "; ", mopt, "; "
+  , knd, "; "
+  , stmp, "; ", mopt, "; "
   , sqas, "; ", tqas, "; "
   , id2c, "; ", ti3a, "; ", ti2s, "; ", f3as, "; ", res0, "; ", d3e0, ")"
   ) (* end of [D3Cimpdecl3] *)

@@ -98,6 +98,15 @@ implement
 fprint_val<h0exp> = fprint_h0exp
 
 (* ****** ****** *)
+//
+implement
+fprint_val<h0gua> = fprint_h0gua
+implement
+fprint_val<h0clau> = fprint_h0clau
+implement
+fprint_val<h0gpat> = fprint_h0gpat
+//
+(* ****** ****** *)
 implement
 fprint_val<htqarg> = fprint_htqarg
 (* ****** ****** *)
@@ -354,10 +363,29 @@ x0.node() of
 | H0Pvar(hdv) =>
   fprint!(out, "H0Pvar(", hdv, ")")
 //
+| H0Pfcon(hdc) =>
+  fprint!(out, "H0Pfcon(", hdc, ")")
+//
+| H0Pbang(h0p) =>
+  fprint!(out, "H0Pbang(", h0p, ")")
+| H0Pflat(h0p) =>
+  fprint!(out, "H0Pflat(", h0p, ")")
+| H0Pfree(h0p) =>
+  fprint!(out, "H0Pfree(", h0p, ")")
+//
+| H0Pdapp
+  (h0f0, npf1, h0ps) =>
+  fprint!
+  ( out
+  , "H0Pdapp("
+  , h0f0, "; ", npf1, "; ", h0ps, ")")
+//
 | H0Pnone1(_) =>
   fprint!(out, "H0Pnone1(", "...", ")")
 //
+(*
 | _(* H0P... *) => fprint!(out, "H0P...(...)")
+*)
 )
 //
 (* ****** ****** *)
@@ -456,6 +484,19 @@ x0.node() of
   ( out
   , "H0Etcst(", tia, "; ", hdc, ")")
 //
+| H0Etimp
+  (stmp, h0e1) =>
+  fprint!
+  ( out
+  , "H0Etimp(", stmp, "; ", h0e1, ")")
+| H0Etimp
+  (stmp, hdc0, targ, hdcl, tsub) =>
+  fprint!
+  ( out
+  , "H0Etimp("
+  , stmp, "; "
+  , hdc0, "; ", targ, "; ", hdcl, "; ", tsub, ")")
+//
 | H0Edapp
   (h0f0, npf1, h0es) =>
   fprint!
@@ -488,6 +529,12 @@ x0.node() of
   , "H0Eif0("
   , h0e1, "; ", h0e2, "; ", opt3, ")")
 //
+| H0Ecase
+  (knd0, h0e1, hcls) =>
+  fprint!
+  ( out, "H0Ecase("
+  , knd0, "; ", h0e1, "; ", hcls, ")")
+//
 | H0Elam
   (knd0, hfas, body) =>
   fprint!
@@ -508,6 +555,84 @@ x0.node() of
 | _(* H0E... *) => fprint!(out, "H0E...(...)")
 *)
 )
+//
+(* ****** ****** *)
+//
+implement
+print_h0gua(x0) =
+fprint_h0gua(stdout_ref, x0)
+implement
+prerr_h0gua(x0) =
+fprint_h0gua(stderr_ref, x0)
+//
+implement
+fprint_h0gua
+  (out, x0) =
+(
+case+
+x0.node() of
+| H0GUAexp(h0e) =>
+  fprint!
+  (out, "H0GUAexp(", h0e, ")")
+| H0GUAmat(h0e, h0p) =>
+  fprint!
+  (out, "H0GUAmat(", h0e, "; ", h0p, ")")
+) (* end of [fprint_h0gua] *)
+//
+(* ****** ****** *)
+//
+implement
+print_h0clau(x0) =
+fprint_h0clau(stdout_ref, x0)
+implement
+prerr_h0clau(x0) =
+fprint_h0clau(stderr_ref, x0)
+//
+implement
+print_h0gpat(x0) =
+fprint_h0gpat(stdout_ref, x0)
+implement
+prerr_h0gpat(x0) =
+fprint_h0gpat(stderr_ref, x0)
+//
+implement
+fprint_h0clau
+  (out, x0) =
+(
+case+
+x0.node() of
+//
+|
+H0CLAUpat(h0gp) =>
+fprint!
+(out, "H0CLAUpat(", h0gp, ")")
+//
+|
+H0CLAUexp(h0gp, d0e0) =>
+fprint!
+( out
+, "H0CLAUexp(", h0gp, "; ", d0e0, ")")
+//
+) (* end of [fprint_h0clau] *)
+//
+implement
+fprint_h0gpat
+  (out, x0) =
+(
+case+
+x0.node() of
+//
+|
+H0GPATpat(h0p) =>
+fprint!
+(out, "H0GPATpat(", h0p, ")")
+//
+|
+H0GPATgua(h0p, h0gs) =>
+fprint!
+(out, "H0GPATgua(", h0p, "; ", h0gs, ")")
+//
+) (* end of [fprint_h0gpat] *)
 //
 (* ****** ****** *)
 //
@@ -537,6 +662,22 @@ fprint_h0dcl(out, x0) =
 case+
 x0.node() of
 //
+| H0Cstatic
+  (tok, h0c1) =>
+  fprint!
+  ( out
+  , "H0Cstatic(", tok, "; ", h0c1, ")")
+| H0Cextern
+  (tok, h0c1) =>
+  fprint!
+  ( out
+  , "H0Cextern(", tok, "; ", h0c1, ")")
+//
+| H0Clocal(head, body) =>
+  fprint!
+  ( out
+  , "H0Clocal(", head, "; ", body, ")")
+//
 | H0Cfundecl
   (knd, mopt, tqas, hfds) =>
   fprint!
@@ -557,10 +698,23 @@ x0.node() of
   , "H0Cvardecl("
   , knd, "; ", mopt, "; ", hvds, ")")
 //
+| H0Cimpdecl3
+  ( knd
+  , stmp, mopt
+  , htvs, hdc0, hfas, body) =>
+  fprint!
+  ( out
+  , "H0Cimpdecl3("
+  , knd, "; "
+  , stmp, "; ", mopt
+  , "; ", htvs, "; ", hdc0, "; ", hfas, "; ", body, ")")
+//
 | H0Cnone1(_) =>
   fprint!(out, "H0Cnone1(", "...", ")")
 //
+(*
 | _(* H0C... *) => fprint!(out, "H0C...(...)")
+*)
 )
 end // end of [local]
 //

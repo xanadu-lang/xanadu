@@ -130,6 +130,19 @@ typedef h0expopt = Option(h0exp)
 //
 (* ****** ****** *)
 //
+abstbox h0gua_tbox = ptr
+typedef h0gua = h0gua_tbox
+typedef h0gualst = List0(h0gua)
+//
+abstbox h0gpat_tbox = ptr
+typedef h0gpat = h0gpat_tbox
+//
+abstbox h0clau_tbox = ptr
+typedef h0clau = h0clau_tbox
+typedef h0claulst = List0(h0clau)
+//
+(* ****** ****** *)
+//
 abstbox h0dcl_tbox = ptr
 typedef h0dcl = h0dcl_tbox
 typedef h0dclist = List0(h0dcl)
@@ -378,6 +391,10 @@ h0pat_node =
 //
 | H0Pfcon of hdcon // cnstrctr
 //
+| H0Pbang of (h0pat)
+| H0Pflat of (h0pat)
+| H0Pfree of (h0pat)
+//
 | H0Pdapp of
   (h0pat, int(*npf*), h0patlst)
 //
@@ -496,6 +513,14 @@ h0exp_node =
 | H0Etcon of (htiarg, hdcon)
 | H0Etcst of (htiarg, hdcst)
 //
+| H0Etimp of
+  ( stamp, h0exp )
+| H0Etimp of
+  ( stamp
+  , h0exp(*tcst*), h0typlst(*targ*)
+  , h0dcl(*impl*), h0typlst(*tsub*)
+  ) (* end of [H0Etimp] *)
+//
 | H0Edapp of
   (h0exp, int(*npf*), h0explst)
 //
@@ -510,6 +535,9 @@ h0exp_node =
 //
 | H0Eif0 of
   (h0exp, h0exp, h0expopt(*else*))
+//
+| H0Ecase of
+  (int(*knd*), h0exp(*val*), h0claulst)
 //
 | H0Elam of
   ( token(*knd*)
@@ -555,6 +583,89 @@ overload fprint with fprint_h0exp
 fun
 h0exp_make_node
 (loc_t, h0typ, h0exp_node): h0exp
+//
+(* ****** ****** *)
+//
+datatype
+h0gua_node =
+| H0GUAexp of (h0exp)
+| H0GUAmat of (h0exp, h0pat)
+//
+fun
+h0gua_get_loc(h0gua): loc_t
+fun
+h0gua_get_node(h0gua): h0gua_node
+//
+overload .loc with h0gua_get_loc
+overload .node with h0gua_get_node
+//
+fun print_h0gua : (h0gua) -> void
+fun prerr_h0gua : (h0gua) -> void
+fun fprint_h0gua : fprint_type(h0gua)
+//
+overload print with print_h0gua
+overload prerr with prerr_h0gua
+overload fprint with fprint_h0gua
+//
+fun
+h0gua_make_node
+(loc: loc_t, node: h0gua_node): h0gua
+//
+(* ****** ****** *)
+//
+datatype
+h0clau_node =
+| H0CLAUpat of h0gpat
+| H0CLAUexp of (h0gpat, h0exp)
+and
+h0gpat_node =
+| H0GPATpat of (h0pat)
+| H0GPATgua of (h0pat, h0gualst)
+//
+fun
+h0clau_get_loc(h0clau): loc_t
+fun
+h0clau_get_node(h0clau): h0clau_node
+//
+overload .loc with h0clau_get_loc
+overload .node with h0clau_get_node
+//
+fun
+h0gpat_get_loc(h0gpat): loc_t
+fun
+h0gpat_get_node(h0gpat): h0gpat_node
+//
+overload .loc with h0gpat_get_loc
+overload .node with h0gpat_get_node
+//
+fun
+print_h0clau : (h0clau) -> void
+fun
+prerr_h0clau : (h0clau) -> void
+fun
+fprint_h0clau : fprint_type(h0clau)
+//
+overload print with print_h0clau
+overload prerr with prerr_h0clau
+overload fprint with fprint_h0clau
+//
+fun
+print_h0gpat : (h0gpat) -> void
+fun
+prerr_h0gpat : (h0gpat) -> void
+fun
+fprint_h0gpat : fprint_type(h0gpat)
+//
+overload print with print_h0gpat
+overload prerr with prerr_h0gpat
+overload fprint with fprint_h0gpat
+//
+fun
+h0clau_make_node
+(loc: loc_t, node: h0clau_node): h0clau
+fun
+h0gpat_make_node
+(loc: loc_t, node: h0gpat_node): h0gpat
 //
 (* ****** ****** *)
 //
@@ -693,8 +804,11 @@ overload fprint with fprint_hvardecl
 //
 datatype
 h0dcl_node =
-// externally named
-| H0Cinclude
+//
+| H0Cstatic of
+  (token(*STATIC*), h0dcl)
+| H0Cextern of
+  (token(*EXTERN*), h0dcl)
 //
 | H0Clocal of
   ( h0dclist(*head*)
@@ -703,14 +817,24 @@ h0dcl_node =
 |
 H0Cfundecl of
 ( token(*knd*)
-, decmodopt, htqarglst, hfundeclist)
+, decmodopt
+, htqarglst, hfundeclist)
 //
 |
 H0Cvaldecl of
-(token(*knd*), decmodopt, hvaldeclist)
+( token(*knd*)
+, decmodopt, hvaldeclist)
 |
 H0Cvardecl of
-(token(*knd*), decmodopt, hvardeclist)
+( token(*knd*)
+, decmodopt, hvardeclist)
+//
+|
+H0Cimpdecl3 of
+( token(*impkind*)
+, stamp(*unicity*)
+, decmodopt
+, htvarlst, hdcst, hfarglst, h0exp)
 //
 | H0Cnone1 of (dataptr) // HX: for ignores
 //

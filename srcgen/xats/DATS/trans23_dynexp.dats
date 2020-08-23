@@ -247,6 +247,49 @@ end // end of [auxsym0]
 (* ****** ****** *)
 
 fun
+auxsapp
+( d2p0
+: d2pat): d3pat = let
+//
+val
+loc0 = d2p0.loc()
+val-
+D2Psapp
+( d2p1
+, s2vs) = d2p0.node()
+//
+val
+d3p1 = trans23_dpat(d2p1)
+//
+val
+s2es = auxs2vs(s2vs) where
+{
+fun
+auxs2vs
+( s2vs
+: s2varlst): s2explst =
+(
+case+ s2vs of
+|
+list_nil() =>
+list_nil()
+|
+list_cons(s2v0, s2vs) =>
+let
+  val s2e0 = s2exp_var(s2v0)
+in
+  list_cons(s2e0, auxs2vs(s2vs))
+end
+)
+}
+//
+in
+  d23pat_sapp_up(loc0, d3p1, s2es)
+end // end of [auxsapp]
+
+(* ****** ****** *)
+
+fun
 auxdap0
 ( d2p0
 : d2pat): d3pat = let
@@ -368,12 +411,17 @@ d2p0.node() of
   )
 //
 | D2Pcon1 _ => auxcon1(d2p0)
+(*
+| D2Pcon2 _ => auxcon2(d2p0)
+*)
 //
 | D2Pbang _ => auxbang(d2p0)
 | D2Pflat _ => auxflat(d2p0)
 | D2Pfree _ => auxfree(d2p0)
 //
 | D2Psym0 _ => auxsym0(d2p0)
+//
+| D2Psapp _ => auxsapp(d2p0)
 //
 | D2Pdap0 _ => auxdap0(d2p0)
 | D2Pdapp _ => auxdapp(d2p0)
@@ -2673,7 +2721,7 @@ aux_impdecl1
 val-
 D2Cimpdecl1
 ( knd
-, mopt
+, stmp, mopt
 , sqas, tqas
 , id2c, tias
 , f2as, res0
@@ -2793,7 +2841,8 @@ d3ecl_make_node
 ( d2cl.loc()
 ,
   D3Cimpdecl1
-  ( knd, mopt
+  ( knd
+  , stmp, mopt
   , sqas, tqas
   , id2c, ti3a, tias, f3as, res0, d3e0)
 ) (* d3ecl_make_node *)
@@ -2811,7 +2860,7 @@ loc0 = d2cl.loc()
 val-
 D2Cimpdecl2
 ( knd
-, mopt
+, stmp, mopt
 , sqas, tqas
 , id2c, tias
 , f2as
@@ -2859,7 +2908,8 @@ in
 {
   val node =
   D3Cimpdecl2
-  ( knd, mopt
+  ( knd
+  , stmp, mopt
   , sqas, tqas
   , id2c, ti3a, tias, f3as, res0, d3e0)
 }
