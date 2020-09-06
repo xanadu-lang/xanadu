@@ -513,8 +513,10 @@ h0exp_node =
 | H0Etcon of (htiarg, hdcon)
 | H0Etcst of (htiarg, hdcst)
 //
+(*
 | H0Etimp of
   ( stamp, h0exp )
+*)
 | H0Etimp of
   ( stamp
   , h0exp(*tcst*), h0typlst(*targ*)
@@ -805,14 +807,17 @@ overload fprint with fprint_hvardecl
 datatype
 h0dcl_node =
 //
-| H0Cstatic of
-  (token(*STATIC*), h0dcl)
-| H0Cextern of
-  (token(*EXTERN*), h0dcl)
+|
+H0Cstatic of
+(token(*STATIC*), h0dcl)
+|
+H0Cextern of
+(token(*EXTERN*), h0dcl)
 //
-| H0Clocal of
-  ( h0dclist(*head*)
-  , h0dclist(*body*))
+|
+H0Clocal of
+( h0dclist(*head*)
+, h0dclist(*body*))
 //
 |
 H0Cfundecl of
