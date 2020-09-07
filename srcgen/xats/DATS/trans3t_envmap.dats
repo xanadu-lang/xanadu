@@ -938,11 +938,11 @@ val+
 //
 val
 d3es =
-list_vt_map<d3exp><t3cst>(ts)
+list_vt_map<d3exp><t3imp>(ts)
 where
 {
 implement
-list_vt_map$fopr<d3exp><t3cst>(t0) = t3cst(t0)
+list_vt_map$fopr<d3exp><t3imp>(t0) = t3imp(t0)
 }
 //
 in
