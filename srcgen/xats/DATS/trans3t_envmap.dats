@@ -112,7 +112,7 @@ let
 local
 val-
 D3Etimp
-( stmp
+( _
 , d3e0
 , targ
 , d3cl
