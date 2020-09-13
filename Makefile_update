@@ -34,7 +34,7 @@ update:: XATSLIB
 
 MISC: ; \
 $(CPF) \
-$(XATSHOME)/srcgen/xats/Makefile_xats ./srcgen/xats/.
+$(XATSHOME)/srcgen/xats/Makefile_xatsopt ./srcgen/xats/.
 
 ######
 
