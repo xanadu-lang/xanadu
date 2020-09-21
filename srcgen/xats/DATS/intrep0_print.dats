@@ -452,16 +452,20 @@ fprint_h0exp(out, x0) =
 case+
 x0.node() of
 //
-| H0Eint(int) =>
-  fprint!(out, "H0Eint(", int, ")")
-| H0Ebtf(btf) =>
-  fprint!(out, "H0Ebtf(", btf, ")")
-| H0Echr(chr) =>
-  fprint!(out, "H0Echr(", chr, ")")
-| H0Eflt(flt) =>
-  fprint!(out, "H0Eflt(", flt, ")")
-| H0Estr(str) =>
-  fprint!(out, "H0Estr(", str, ")")
+| H0Eint(tok) =>
+  fprint!(out, "H0Eint(", tok, ")")
+| H0Ebtf(tok) =>
+  fprint!(out, "H0Ebtf(", tok, ")")
+| H0Echr(tok) =>
+  fprint!(out, "H0Echr(", tok, ")")
+//
+| H0Eflt(tok) =>
+  fprint!(out, "H0Eflt(", tok, ")")
+| H0Estr(tok) =>
+  fprint!(out, "H0Estr(", tok, ")")
+//
+| H0Etop(tok) =>
+  fprint!(out, "H0Etop(", tok, ")")
 //
 | H0Evar(hdv) =>
   fprint!(out, "H0Evar(", hdv, ")")
@@ -505,6 +509,18 @@ x0.node() of
   ( out
   , "H0Edapp("
   , h0f0, "; ", npf1, "; ", h0es, ")")
+//
+| H0Epcon
+  (h0e1, lab2) =>
+  fprint!
+  ( out
+  , "H0Epcon(", h0e1, "; ", lab2, ")")
+| H0Eproj
+  (h0e1, lab2, idx3) =>
+  fprint!
+  ( out
+  , "H0Eproj("
+  , h0e1, "; ", lab2, "; ", idx3, ")")
 //
 | H0Elet
   ( dcls
