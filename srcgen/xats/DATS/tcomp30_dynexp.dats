@@ -50,9 +50,14 @@ UN = "prelude/SATS/unsafe.sats"
 #staload "./../SATS/locinfo.sats"
 
 (* ****** ****** *)
+//
 #staload "./../SATS/statyp2.sats"
+#staload "./../SATS/staexp2.sats"
+//
 #staload "./../SATS/dynexp2.sats"
+//
 #staload "./../SATS/dynexp3.sats"
+//
 (* ****** ****** *)
 
 #staload "./../SATS/intrep0.sats"
@@ -909,21 +914,63 @@ val
 loc0 = d3e0.loc()
 val
 t2p0 = d3e0.type()
+//
 val
 h0t0 = tcomp30_type(t2p0)
 //
 val
 hend =
 (
-H0Eproj(h0e1, lab2, idx3)
+  H0Eproj
+  (knd0, h0e1, lab2, idx2)
 ) where
 {
 val-
 D3Eproj
 ( d3e1
-, lab2, idx3) = d3e0.node()
+, lab2, idx2) = d3e0.node()
 //
 val h0e1 = tcomp30_dexp(d3e1)
+//
+local
+fun
+auxtknd
+( h0t1
+: h0typ): int =
+let
+//
+(*
+val () =
+println!
+("auxtknd: h0e1 = ", h0e1)
+*)
+val () =
+println!
+("auxtknd: h0t1 = ", h0t1)
+//
+in
+(
+case+
+h0t1.node() of
+|
+H0Ttyrec
+(tknd, _, _) =>
+(
+case+ tknd of
+| TYRECbox0() => 1
+| TYRECbox1() => 1
+| _ (* else *) => 0
+)
+| H0Tlft
+( h0t1 ) => auxtknd(h0t1)
+//
+|
+_(*non-H0Ttyrec*) => 1(*boxed*)
+)
+end // end of [let]
+in
+val knd0 = auxtknd(h0e1.type())
+end // end of [local]
 //
 } (* where *) // end-of-val
 //
