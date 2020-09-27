@@ -10,6 +10,13 @@ XATS2JS_none = null
 var
 XATS2JS_void = null
 /* ****** ****** */
+function
+XATS2JS_fcast
+  ( x0 )
+{
+  return x0;
+}  
+/* ****** ****** */
 //
 function
 XATS2JS_assert

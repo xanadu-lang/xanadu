@@ -40,6 +40,7 @@ UN = "prelude/SATS/unsafe.sats"
 //
 (* ****** ****** *)
 //
+#staload "./../SATS/basics.sats"
 #staload "./../SATS/stamp0.sats"
 #staload "./../SATS/symbol.sats"
 #staload "./../SATS/lexing.sats"
@@ -169,6 +170,30 @@ end // end of [local]
 
 (* ****** ****** *)
 
+implement
+hdcst_fcastq(hdc) =
+let
+val
+knd = hdcst_get_kind(hdc)
+in
+//
+case+ knd of
+|
+T_FUN(fnk) =>
+(
+case+ fnk of
+| FNKfcast() => true
+| _(*non-FNKfcast*) => false
+)
+(*
+  | T_VAL(vlk) => false
+*)
+| _ (* rest-of-tnode *) => false
+//
+end // end of [hdcst_iscast]
+
+(* ****** ****** *)
+
 local
 
 typedef
@@ -176,6 +201,7 @@ hdvar_struct = @{
 //
   hdvar_loc= loc_t // loc
 , hdvar_sym= sym_t // name
+, hdvar_kind= tnode // kind
 , hdvar_type= h0typ // type
 , hdvar_stamp= stamp // unicity
 //
@@ -190,17 +216,22 @@ implement
 hdvar_get_sym
 (hdv) = hdv->hdvar_sym
 implement
+hdvar_get_kind
+(hdv) = hdv->hdvar_kind
+implement
 hdvar_get_stamp
 (hdv) = hdv->hdvar_stamp
 
 implement
 hdvar_make_idtp
-(loc, sym, htp) =
+( loc
+, sym, knd, htp) =
 (
 ref<hdvar_struct>
 @{
   hdvar_loc=loc
 , hdvar_sym=sym
+, hdvar_kind=knd
 , hdvar_type=htp
 , hdvar_stamp=stamp
 }
