@@ -63,6 +63,11 @@ PRESATS:: ; $(CPF) $(XATSHOME)/prelude/SATS/CC/*.sats ./prelude/SATS/CC/.
 PREDATS:: ; $(CPF) $(XATSHOME)/prelude/DATS/*.dats ./prelude/DATS/.
 #
 PREDATSCATS:: \
+PREDATSCATS_JS
+PREDATSCATS_JS: ; \
+$(CPF) $(XATSHOME)/prelude/DATS/CATS/JS/*.?ats ./prelude/DATS/CATS/JS/.
+#
+PREDATSCATS:: \
 PREDATSCATS_Xint
 PREDATSCATS_Xint: ; \
 $(CPF) $(XATSHOME)/prelude/DATS/CATS/Xint/*.dats ./prelude/DATS/CATS/Xint/.
