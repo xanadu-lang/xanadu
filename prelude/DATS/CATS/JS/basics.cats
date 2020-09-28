@@ -11,11 +11,36 @@ var
 XATS2JS_void = null
 /* ****** ****** */
 function
+XATS2JS_char
+  ( cs )
+{
+// cs: singleton
+return cs.charCodeAt(0);
+}
+function
+XATS2JS_string
+  ( cs )
+{
+return cs;//cs:JS_string
+}
+/* ****** ****** */
+function
 XATS2JS_fcast
   ( x0 )
 {
-  return x0;
+return x0; // obj: object
 }  
+/* ****** ****** */
+//
+function
+XATS2JS_g_print(obj)
+{
+var
+rep = obj.toString();
+process.stdout.write(rep);
+return; // XATS2JS_g_print
+}
+//
 /* ****** ****** */
 //
 function
@@ -98,11 +123,11 @@ if
 lvl0.hasOwnProperty('prev')
 )
 { // flat tuple
-  root =
-  XATS2JS_lval_get(lvl0.prev);
-  root =
-  root.slice(); root[offs] = obj1;
-  XATS2JS_lval_set(lvl0.prev, root);
+root =
+XATS2JS_lval_get(lvl0.prev);
+root =
+root.slice(); root[offs] = obj1;
+XATS2JS_lval_set(lvl0.prev, root);
 }
 else
 {
@@ -271,17 +296,6 @@ if
 
 /* ****** ****** */
 //
-function
-XATS2JS_g_print(obj)
-{
-var
-rep = obj.toString();
-process.stdout.write(rep);
-return; // XATS2JS_g_print
-}
-//
-/* ****** ****** */
-//
 // prelude/bool.sats
 //
 /* ****** ****** */
@@ -319,11 +333,50 @@ return ; // XATS2JS_bool_print
 //
 /* ****** ****** */
 function
+XATS2JS_char_eqzq
+  (c0)
+{
+return (0===c0); // eqzq
+}
+function
+XATS2JS_char_neqzq
+  (c0)
+{
+return (0!==c0); // neqzq
+}
+/* ****** ****** */
+function
+XATS2JS_char_cmp
+  (c1, c2)
+{
+if
+(c1 < c2)
+return (-1);
+else
+return (c1 <= c2 ? 0 : 1);
+}
+/* ****** ****** */
+function
+XATS2JS_char_equal
+  (c1, c2)
+{
+return (c1===c2); // equal
+}
+function
+XATS2JS_char_noteq
+  (c1, c2)
+{
+return (c1!==c2); // noteq
+}
+/* ****** ****** */
+function
 XATS2JS_char_print
   (c0)
 {
-  XATS2JS_g_print(c0);
-  return; // char_print
+// c0: number
+XATS2JS_g_print
+(String.fromCharCode(c0));
+return; // XATS2JS_char_print
 }
 /* ****** ****** */
 //
@@ -334,55 +387,88 @@ function
 XATS2JS_gint_print_sint
   (x0)
 {
-  XATS2JS_g_print(x0);
-  return; // gint_print_sint
+XATS2JS_g_print(x0);
+return; // gint_print_sint
 }
 function
 XATS2JS_gint_print_uint
   (x0)
 {
-  XATS2JS_g_print(x0);
-  return; // gint_print_uint
+XATS2JS_g_print(x0);
+return; // gint_print_uint
+}
+/* ****** ****** */
+function
+XATS2JS_gint_abs_sint
+  (x0)
+{
+if
+(x0 >= 0)
+{
+  return x0; // abs
+}
+else
+{
+  return -x0; // abs
+}
 }
 /* ****** ****** */
 function
 XATS2JS_gint_neg_sint
   (x0)
-{ return (-x0); }
+{
+return (-x0); // neg
+}
 /* ****** ****** */
 function
 XATS2JS_gint_succ_sint
   (x0)
-{ return (x0 + 1); }
+{
+return (x0 + 1); // +1
+}
 function
 XATS2JS_gint_pred_sint
   (x0)
-{ return (x0 - 1); }
+{
+return (x0 - 1); // -1
+}
 /* ****** ****** */
 function
 XATS2JS_gint_lt_sint_sint
   (x1, x2)
-{ return (x1 < x2); }
+{
+return (x1 < x2); // lt
+}
 function
 XATS2JS_gint_gt_sint_sint
   (x1, x2)
-{ return (x1 > x2); }
+{
+return (x1 > x2); // gt
+}
 function
 XATS2JS_gint_eq_sint_sint
   (x1, x2)
-{ return (x1 === x2); }
+{
+return (x1 === x2); // eq
+}
 function
 XATS2JS_gint_lte_sint_sint
   (x1, x2)
-{ return (x1 <= x2); }
+{
+return (x1 <= x2); // lte
+}
 function
 XATS2JS_gint_gte_sint_sint
   (x1, x2)
-{ return (x1 >= x2); }
+{
+return (x1 >= x2); // gte
+}
 function
 XATS2JS_gint_neq_sint_sint
   (x1, x2)
-{ return (x1 !== x2); }
+{
+return (x1 !== x2); // neq
+}
 /* ****** ****** */
 function
 XATS2JS_gint_cmp_sint_sint
@@ -398,28 +484,38 @@ return (x1 <= x2 ? 0 : 1);
 function
 XATS2JS_gint_add_sint_sint
   (x1, x2)
-{ return ( x1 + x2 ); }
+{
+   return (x1 + x2); // add
+}
 /* ****** ****** */
 function
 XATS2JS_gint_sub_sint_sint
   (x1, x2)
-{ return ( x1 - x2 ); }
+{
+  return (x1 - x2); // sub
+}
 /* ****** ****** */
 function
 XATS2JS_gint_mul_sint_sint
   (x1, x2)
-{ return ( x1 * x2 ); }
+{
+  return (x1 * x2); // mul
+}
 /* ****** ****** */
 function
 XATS2JS_gint_mod_sint_sint
   (x1, x2)
-{ return ( x1 % x2 ); }
+{
+  return (x1 % x2); // mod
+}
 /* ****** ****** */
 function
 XATS2JS_gint_div_sint_sint
   (x1, x2)
 { 
+//
   var q0 = x1 / x2;
+//
   if
   (q0 >= 0)
   {
@@ -435,11 +531,153 @@ XATS2JS_gint_div_sint_sint
 // prelude/string.sats
 //
 /* ****** ****** */
+//
+// HX-2020-09-28:
+// Please note that:
+// A string is a JS_string
+// A string_vt is a JS_array
+//
+/* ****** ****** */
+function
+XATS2JS_string_vt2t
+  (cs)
+{
+cs.pop(); // remove the last '0'
+var cs =
+String.fromCharCode.apply(null, cs);
+return cs; // XATS2JS_string_vt2t
+}
+/* ****** ****** */
+function
+XATS2JS_string_head_opt
+  (cs)
+{
+if
+(cs.length <= 0)
+{
+  return 0; // none
+}
+return cs.charCodeAt(0);
+}
+/* ****** ****** */
+function
+XATS2JS_string_head_raw
+  (cs)
+{
+return cs.charCodeAt(0);
+}
+/* ****** ****** */
+function
+XATS2JS_string_tail_raw
+  (cs)
+{
+return cs.slice(1);//tail
+}
+/* ****** ****** */
 function
 XATS2JS_string_print
-  (x0)
+  (cs)
 {
-  XATS2JS_g_print(x0); return;
+  XATS2JS_g_print(cs);
+  return;
+}
+/* ****** ****** */
+function
+XATS2JS_string_get_at
+  (cs, i0)
+{
+  return cs[i0];
+  // cs: JS_array(char)
+}
+/* ****** ****** */
+function
+XATS2JS_strtmp_vt_alloc
+  (bsz)
+{
+  cs =
+  new Array(bsz+1);
+  cs[bsz] = 0; return cs;
+}
+function
+XATS2JS_strtmp_vt_set_at
+  (cs, i0, c0)
+{
+  cs[i0] = c0;
+  return;//cs:JS_array(char)
+}
+/* ****** ****** */
+function
+XATS2JS_string_forall_cfr
+  (cs, f0)
+{
+var
+res = true;
+var
+len = cs.length
+for
+( i0 = 0
+; i0 < len; i0 += 1)
+{
+var c0 = cs.charCodeAt(i0);
+if
+(!f0(c0)){res = false; break;}
+}
+return res; // string_forall_cfr
+}
+/* ****** ****** */
+function
+XATS2JS_string_rforall_cfr
+  (cs, f0)
+{
+var
+res = true;
+var
+len = cs.length
+for
+( i0 = len
+; i0 >= 1 ; i0 -= 1)
+{
+var c0 = cs.charCodeAt(i0-1);
+if
+(!f0(c0)){res = false; break;}
+}
+return res; // string_rforall_cfr
+}
+/* ****** ****** */
+function
+XATS2JS_string_vt_forall_cfr
+  (cs, f0)
+{
+var
+res = true;
+var
+len = cs.length
+for
+( i0 = 0
+; i0 < len; i0 += 1)
+{
+if
+(!f0(cs[i0])){res = false; break;}
+}
+return res; // string_vt_forall_cfr
+}
+/* ****** ****** */
+function
+XATS2JS_string_vt_rforall_cfr
+  (cs, f0)
+{
+var
+res = true;
+var
+len = cs.length;
+for
+( i0 = len
+; i0 >= 1 ; i0 -= 1)
+{
+if
+(!f0(cs[i0-1])){res = false; break;}
+}
+return res; // string_vt_rforall_cfr
 }
 /* ****** ****** */
 //

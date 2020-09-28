@@ -1,7 +1,11 @@
 (* ****** ****** *)
 (*
-** The runtime for Xinterp
+Basics for Xinterp
 *)
+(* ****** ****** *)
+#staload
+UN = // for casting
+"prelude/SATS/unsafe.sats"
 (* ****** ****** *)
 //
 // prelude/bool.sats
@@ -481,6 +485,17 @@ gflt_div_dflt_dflt<> = Xint_gflt_div_dflt_dflt
 //
 (* ****** ****** *)
 //
+(*
+In Xint,
+string and string_vt are
+of the same representation!!!
+*)
+impltmp
+string_vt2t<>
+( cs ) = $UN.castlin01(cs)
+//
+(* ****** ****** *)
+//
 #extern
 fun
 Xint_string_print
@@ -515,11 +530,11 @@ string_tail_raw<> = Xint_string_tail_raw
 //
 #extern
 fun
-Xint_strptr_alloc
+Xint_strtmp_vt_alloc
 {n:nat}
-(len: int(n)): strptr(n)
+(len: int(n)): strtmp_vt(n)
 impltmp
-strptr_alloc<> = Xint_strptr_alloc
+strtmp_vt_alloc<> = Xint_strtmp_vt_alloc
 //
 #extern
 fun
@@ -531,16 +546,16 @@ Xint_string_get_at
 , i0: int(i)): cgtz
 impltmp
 string_get_at<> = Xint_string_get_at
+//
 #extern
 fun
-Xint_strptr_set_at
+Xint_strtmp_vt_set_at
 {n:nat}
 {i:int|i<n}
 ( p0:
-! strptr(n)
-, i0: int(i), c0: cgtz): void
+! strtmp_vt(n), i0:int(i), c0:cgtz): void
 impltmp
-strptr_set_at<> = Xint_strptr_set_at
+strtmp_vt_set_at<> = Xint_strtmp_vt_set_at
 //
 (* ****** ****** *)
 //
