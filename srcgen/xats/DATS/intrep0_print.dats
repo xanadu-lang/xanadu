@@ -599,15 +599,19 @@ x0.node() of
 | H0Elam
   (knd0, hfas, body) =>
   fprint!
-  ( out
-  , "H0Elam("
+  ( out, "H0Elam("
   , knd0, "; ", hfas, "; ", body, ")")
 | H0Efix
   (knd0, fid1, hfas, body) =>
   fprint!
-  ( out
-  , "H0Efix("
+  ( out, "H0Efix("
   , knd0, "; ", fid1, "; ", hfas, "; ", body, ")")
+//
+| H0Etry
+  (knd0, h0e1, hcls) =>
+  fprint!
+  ( out, "H0Etry("
+  , knd0, "; ", h0e1, "; ", hcls, ")")
 //
 | H0Eaddr(h0e1) =>
   (
