@@ -100,6 +100,8 @@ abstbox hdcst_tbox = ptr
 typedef hdcon = hdcon_tbox
 typedef hdcst = hdcst_tbox
 //
+typedef hdconlst = List0(hdcon)
+//
 abstbox hdvar_tbox = ptr
 typedef hdvar = hdvar_tbox
 typedef hdvarlst = List0(hdvar)
@@ -155,6 +157,19 @@ fun
 hdcst_stamp_new(): stamp
 fun
 hdvar_stamp_new(): stamp
+//
+(* ****** ****** *)
+//
+fun
+hdcon_get_loc(hdcon): loc_t
+fun
+hdcst_get_loc(hdcst): loc_t
+fun
+hdvar_get_loc(hdvar): loc_t
+//
+overload .loc with hdcon_get_loc
+overload .loc with hdcst_get_loc
+overload .loc with hdvar_get_loc
 //
 (* ****** ****** *)
 //
@@ -936,6 +951,13 @@ H0Cvaldecl of
 H0Cvardecl of
 ( token(*knd*)
 , decmodopt, hvardeclist)
+//
+|
+H0Cexcptcon of (hdconlst)
+(*
+|
+H0Cdatatype of (htcstlst)
+*)
 //
 |
 H0Cimpdecl3 of
