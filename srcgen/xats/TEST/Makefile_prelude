@@ -1,0 +1,70 @@
+######
+#
+# For testing the files in prelude
+#
+######
+
+XATSOPT=./../xatsopt
+PRELUDE=./../../../prelude
+
+######
+
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/gbas.sats
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/gord.sats
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/gnum.sats
+
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/bool.sats
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/char.sats
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/gint.sats
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/gflt.sats
+
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/gfor.sats
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/gfun.sats
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/gios.sats
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/rand.sats
+
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/gseq.sats
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/gseqn.sats
+
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/list.sats
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/optn.sats
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/array.sats
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/string.sats
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/stream.sats
+
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/unsafe.sats
+
+
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/gseq_vt.sats
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/gseqn_vt.sats
+
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/list_vt.sats
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/optn_vt.sats
+all:: ; \
+$(XATSOPT) -s $(PRELUDE)/SATS/stream_vt.sats
+
+
+###### end of [Makefile_prelude] ######
