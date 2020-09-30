@@ -9,7 +9,9 @@ of Types and Templates
 
 ## Project Description
 
-ATS3 is an attempt to greatly improve upon ATS2.
+ATS3 is an attempt to greatly improve upon ATS2. The version of ATS3
+in this repository is supposed to be used to generate *libxatsopt* for
+developing ATS3 tool support of all sorts.
 
 Probably the biggest problem with ATS2 is the *very* steep learning
 curve associated with it.  Very few programmers were able to ever
