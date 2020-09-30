@@ -15,7 +15,7 @@ XATS2JS_excbas = 0
 var // global
 XATS2JS_exctag = 0
 function
-XATS2JS_new_excon
+XATS2JS_new_exctag
   (    )
 {
 var bas0 =
@@ -50,6 +50,12 @@ return x0; //obj: object
 //
 function
 XATS2JS_raise
+  ( exn )
+{
+  throw exn;//no return!
+}
+function
+XATS2JS_reraise
   ( exn )
 {
   throw exn;//no return!
