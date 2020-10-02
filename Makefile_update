@@ -32,36 +32,36 @@ update:: XATSLIB
 
 ######
 
-MISC: ; \
+MISC:: ; \
 $(CPF) \
 $(XATSHOME)/srcgen/xats/Makefile_xatsopt ./srcgen/xats/.
-MISC: ; \
+MISC:: ; \
 $(CPF) \
 $(XATSHOME)/srcgen/xats/TEST/Makefile_prelude ./srcgen/xats/TEST/.
-MISC: ; \
+MISC:: ; \
 $(CPF) \
 $(XATSHOME)/srcgen/xats/TEST/Makefile_xatslib ./srcgen/xats/TEST/.
 
 ######
 
-SATS: ; \
+SATS:: ; \
 $(CPF) $(XATSHOME)/srcgen/xats/SATS/*.sats ./srcgen/xats/SATS/.
 
-DATS: ; \
+DATS:: ; \
 $(CPF) $(XATSHOME)/srcgen/xats/DATS/*.dats ./srcgen/xats/DATS/.
 
-CATS: ; \
+CATS:: ; \
 $(CPF) $(XATSHOME)/srcgen/xats/CATS/*.cats ./srcgen/xats/CATS/.
 
-HATS: ; \
+HATS:: ; \
 $(CPF) $(XATSHOME)/srcgen/xats/HATS/*.hats ./srcgen/xats/HATS/.
 
-CONTRIB: ; \
+CONTRIB:: ; \
 $(CPFR) $(XATSHOME)/srcgen/xats/DATS/CONTRIB ./srcgen/xats/DATS/.
 
 ######
 #
-PRETOP: ; $(CPF) $(XATSHOME)/prelude/*.?ats ./prelude/.
+PRETOP:: ; $(CPF) $(XATSHOME)/prelude/*.?ats ./prelude/.
 #
 PRESATS:: ; $(CPF) $(XATSHOME)/prelude/SATS/*.sats ./prelude/SATS/.
 PRESATS:: ; $(CPF) $(XATSHOME)/prelude/SATS/CC/*.sats ./prelude/SATS/CC/.
@@ -70,12 +70,12 @@ PREDATS:: ; $(CPF) $(XATSHOME)/prelude/DATS/*.dats ./prelude/DATS/.
 #
 PREDATSCATS:: \
 PREDATSCATS_JS
-PREDATSCATS_JS: ; \
+PREDATSCATS_JS:: ; \
 $(CPF) $(XATSHOME)/prelude/DATS/CATS/JS/*.?ats ./prelude/DATS/CATS/JS/.
 #
 PREDATSCATS:: \
 PREDATSCATS_Xint
-PREDATSCATS_Xint: ; \
+PREDATSCATS_Xint:: ; \
 $(CPF) $(XATSHOME)/prelude/DATS/CATS/Xint/*.dats ./prelude/DATS/CATS/Xint/.
 #
 ######
