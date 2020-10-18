@@ -216,6 +216,7 @@ ATS_DYNLOADNAME "libxatsopt_dynloadall"
 //
 #dynload "./staexp1.dats"
 #dynload "./dynexp1.dats"
+//
 #dynload "./staexp1_print.dats"
 #dynload "./dynexp1_print.dats"
 //
@@ -254,6 +255,9 @@ ATS_DYNLOADNAME "libxatsopt_dynloadall"
 #dynload "./dynexp2_print.dats"
 //
 #dynload "./nmspace.dats"
+//
+#dynload "./gmacro1_define.dats"
+#dynload "./dmacro2_macdef.dats"
 //
 #dynload "./trans12_basics.dats"
 #dynload "./trans12_envmap.dats"
@@ -1056,6 +1060,9 @@ println!
 end (* end of [val] *)
 //
 (* ****** ****** *)
+//
+val () = println!("the_gmacenv =")
+val () = the_gmacenv_println((*void*))
 //
 val () = println!("the_sortenv =")
 val () = the_sortenv_println((*void*))

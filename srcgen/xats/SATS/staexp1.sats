@@ -52,16 +52,20 @@ typedef tokenopt = $LEX.tokenopt
 typedef tokenlst = $LEX.tokenlst
 //
 (* ****** ****** *)
-
 #staload
 S0E = "./staexp0.sats"
-
+(* ****** ****** *)
+abstbox g1exp_tbox = ptr
+abstype g1mac_tbox = ptr
 (* ****** ****** *)
 //
-abstbox g1exp_tbox = ptr
 abstbox g1marg_tbox = ptr
 //
+typedef g0exp = $S0E.g0exp
+//
 typedef g1exp = g1exp_tbox
+typedef g1mac = g1mac_tbox
+//
 typedef g1explst = List0(g1exp)
 typedef g1expopt = Option(g1exp)
 //
@@ -76,7 +80,7 @@ typedef g1marglst = List0(g1marg)
 datatype
 g1exp_node =
 //
-| G1Eid of (sym_t)
+| G1Eid0 of (sym_t)
 //
 | G1Eint of (token)
 | G1Estr of (token)
@@ -90,7 +94,8 @@ g1exp_node =
 //
 | G1Elist of g1explst (*temp*)
 //
-| G1Enone of (loc_t) // HX: for error indicaton
+| G1Enone0 of () // HX: EMPTY
+| G1Enone1 of (g0exp) // ERROR!
 //
 (* ****** ****** *)
 //
@@ -114,11 +119,22 @@ overload prerr with prerr_g1exp
 overload fprint with fprint_g1exp
 //
 fun
+print_g1mac : print_type(g1mac)
+fun
+prerr_g1mac : prerr_type(g1mac)
+fun
+fprint_g1mac : fprint_type(g1mac)
+//
+overload print with print_g1mac
+overload prerr with prerr_g1mac
+overload fprint with fprint_g1mac
+//
+(* ****** ****** *)
+fun
 g1exp_none(loc: loc_t): g1exp
 fun
 g1exp_make_node
 (loc: loc_t, node: g1exp_node): g1exp
-//
 (* ****** ****** *)
 //
 datatype
@@ -522,7 +538,7 @@ typedef labs1explst = List0(labs1exp)
 datatype
 s1exp_node =
 //
-| S1Eid of sym_t
+| S1Eid0 of sym_t
 //
 | S1Eint of token
 | S1Echr of token

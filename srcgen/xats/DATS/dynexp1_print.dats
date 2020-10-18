@@ -429,9 +429,9 @@ fprint_d1exp
 (
 case+
 x0.node() of
-| D1Eid(tok) =>
+| D1Eid0(tok) =>
   fprint!
-  (out, "D1Eid(", tok, ")")
+  (out, "D1Eid0(", tok, ")")
 //
 | D1Eint(tok) =>
   fprint!
@@ -468,12 +468,15 @@ x0.node() of
 | D1Etqarg(s1es) =>
   fprint!(out, "D1Etqarg(", s1es, ")")
 //
-| D1Elist(d1es) =>
+| D1Elist( d1es ) =>
   fprint!
   (out, "D1Elist1(", d1es, ")")
 | D1Elist(d1es1, d1es2) =>
   fprint!
   (out, "D1Elist2(", d1es1, "; ", d1es2, ")")
+//
+| D1Enone((*void*)) =>
+  fprint!(out, "D1Enone(", ")")
 //
 | D1Eseqn(d1es1, d1es2) =>
   fprint!
@@ -546,8 +549,6 @@ x0.node() of
   (
     fprint!(out, "D1Equal(", tok1, "; ", d1e2, ")")
   )
-//
-| D1Enone((*void*)) => fprint!(out, "D1Enone(", ")")
 //
 ) (* fprint_d1exp *)
 

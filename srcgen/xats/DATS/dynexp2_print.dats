@@ -367,6 +367,11 @@ fprint_d2exp
 (
 case- x0.node() of
 //
+| D2Ei00(int) =>
+  fprint!(out, "D2Ei00(", int, ")")
+| D2Es00(str) =>
+  fprint!(out, "D2Es00(", str, ")")
+//
 | D2Eint(tok) =>
   fprint!(out, "D2Eint(", tok, ")")
 | D2Ebtf(tok) =>
@@ -537,6 +542,9 @@ case- x0.node() of
   fprint!
   (out, "D2Eanno(", d2e1, "; ", s2e2, ")")
 //
+| D2Eg1mac(g1m0) =>
+  fprint!(out, "D2Eg1mac(", g1m0, ")")
+//
 | D2Enone0() => fprint!(out, "D2Enone0(", ")")
 | D2Enone1(d1esrc) => fprint!(out, "D2Enone1(", d1esrc, ")")
 //
@@ -643,12 +651,18 @@ case- x0.node() of
   fprint!
   (out, "D2Cnone1(", d1csrc, ")")
 //
+| D2Cdefine(d1cl) =>
+  fprint!
+  (out, "D2Cdefine(", d1cl, ")")
+//
 | D2Cstatic
-  (tok, d2c) =>
-  fprint!(out, "D2Cstatic(", d2c, ")")
+  (tok, d2cl) =>
+  fprint!
+  (out, "D2Cstatic(", d2cl, ")")
 | D2Cextern
-  (tok, d2c) =>
-  fprint!(out, "D2Cextern(", d2c, ")")
+  (tok, d2cl) =>
+  fprint!
+  (out, "D2Cextern(", d2cl, ")")
 //
 | D2Clocal(head, body) =>
   fprint!

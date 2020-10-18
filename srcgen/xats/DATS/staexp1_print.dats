@@ -47,6 +47,8 @@ UN = "prelude/SATS/unsafe.sats"
 //
 #staload "./../SATS/locinfo.sats"
 //
+#staload "./../SATS/staexp0.sats"
+//
 #staload "./../SATS/staexp1.sats"
 //
 (* ****** ****** *)
@@ -64,6 +66,10 @@ fprint_val<token> = fprint_token
 implement
 fprint_val<g1exp> = fprint_g1exp
 //
+(*
+implement
+fprint_val<g1arg> = fprint_g1arg
+*)
 implement
 fprint_val<g1marg> = fprint_g1marg
 //
@@ -134,8 +140,8 @@ fprint_g1exp
 (
 case+ x0.node() of
 //
-| G1Eid(tok) =>
-  fprint!(out, "G1Eid(", tok, ")")
+| G1Eid0(gid) =>
+  fprint!(out, "G1Eid0(", gid, ")")
 //
 | G1Eint(int) =>
   fprint!(out, "G1Eint(", int, ")")
@@ -148,20 +154,28 @@ case+ x0.node() of
 | G1Eapp1
   (g1e0, g1e1) =>
   fprint!
-  (out, "G1Eapp1(", g1e0, "; ", g1e1, ")")
+  ( out
+  , "G1Eapp1(", g1e0, "; ", g1e1, ")")
 | G1Eapp2
   (g1e0, g1e1, g1e2) =>
   fprint!
-  (out, "G1Eapp2(", g1e0, "; ", g1e1, "; ", g1e2, ")")
+  ( out
+  , "G1Eapp2("
+  , g1e0, "; ", g1e1, "; ", g1e2, ")")
 //
 | G1Elist(g1es) =>
-  fprint!(out, "G1Elist(", g1es, ")")
+  fprint!( out, "G1Elist(", g1es, ")")
 //
-| G1Enone(loc) => fprint!( out, "G1Enone(", ")" )
+| G1Enone0() =>
+  (
+   fprint!(out, "G1Enone0(", ")")
+  )
+| G1Enone1(g0e1) =>
+  (
+   fprint!(out, "G1Enone1(", g0e1, ")")
+  )
 //
-) (* end of [fprint_g1exp] *)
-
-end // end of [local]
+) (* fprint_g1exp *) end // end of [local]
 
 (* ****** ****** *)
 
@@ -243,7 +257,8 @@ case+ x0.node() of
 | S1Tapp2
   (s1t0, s1t1, s1t2) =>
   fprint!
-  (out, "S1Tapp2(", s1t0, "; ", s1t1, "; ", s1t2, ")")
+  ( out
+  , "S1Tapp2(", s1t0, "; ", s1t1, "; ", s1t2, ")")
 //
 | S1Tlist(s1ts) =>
   fprint!(out, "S1Tlist(", s1ts, ")")
@@ -483,9 +498,9 @@ fprint_s1exp
 (
 case+ x0.node() of
 //
-| S1Eid(sid) =>
+| S1Eid0(sid) =>
   fprint!
-  (out, "S1Eid(", sid, ")")
+  (out, "S1Eid0(", sid, ")")
 //
 | S1Eint(tok) =>
   fprint!
@@ -652,7 +667,8 @@ case+ x0.node() of
 | D1ATCON(s1us, tok, s1is, argopt) =>
   fprint!
   ( out
-  , "D1ATCON(", s1us, "; ", tok, "; ", s1is, "; ", argopt, ")")
+  , "D1ATCON("
+  , s1us, "; ", tok, "; ", s1is, "; ", argopt, ")")
 ) (* end of [fprint_d1atcon] *)
 
 (* ****** ****** *)

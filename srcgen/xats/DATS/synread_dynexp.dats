@@ -236,7 +236,7 @@ d0e0.node() of
 | D0Eflt _ => ()
 | D0Estr _ => ()
 //
-| D0Eid(id0) =>
+| D0Eid0(id0) =>
   {
     val () =
     synread_d0eid(id0)
@@ -284,6 +284,20 @@ d0e0.node() of
 (*
     val () =
     synread_LPAREN(tbeg)
+*)
+    val () =
+    synread_d0explst(d0es)
+    val () =
+    synread_d0exp_RPAREN(dend)
+  }
+//
+| D0Etuple
+  ( tknd
+  , topt, d0es, dend) =>
+  {
+(*
+    val () =
+    synread_LPAREN(tknd)
 *)
     val () =
     synread_d0explst(d0es)
@@ -719,14 +733,14 @@ synread_d0ecl
 val
 loc0 = d0cl.loc((*void*))
 //
-// (*
+(*
 val () =
 println!
 ("synread_d0ecl: loc0 = ", loc0)
 val () =
 println!
 ("synread_d0ecl: d0cl = ", d0cl)
-// *)
+*)
 //
 in
 //

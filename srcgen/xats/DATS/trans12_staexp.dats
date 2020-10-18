@@ -116,12 +116,10 @@ NMS = "./../SATS/nmspace.sats"
 #staload "./../SATS/trans12.sats"
 
 (* ****** ****** *)
-
 implement
 fprint_val<s1qua> = fprint_s1qua
 implement
 fprint_val<s2exp> = fprint_s2exp
-
 (* ****** ****** *)
 
 local
@@ -517,9 +515,9 @@ islin
 (
 case+
 x0.node() of
-| S1Eid(sym) =>
+| S1Eid0(sym) =>
   (sym = LIN_sym)
-| _ (*non-S1Eid*) => false
+| _ (*non-S1Eid0*) => false
 )
 //
 in
@@ -552,7 +550,7 @@ fptr
 (
 case+
 x0.node() of
-| S1Eid(sym) =>
+| S1Eid0(sym) =>
   (
   ifcase
   | sym =
@@ -563,7 +561,7 @@ x0.node() of
 *)
   | _ (* else *) => false
   )
-| _ (*non-S1Eid*) => false
+| _ (*non-S1Eid0*) => false
 )
 fun
 cflt
@@ -571,7 +569,7 @@ cflt
 (
 case+
 x0.node() of
-| S1Eid(sym) =>
+| S1Eid0(sym) =>
   (
   ifcase
   | sym =
@@ -584,7 +582,7 @@ x0.node() of
 *)
   | _ (* else *) => false
   )
-| _ (* non-S1Eid *) => false
+| _ (* non-S1Eid0 *) => false
 )
 fun
 cptr
@@ -592,7 +590,7 @@ cptr
 (
 case+
 x0.node() of
-| S1Eid(sym) =>
+| S1Eid0(sym) =>
   (
   ifcase
   | sym =
@@ -605,7 +603,7 @@ x0.node() of
 *)
   | _ (* else *) => false
   )
-| _ (*non-S1Eid*) => false
+| _ (*non-S1Eid0*) => false
 )
 fun
 cref
@@ -613,7 +611,7 @@ cref
 (
 case+
 x0.node() of
-| S1Eid(sym) =>
+| S1Eid0(sym) =>
   (
   ifcase
   | sym =
@@ -625,7 +623,7 @@ x0.node() of
 *)
   | _ (* else *) => false
   )
-| _ (*non-S1Eid*) => false
+| _ (*non-S1Eid0*) => false
 )
 in
 //
@@ -675,7 +673,7 @@ in
 case+
 s1e0.node() of
 |
-S1Eid(sid) => let
+S1Eid0(sid) => let
   val
   opt =
   the_sexpenv_find(sid)
@@ -687,7 +685,7 @@ in
      case+ s2i of
      | S2ITMcst(s2cs) => s2cs | _ => list_nil()
     )
-end // end of [S1Eid]
+end // end of [S1Eid0]
 | _(*rest-of-s1exp*) => list_nil()
 end // end of [s1exp_get_s2cstlst]
 
@@ -870,8 +868,9 @@ auxid0
 : s1exp): s2exp = let
 //
 val-
-S1Eid
-(sid) = s1e0.node()
+S1Eid0
+( sid ) =
+s1e0.node((*void*))
 //
 val knd = isany(sid)
 //
@@ -942,9 +941,9 @@ isCBV0
 (
 case+
 s1e.node() of
-| S1Eid(sid) =>
+| S1Eid0(sid) =>
   sid = $SYM.CBV0_symbol
-| _(*non-S1Eid*) => false
+| _(*non-S1Eid0*) => false
 )
 fun
 isCBV1
@@ -953,9 +952,9 @@ isCBV1
 (
 case+
 s1e.node() of
-| S1Eid(sid) =>
+| S1Eid0(sid) =>
   sid = $SYM.CBV1_symbol
-| _(*non-S1Eid*) => false
+| _(*non-S1Eid0*) => false
 )
 fun
 isCBRF
@@ -964,9 +963,9 @@ isCBRF
 (
 case+
 s1e.node() of
-| S1Eid(sid) =>
+| S1Eid0(sid) =>
   sid = $SYM.CBRF_symbol
-| _(*non-S1Eid*) => false
+| _(*non-S1Eid0*) => false
 )
 
 (* ****** ****** *)
@@ -978,9 +977,9 @@ isTOP0
 (
 case+
 s1e.node() of
-| S1Eid(sid) =>
+| S1Eid0(sid) =>
   sid = $SYM.QMARK_symbol
-| _(*non-S1Eid*) => false
+| _(*non-S1Eid0*) => false
 )
 fun
 isTOP1
@@ -989,9 +988,9 @@ isTOP1
 (
 case+
 s1e.node() of
-| S1Eid(sid) =>
+| S1Eid0(sid) =>
   sid = $SYM.QMNEG_symbol
-| _(*non-S1Eid*) => false
+| _(*non-S1Eid0*) => false
 )
 
 fun
@@ -1001,10 +1000,10 @@ isextp
 (
 case+
 s1e.node() of
-| S1Eid(sid) =>
+| S1Eid0(sid) =>
   sid =
   $SYM.DLR_EXTYPE_symbol
-| _(*non-S1Eid*) => false
+| _(*non-S1Eid0*) => false
 )
 
 fun
@@ -1485,9 +1484,9 @@ isAXCG
 (
 case+
 s1e.node() of
-| S1Eid(sid) =>
+| S1Eid0(sid) =>
   sid = $SYM.AXCG_symbol
-| _(*non-S1Eid*) => false
+| _(*non-S1Eid0*) => false
 )
 fun
 isARRW
@@ -1496,9 +1495,9 @@ isARRW
 (
 case+
 s1e.node() of
-| S1Eid(sid) =>
+| S1Eid0(sid) =>
   sid = $SYM.MSGT_symbol
-| _(*non-S1Eid*) => false
+| _(*non-S1Eid0*) => false
 )
 
 fun
@@ -1906,7 +1905,7 @@ in
 case-
 s1e0.node() of
 //
-| S1Eid _ => auxid0(s1e0)
+| S1Eid0 _ => auxid0(s1e0)
 //
 | S1Eint(tok) =>
   s2exp_int(token2sint(tok))

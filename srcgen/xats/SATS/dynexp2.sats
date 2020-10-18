@@ -68,6 +68,9 @@ typedef dq0eid = $S0E.dq0eid
 #staload
 S1E = "./staexp1.sats"
 //
+  typedef g1exp = $S1E.g1exp
+  typedef g1mac = $S1E.g1mac
+//
   typedef s1exp = $S1E.s1exp
 //
 (* ****** ****** *)
@@ -592,7 +595,8 @@ d2pat_node =
 | D2Panno of
   (d2pat, s2exp) // no s2xtv in anno
 //
-| D2Pnone0 of () | D2Pnone1 of (d1pat)
+| D2Pnone0 of ()
+| D2Pnone1 of (d1pat)
 //
 (* ****** ****** *)
 //
@@ -748,6 +752,9 @@ ti2arg_make
 datatype
 d2exp_node =
 //
+| D2Ei00 of (int) // int
+| D2Es00 of string // string
+//
 | D2Eint of (token) // int
 | D2Ebtf of (token) // bool
 | D2Echr of (token) // char
@@ -828,11 +835,15 @@ d2exp_node =
 | D2Elazy of
   (d2exp(*eval*)) // nonlin
 | D2Ellazy of
-  (d2exp(*eval*), d2explst(*frees*)) // linear
+  ( d2exp(*eval*)
+  , d2explst(*frees*))//linear
 //
-| D2Eanno of (d2exp(*applst*), s2exp(*type*))
+| D2Eanno of
+  (d2exp(*applst*), s2exp(*type*))
 //
-| D2Enone0 of ((*void*)) | D2Enone1 of (d1exp)
+| D2Eg1mac of (g1mac) // HX: error!
+//
+| D2Enone0 of () | D2Enone1 of (d1exp)
 //
 (* ****** ****** *)
 //
@@ -1129,6 +1140,8 @@ d2ecl_node =
 (*
 | D2Clist of (d2eclist)
 *)
+//
+| D2Cdefine of (d1ecl)
 //
 | D2Cstatic of
   (token(*STATIC*), d2ecl)

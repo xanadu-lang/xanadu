@@ -47,6 +47,9 @@
 typedef loc_t = $LOC.loc_t
 //
 (* ****** ****** *)
+typedef fpath = $FP0.filpath
+typedef filpath = $FP0.filpath
+(* ****** ****** *)
 
 #staload LEX = "./lexing.sats"
 #staload S1E = "./staexp1.sats"
@@ -55,40 +58,61 @@ typedef loc_t = $LOC.loc_t
 #staload D2E = "./dynexp2.sats"
 
 (* ****** ****** *)
-
-(*
-symintr trans12
-*)
-
-(* ****** ****** *)
-
-typedef fpath = $FP0.filpath
-typedef filpath = $FP0.filpath
-
-(* ****** ****** *)
-
 typedef token = $LEX.token
-
+(* ****** ****** *)
+typedef s1exp = $S1E.s1exp
+typedef d1exp = $D1E.d1exp
+(* ****** ****** *)
+(*
+symintr trans12 // too much?
+*)
+(* ****** ****** *)
+//
+typedef g1exp = $S1E.g1exp
+//
+typedef g1mac = $S1E.g1mac
+(*
+HX-2020-10-17:
+Note that g1mac is defined
+in the [g1maro_define.dats]
+*)
+//
+(* ****** ****** *)
+fun
+trans11_g1exp(g1exp): g1mac
+fun
+trans11_g1mac
+( gmas: $S1E.g1marglst
+, def1: $S1E.g1expopt): g1mac
+(* ****** ****** *)
+//
+vtypedef g1menv = symmap(g1mac)
+//
 (* ****** ****** *)
 //
 typedef sort1 = $S1E.sort1
-typedef sort1opt = $S1E.sort1opt
-typedef sort1lst = $S1E.sort1lst
-//
 typedef s1arg = $S1E.s1arg
-typedef s1marg = $S1E.s1marg
-typedef s1arglst = $S1E.s1arglst
-//
-typedef s1rtcon = $S1E.s1rtcon
-//
 typedef s1exp = $S1E.s1exp
 (*
 typedef s1eff = $S1E.s1eff
 *)
+typedef s1qua = $S1E.s1qua
+//
+(* ****** ****** *)
+//
+typedef s1marg = $S1E.s1marg
+typedef s1rtcon = $S1E.s1rtcon
+//
+(* ****** ****** *)
+//
+typedef sort1opt = $S1E.sort1opt
+typedef sort1lst = $S1E.sort1lst
+//
+typedef s1arglst = $S1E.s1arglst
+//
 typedef s1expopt = $S1E.s1expopt
 typedef s1explst = $S1E.s1explst
 //
-typedef s1qua = $S1E.s1qua
 typedef s1qualst = $S1E.s1qualst
 //
 (* ****** ****** *)
@@ -123,8 +147,7 @@ typedef s2varlst = $S2E.s2varlst
 //
 (* ****** ****** *)
 
-typedef
-s2varlstlst = List0($S2E.s2varlst)
+typedef s2varlstlst = List0(s2varlst)
 
 (* ****** ****** *)
 //
@@ -146,6 +169,11 @@ typedef effs2expopt = $S2E.effs2expopt
 //
 typedef s2txt = $S2E.s2txt
 typedef s2txtopt = $S2E.s2txtopt
+//
+(* ****** ****** *)
+//
+vtypedef
+  g1macopt_vt = Option_vt(g1mac)
 //
 (* ****** ****** *)
 //
@@ -282,8 +310,10 @@ typedef d2itm = $D2E.d2itm
 typedef s2itmopt = $S2E.s2itmopt
 typedef d2itmopt = $D2E.d2itmopt
 //
-vtypedef s2itmopt_vt = $S2E.s2itmopt_vt
-vtypedef d2itmopt_vt = $D2E.d2itmopt_vt
+vtypedef
+s2itmopt_vt = $S2E.s2itmopt_vt
+vtypedef
+d2itmopt_vt = $D2E.d2itmopt_vt
 //
 (* ****** ****** *)
 //
@@ -303,11 +333,26 @@ dargid_new((*void*)): sym_t
 fun
 fmodenv_make
 ( fp: fpath
-, m0: s2tmap
-, m1: s2imap
-, m2: d2imap
+, env0: g1menv
+(*
+, env1: d2menv
+*)
+, map0: s2tmap
+, map1: s2imap
+, map2: d2imap
 , d2cs: d2eclist) : fmodenv
 
+(* ****** ****** *)
+fun
+fmodenv_get_g1menv
+( menv
+: fmodenv
+) :
+[
+  l:addr
+]
+( g1menv@l
+, minus_v(fmodenv, g1menv@l) | ptr(l))
 (* ****** ****** *)
 //
 (*
@@ -388,6 +433,55 @@ the_qualist_find
 (* ****** ****** *)
 //
 fun
+the_gmacenv_add
+(gid: sym_t, def: g1mac): void
+fun
+the_gmacenv_padd
+(gid: sym_t, def: g1mac): void
+//
+fun
+the_gmacenv_find
+  ( gid: sym_t ) : g1macopt_vt
+fun
+the_gmacenv_qfind
+  ( qua: token
+  , gid: sym_t ) : g1macopt_vt
+//
+(* ****** ****** *)
+absview gmacenv_view
+viewdef gmacenv_v = gmacenv_view
+(* ****** ****** *)
+//
+fun
+the_gmacenv_pop
+  (gmacenv_v | (*none*)): g1menv
+fun
+the_gmacenv_popfree
+  (gmacenv_v | (*none*)): (void)
+fun
+the_gmacenv_pushnil
+  ((*void*)): (gmacenv_v | void)
+//
+fun
+the_gmacenv_locjoin
+(
+  pf1: gmacenv_v
+, pf2: gmacenv_v | (*none*)
+) : void // end of [the_gmacenv_locjoin]
+//
+fun // p: pervasive
+the_gmacenv_pjoinwth0(map: g1menv): void
+fun // p: pervasive
+the_gmacenv_pjoinwth1(map: !g1menv): void
+//
+(* ****** ****** *)
+fun
+the_gmacenv_fprint(FILEref): void
+fun
+the_gmacenv_println((*void*)): void
+(* ****** ****** *)
+//
+fun
 the_sortenv_add
 (tid: sym_t, s2t: s2txt): void
 fun
@@ -396,17 +490,16 @@ the_sortenv_padd
 //
 fun
 the_sortenv_find
-  (tid: sym_t): s2txtopt_vt
+  ( tid: sym_t ) : s2txtopt_vt
 fun
 the_sortenv_qfind
-  (qua: token, tid: sym_t): s2txtopt_vt
+  ( qua: token
+  , tid: sym_t ) : s2txtopt_vt
 //
 (* ****** ****** *)
-//
-absview
-sortenv_view
-viewdef
-sortenv_v = sortenv_view
+absview sortenv_view
+viewdef sortenv_v = sortenv_view
+(* ****** ****** *)
 //
 fun
 the_sortenv_pop
@@ -457,20 +550,19 @@ the_sexpenv_add_varlstlst(svss: s2varlstlst): void
 //
 fun
 the_sexpenv_find
-  (sym: sym_t): s2itmopt_vt
+  ( sym: sym_t ) : s2itmopt_vt
 fun // pervasive
 the_sexpenv_pfind
-  (sym: sym_t): s2itmopt_vt
+  ( sym: sym_t ) : s2itmopt_vt
 fun
 the_sexpenv_qfind
-  (qua: token, sym: sym_t): s2itmopt_vt
+  ( qua: token
+  , sym: sym_t ) : s2itmopt_vt
 //
 (* ****** ****** *)
-//
-absview
-sexpenv_view
-viewdef
-sexpenv_v = sexpenv_view
+absview sexpenv_view
+viewdef sexpenv_v = sexpenv_view
+(* ****** ****** *)
 //
 fun
 the_sexpenv_pop
@@ -587,6 +679,8 @@ trans12_squalst
 //
 fun
 trans12_sexp: s1exp -> s2exp 
+fun
+trg1mac_sexp:(loc_t, g1mac) -> s2exp
 //
 (* ****** ****** *)
 //
@@ -652,7 +746,8 @@ trans12_seff: s1eff -> s2eff
 *)
 //
 fun
-trans12_effsexpopt: effs1expopt -> effs2expopt
+trans12_effsexpopt
+( opt0: effs1expopt ) : effs2expopt
 //
 (* ****** ****** *)
 //
@@ -674,17 +769,16 @@ the_dexpenv_add_varlst(d2vs: d2varlst): void
 //
 fun
 the_dexpenv_find
-  (sym: sym_t): d2itmopt_vt
+  ( sym: sym_t ) : d2itmopt_vt
 fun
 the_dexpenv_qfind
-  (qua: token, sym: sym_t): d2itmopt_vt
+  ( qua: token
+  , sym: sym_t ) : d2itmopt_vt
 //
 (* ****** ****** *)
-//
-absview
-dexpenv_view
-viewdef
-dexpenv_v = dexpenv_view
+absview dexpenv_view
+viewdef dexpenv_v = dexpenv_view
+(* ****** ****** *)
 //
 fun
 the_dexpenv_pop
@@ -724,11 +818,9 @@ the_fmodenvmap_find
   (fid: sym_t): Option_vt(fmodenv)
 //
 (* ****** ****** *)
-//
-absview
-trans12_view
-viewdef
-trans12_v = trans12_view
+absview trans12_view
+viewdef trans12_v = trans12_view
+(* ****** ****** *)
 //
 fun
 the_trans12_popfree
@@ -759,12 +851,18 @@ trans12_save_view
 viewdef
 trans12_save_v = trans12_save_view
 //
+(* ****** ****** *)
+//
 fun
 the_trans12_savecur
-((*none*)): (trans12_save_v | void)
+((*none*))
+:
+(trans12_save_v | void)
 fun
 the_trans12_restore
-(trans12_save_v | (*none*)) : (s2tmap, s2imap, d2imap)
+(trans12_save_v | (*none*))
+:
+( g1menv, s2tmap, s2imap, d2imap )
 //
 (* ****** ****** *)
 //
@@ -812,6 +910,11 @@ trans12_dclaulst: d1claulst -> d2claulst
 //
 fun
 trans12_dexp: d1exp -> d2exp 
+fun
+trg1mac_dexp:(loc_t, g1mac) -> d2exp
+//
+(* ****** ****** *)
+//
 fun
 trans12_dexpopt: d1expopt -> d2expopt
 fun

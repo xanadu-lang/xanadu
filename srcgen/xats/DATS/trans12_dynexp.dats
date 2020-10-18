@@ -1164,16 +1164,48 @@ auxid0
 : d1exp): d2exp = let
 //
 val-
-D1Eid(tok) = d1e0.node()
+D1Eid0(tok) = d1e0.node()
 //
-val sym = dexpid_sym(tok)
-val opt = the_dexpenv_find(sym)
+val
+sym = dexpid_sym(tok)
+val
+opt = the_gmacenv_find(sym)
+//
+in
+//
+case- opt of
+|
+~None_vt() =>
+(
+  auxid0_d1exp(d1e0)
+)
+|
+~Some_vt(g1m0) =>
+(
+trg1mac_dexp(d1e0.loc(), g1m0)
+)
+//
+end // end of [auxid0]
+
+and
+auxid0_d1exp
+( d1e0
+: d1exp): d2exp = let
+//
+val-
+D1Eid0(tok) = d1e0.node()
+//
+val
+sym = dexpid_sym(tok)
+val
+opt = the_dexpenv_find(sym)
 //
 in
 //
 case+ opt of
-| ~None_vt() =>
-  (
+|
+~None_vt() =>
+(
   ifcase
   | isbtf(tok) =>
     (
@@ -1190,12 +1222,12 @@ case+ opt of
       val loc0 = d1e0.loc()
     }
   | _(* else *) => d2exp_none1(d1e0)
-  )
-| ~Some_vt(d2i) => auxid0_some(d1e0, d2i)
+)
+| ~Some_vt(d2i) => auxid0_d2itm(d1e0, d2i)
 end // end of [auxid0]
 
 and
-auxid0_some
+auxid0_d2itm
 ( d1e0
 : d1exp
 , d2i0
@@ -1548,7 +1580,7 @@ isAMP
 (
 case+
 d1e.node() of
-| D1Eid(tok) =>
+| D1Eid0(tok) =>
 (
 case+
 tok.node() of
@@ -1558,7 +1590,7 @@ T_IDENT_sym(x) => (x = "&")
 _(*non-T_IDENT_sym*) => false
 )
 |
-_(* non-D1Eid-d1exp *) => false
+_(* non-D1Eid0-d1exp *) => false
 )
 fun
 isBANG
@@ -1567,7 +1599,7 @@ isBANG
 case+
 d1e.node() of
 |
-D1Eid(tok) =>
+D1Eid0(tok) =>
 (
 case+
 tok.node() of
@@ -1577,7 +1609,7 @@ T_IDENT_sym(x) => (x = "!")
 _(* non-T_IDENT_sym *) => (false)
 )
 |
-_(* non-D1Eid-d1exp *) => (false)
+_(* non-D1Eid0-d1exp *) => (false)
 )
 //
 (*
@@ -1587,7 +1619,7 @@ isFLAT
 (
 case+
 d1e.node() of
-| D1Eid(tok) =>
+| D1Eid0(tok) =>
 (
 case+
 tok.node() of
@@ -1597,7 +1629,7 @@ T_IDENT_sym(x) => (x = "@")
 _(*non-T_IDENT_sym*) => false
 )
 |
-_(* non-D1Eid-d1exp *) => false
+_(* non-D1Eid0-d1exp *) => false
 )
 *)
 //
@@ -1608,7 +1640,7 @@ isADDR
 case+
 d1e.node() of
 |
-D1Eid(tok) =>
+D1Eid0(tok) =>
 (
 case+
 tok.node() of
@@ -1618,7 +1650,7 @@ T_IDENT_dlr(x) => (x = "$addr")
 _(* non-T_IDENT_dlr *) => (false)
 )
 |
-_(* non-D1Eid-d1exp *) => (false)
+_(* non-D1Eid0-d1exp *) => (false)
 )
 fun
 isEVAL
@@ -1627,7 +1659,7 @@ isEVAL
 case+
 d1e.node() of
 |
-D1Eid(tok) =>
+D1Eid0(tok) =>
 (
 case+
 tok.node() of
@@ -1637,7 +1669,7 @@ T_IDENT_dlr(x) => (x = "$eval")
 _(* non-T_IDENT_dlr *) => (false)
 )
 |
-_(* non-D1Eid-d1exp *) => (false)
+_(* non-D1Eid0-d1exp *) => (false)
 )
 //
 fun
@@ -1647,7 +1679,7 @@ isFOLD
 case+
 d1e.node() of
 |
-D1Eid(tok) =>
+D1Eid0(tok) =>
 (
 case+
 tok.node() of
@@ -1657,7 +1689,7 @@ T_IDENT_dlr(x) => (x = "$fold")
 _(* non-T_IDENT_dlr *) => (false)
 )
 |
-_(* non-D1Eid-d1exp *) => (false)
+_(* non-D1Eid0-d1exp *) => (false)
 )
 //
 fun
@@ -1667,7 +1699,7 @@ isFREE
 case+
 d1e.node() of
 |
-D1Eid(tok) =>
+D1Eid0(tok) =>
 (
 case+
 tok.node() of
@@ -1677,7 +1709,7 @@ T_IDENT_dlr(x) => (x = "$free")
 _(* non-T_IDENT_dlr *) => (false)
 )
 |
-_(* non-D1Eid-d1exp *) => (false)
+_(* non-D1Eid0-d1exp *) => (false)
 )
 //
 fun
@@ -1687,7 +1719,7 @@ isLAZY
 case+
 d1e.node() of
 |
-D1Eid(tok) =>
+D1Eid0(tok) =>
 (
 case+
 tok.node() of
@@ -1697,7 +1729,7 @@ T_IDENT_dlr(x) => (x = "$lazy")
 _(* non-T_IDENT_dlr *) => (false)
 )
 |
-_(* non-D1Eid-d1exp *) => (false)
+_(* non-D1Eid0-d1exp *) => (false)
 )
 fun
 isLLAZY
@@ -1706,7 +1738,7 @@ isLLAZY
 case+
 d1e.node() of
 |
-D1Eid(tok) =>
+D1Eid0(tok) =>
 (
 case+
 tok.node() of
@@ -1716,7 +1748,7 @@ T_IDENT_dlr(x) => (x = "$llazy")
 _(* non-T_IDENT_dlr *) => (false)
 )
 |
-_(* non-D1Eid-d1exp *) => (false)
+_(* non-D1Eid0-d1exp *) => (false)
 )
 //
 fun
@@ -1726,7 +1758,7 @@ isRAISE
 case+
 d1e.node() of
 |
-D1Eid(tok) =>
+D1Eid0(tok) =>
 (
 case+
 tok.node() of
@@ -1736,7 +1768,7 @@ T_IDENT_dlr(x) => (x = "$raise")
 _(* non-T_IDENT_dlr *) => (false)
 )
 |
-_(* non-D1Eid-d1exp *) => (false)
+_(* non-D1Eid0-d1exp *) => (false)
 )
 //
 in
@@ -1951,12 +1983,12 @@ isASSGN
 (
 case+
 d1e.node() of
-| D1Eid(tok) =>
+| D1Eid0(tok) =>
   (
   case+ tok.node() of
   | T_IDENT_sym(sym) => (sym = ":=") | _ => false
   )
-| _ (*non-D1Eid*) => false
+| _ (*non-D1Eid0*) => false
 )
 //
 in
@@ -2134,6 +2166,16 @@ d2exp_tuple
 }
 end // end of [auxlist2]
 
+(* ****** ****** *)
+//
+fun
+auxnone
+( d1e0
+: d1exp): d2exp =
+(
+  d2exp_none0(d1e0.loc())
+)
+//
 (* ****** ****** *)
 
 fun
@@ -2378,7 +2420,7 @@ auxqid
 let
 //
 val-
-D1Eid(tok) = d1e.node()
+D1Eid0(tok) = d1e.node()
 //
 val
 sym = dexpid_sym(tok)
@@ -2464,7 +2506,7 @@ in
 //
 case+
 d1e1.node() of
-| D1Eid _ => auxqid(tok0, d1e1)
+| D1Eid0 _ => auxqid(tok0, d1e1)
 | _(*else*) => d2exp_none1(d1e0)
 //
 end // end of [aux_qual0]
@@ -2491,7 +2533,7 @@ in (* in-of-let *)
 case-
 d1e0.node() of
 //
-| D1Eid _ => auxid0(d1e0)
+| D1Eid0 _ => auxid0(d1e0)
 //
 | D1Eint _ => auxint(d1e0)
 | D1Echr _ => auxchr(d1e0)
@@ -2510,6 +2552,7 @@ d1e0.node() of
 | D1Elist
   ( _, _ ) => auxlist2(d1e0)
 //
+| D1Enone _ => auxnone(d1e0)
 | D1Eseqn _ => auxseqn(d1e0)
 //
 | D1Etuple
@@ -2628,8 +2671,6 @@ d1e0.node() of
 //
 | D1Equal
   (tok0, d1e1) => aux_qual0(d1e0)
-//
-| D1Enone((*void*)) => d2exp_none0(loc0)
 //
 | _(*rest-of-d1exp*) => d2exp_none1(d1e0)
 //
@@ -2752,6 +2793,34 @@ local
 (* ****** ****** *)
 
 fun
+aux_define
+( d1cl
+: d1ecl): d2ecl = let
+//
+val
+loc0 = d1cl.loc()
+val-
+D1Cdefine
+( tok, gid0
+, gmas, def1) = d1cl.node()
+//
+val
+sym = gexpid_sym(gid0)
+
+val
+gmac =
+trans11_g1mac(gmas, def1)
+//
+val () =
+the_gmacenv_add(sym, gmac)
+//
+in
+d2ecl_make_node(loc0, D2Cdefine(d1cl))
+end // end of [aux_define]
+
+(* ****** ****** *)
+
+fun
 aux_include
 ( d1cl
 : d1ecl): d2ecl = let
@@ -2834,7 +2903,7 @@ auxd1exp
 case+
 src.node() of
 |
-D1Eid _ => auxd1eid(src)
+D1Eid0 _ => auxd1eid(src)
 |
 D1Eapp2
 (_,_,src) => auxd1eid(src)
@@ -2849,7 +2918,7 @@ auxd1eid
 case+
 src.node() of
 |
-D1Eid(tok) =>
+D1Eid0(tok) =>
 let
 val opt =
 the_qualist_find(tok)
@@ -2889,13 +2958,18 @@ the_trans12_savecur((*void*))
 //
 val d2cs = trans12_declist(d1cs)
 //
-val env3 =
+val envs =
 the_trans12_restore(pf|(*void*))
+//
 val menv =
 fmodenv_make
-(fp0, env3.0, env3.1, env3.2, d2cs)
+( fp0
+, envs.0(*gmac*)
+, envs.1, envs.2, envs.3, d2cs )
 //
-val () = trans12_staload_add(fp0, menv)
+val
+((*void*)) =
+trans12_staload_add( fp0, menv )
 //
 } (* end of [None_vt] *)
 | ~Some_vt(menv) => (1(*shared*), menv)
@@ -5203,7 +5277,7 @@ sexpid_sym(tok0)
 val s1e0 =
 s1exp_make_node
 ( tok0.loc()
-, S1Eid(sid)) in trans12_sexp_ci(s1e0)
+, S1Eid0(sid)) in trans12_sexp_ci(s1e0)
 end // end of [auxsid]
 
 and
@@ -5472,6 +5546,8 @@ d1cl.node() of
   in
     d2ecl_make_node(loc0, D2Cextern(tok, d2c))
   end
+//
+| D1Cdefine _ => aux_define(d1cl)
 //
 | D1Clocal
   (head, body) => let
@@ -5972,7 +6048,7 @@ list_map$fopr<sq1arg><sq2arg>(sqa) = trans12_sqarg(sqa)
 } (* end of [trans12_sqarglst] *)
 
 (* ****** ****** *)
-
+//
 implement
 trans12_tqarg
   (tq1a) = let
@@ -5987,7 +6063,7 @@ val s2vs = trans12_qarglst(q1as)
 in
   tq2arg_make(loc0, s2vs)
 end // end of [trans12_tqarg]
-
+//
 implement
 trans12_tqarglst
   (tqas) =
@@ -5999,9 +6075,9 @@ list_map<tq1arg><tq2arg>(tqas)
 implement
 list_map$fopr<tq1arg><tq2arg>(tqa) = trans12_tqarg(tqa)
 } (* end of [trans12_tqarglst] *)
-
+//
 (* ****** ****** *)
-
+//
 implement
 trans12_tiarg
   (ti1a) = let
@@ -6018,7 +6094,7 @@ val s2es = trans12_sexplst(s1es)
 in
   ti2arg_make(loc0, s2es)
 end // end of [trans12_t1arg]
-
+//
 implement
 trans12_tiarglst
   (tias) =
@@ -6030,7 +6106,7 @@ list_map<ti1arg><ti2arg>(tias)
 implement
 list_map$fopr<ti1arg><ti2arg>(tia) = trans12_tiarg(tia)
 } (* end of [trans12_tiarglst] *)
-
+//
 (* ****** ****** *)
 
 (* end of [xats_trans12_dynexp.dats] *)

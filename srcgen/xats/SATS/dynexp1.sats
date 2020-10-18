@@ -505,7 +505,7 @@ d1gpat_make_node
 datatype
 d1exp_node =
 //
-| D1Eid of token
+| D1Eid0 of token
 //
 | D1Eint of token
 | D1Echr of token
@@ -533,8 +533,10 @@ d1exp_node =
 | D1Elist of
   (d1explst, d1explst) // temp.
 //
+| D1Enone of ()//HX: for emptiness
+//
 | D1Eseqn of
-  (d1explst, d1explst) // temp.
+  (d1explst, d1explst)//sequencing
 //
 | D1Etuple of
   (token, d1explst)
@@ -583,7 +585,6 @@ d1exp_node =
 | D1Equal of
   (token(*qual*), d1exp) // HX: qualified expression
 //
-| D1Enone of ((*error*)) // HX: for special treatment
 // end of [d1exp_node]
 //
 and
