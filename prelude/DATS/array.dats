@@ -30,7 +30,7 @@ a0ptr2ref
 (*
 HX-2020-10-25:
 A C-style implementation
-does not work in general
+that does not work in general
 *)
 //
 impltmp
@@ -39,6 +39,11 @@ a0ptr_make(x0) =
 let
 val A0 =
 a0ptr_alloc<a>()
+//
+(*
+This cast may not be supported
+*)
+//
 val p0 =
 $UN.cast10{p2tr(a)}(A0)
 val () =
@@ -213,11 +218,9 @@ a1ref_print$end() = string_print("]")
 (* ****** ****** *)
 //
 (*
-//
-(*
 HX-2010-10-25:
 A C-style implementation
-does not work in general
+that SHOULD work in general
 *)
 //
 impltmp
@@ -250,16 +253,13 @@ val () =
 g_x1forint<n>(n0) in $UN.castlin10(res)
 end
 end // end of [a1ref_listize]
-*)
 //
 (* ****** ****** *)
 //
 (*
-//
-(*
 HX-2010-10-25:
 A C-style implementation
-does not work in general
+that SHOULD work in general
 *)
 //
 impltmp
@@ -289,7 +289,6 @@ val () =
 g_x1forint<n>(n0) in $UN.castlin10(res)
 end
 end // end of [a1ref_rlistize]
-*)
 //
 (* ****** ****** *)
 

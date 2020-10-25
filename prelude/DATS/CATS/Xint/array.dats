@@ -73,41 +73,5 @@ end
 end // end of [a1ref_listize]
 //
 (* ****** ****** *)
-//
-(*
-HX-2010-10-25:
-A C-style implementation
-does not work in general
-*)
-//
-impltmp
-<a:t0>
-a1ref_rlistize
-  {n}(A0) = let
-//
-var
-res:
-?list_vt(a) =
-list_vt_nil()
-val p0 = $addr(res)
-//
-val n0 = a1ref_length(A0)
-//
-impltmp
-x1forint$work<n>(i0) =
-let
-  val x0 = get_at(A0, i0)
-in
-$UN.p2tr_set_list_vt_cons(p0, x0)
-end
-//
-in
-let
-val () =
-g_x1forint<n>(n0) in $UN.castlin10(res)
-end
-end // end of [a1ref_rlistize]
-//
-(* ****** ****** *)
 
 (* end of [XINTERP_array.dats] *)
