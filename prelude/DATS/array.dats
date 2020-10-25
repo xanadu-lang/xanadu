@@ -25,6 +25,14 @@ a0ref_make(x0) =
 a0ptr2ref
 (a0ptr_make<a>(x0))
 //
+(*
+//
+(*
+HX-2020-10-25:
+A C-style implementation
+does not work in general
+*)
+//
 impltmp
 <a:vt>
 a0ptr_make(x0) =
@@ -38,6 +46,7 @@ $UN.p2tr_set<a>(p0, x0)
 in
 $UN.castlin10{a0ptr(a)}(A0)
 end
+*)
 //
 (* ****** ****** *)
 //
@@ -198,7 +207,15 @@ impltmp
 a1ref_print$end() = string_print("]")
 //
 (* ****** ****** *)
-
+//
+(*
+//
+(*
+HX-2010-10-25:
+A C-style implementation
+does not work in general
+*)
+//
 impltmp
 <a:t0>
 a1ref_listize
@@ -229,9 +246,18 @@ val () =
 g_x1forint<n>(n0) in $UN.castlin10(res)
 end
 end // end of [a1ref_listize]
-
+*)
+//
 (* ****** ****** *)
-
+//
+(*
+//
+(*
+HX-2010-10-25:
+A C-style implementation
+does not work in general
+*)
+//
 impltmp
 <a:t0>
 a1ref_rlistize
@@ -259,7 +285,8 @@ val () =
 g_x1forint<n>(n0) in $UN.castlin10(res)
 end
 end // end of [a1ref_rlistize]
-
+*)
+//
 (* ****** ****** *)
 
 impltmp
