@@ -110,4 +110,4 @@ end // end of [a1ref_rlistize]
 //
 (* ****** ****** *)
 
-(* end of [array.dats] *)
+(* end of [XINTERP_array.dats] *)

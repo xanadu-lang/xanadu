@@ -67,6 +67,10 @@ impltmp
 a0ref_print$end() = string_print("]")
 //
 (* ****** ****** *)
+impltmp
+{a:t0}
+g_print<a0ref(a)> = a0ref_print<a>
+(* ****** ****** *)
 (*
 **HX: 1-dimensional
 *)
