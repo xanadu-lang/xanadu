@@ -41,15 +41,9 @@ UN = "prelude/SATS/unsafe.sats"
 (* ****** ****** *)
 //
 #staload
-"./../../xutl/SATS/mylibc.sats"
-//
-(* ****** ****** *)
-//
+SYM = "./../SATS/symbol.sats"
 #staload
-SYM="./../SATS/symbol.sats"
-#staload
-FIX="./../SATS/fixity.sats"
-//
+FIX = "./../SATS/fixity.sats"
 #staload
 ENV = "./../SATS/symenv.sats"
 //
@@ -57,9 +51,18 @@ ENV = "./../SATS/symenv.sats"
 //
 #staload
 LOC = "./../SATS/locinfo.sats"
-overload + with $LOC.location_combine
-overload print with $LOC.print_location
-overload prerr with $LOC.prerr_location
+//
+overload
++ with $LOC.location_combine
+overload
+print with $LOC.print_location
+overload
+prerr with $LOC.prerr_location
+//
+(* ****** ****** *)
+//
+#staload
+"./../../xutl/SATS/mylibc.sats"
 //
 (* ****** ****** *)
 //
@@ -2411,7 +2414,8 @@ auxstr
 (d1e: d1exp): fopt =
   auxtok(tok) where
 {
-  val-D1Estr(tok) = d1e.node()
+  val-
+  D1Estr(tok) = d1e.node()
 }
 and
 auxtok
@@ -2606,7 +2610,8 @@ auxstr
 (d1e: d1exp): fopt =
   auxtok(tok) where
 {
-  val-D1Estr(tok) = d1e.node()
+  val-
+  D1Estr(tok) = d1e.node()
 }
 //
 and
