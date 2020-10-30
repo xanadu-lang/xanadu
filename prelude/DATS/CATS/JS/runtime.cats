@@ -1,6 +1,6 @@
 /* ****** ****** */
 /*
-Basics for Xats2js
+Runtime for Xats2js
 */
 /* ****** ****** */
 var
@@ -60,17 +60,6 @@ XATS2JS_reraise
 {
   throw exn;//no return!
 }
-/* ****** ****** */
-//
-function
-XATS2JS_g_print(obj)
-{
-var
-rep = obj.toString();
-process.stdout.write(rep);
-return; // XATS2JS_g_print
-}
-//
 /* ****** ****** */
 //
 function
@@ -343,21 +332,6 @@ XATS2JS_bool_mul
   (b1, b2)
 { return (b1 && b2); }
 /* ****** ****** */
-function
-XATS2JS_bool_print
-  (b0)
-{
-if(b0)
-{
-  XATS2JS_g_print("true");
-}
-else
-{
-  XATS2JS_g_print("false");
-}
-return ; // XATS2JS_bool_print
-}
-/* ****** ****** */
 //
 // prelude/char.sats
 //
@@ -399,34 +373,9 @@ XATS2JS_char_noteq
 return (c1!==c2); // noteq
 }
 /* ****** ****** */
-function
-XATS2JS_char_print
-  (c0)
-{
-// c0: number
-XATS2JS_g_print
-(String.fromCharCode(c0));
-return; // XATS2JS_char_print
-}
-/* ****** ****** */
 //
 // prelude/gint.sats
 //
-/* ****** ****** */
-function
-XATS2JS_gint_print_sint
-  (x0)
-{
-XATS2JS_g_print(x0);
-return; // gint_print_sint
-}
-function
-XATS2JS_gint_print_uint
-  (x0)
-{
-XATS2JS_g_print(x0);
-return; // gint_print_uint
-}
 /* ****** ****** */
 function
 XATS2JS_gint_abs_sint
@@ -751,14 +700,6 @@ if(x1 < x2)
 }
 /* ****** ****** */
 function
-XATS2JS_string_print
-  (cs)
-{
-  XATS2JS_g_print(cs);
-  return;
-}
-/* ****** ****** */
-function
 XATS2JS_string_head_opt
   (cs)
 {
@@ -996,4 +937,4 @@ XATS2JS_UN_p2tr_set
 //
 /* ****** ****** */
 
-/* end of [XATS2JS_basics.cats] */
+/* end of [XATS2JS_runtime.cats] */

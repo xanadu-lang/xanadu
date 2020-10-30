@@ -72,6 +72,9 @@ PREDATSCATS:: \
 PREDATSCATS_JS
 PREDATSCATS_JS:: ; \
 $(CPF) $(XATSHOME)/prelude/DATS/CATS/JS/*.?ats ./prelude/DATS/CATS/JS/.
+PREDATSCATS_JS:: ; \
+$(CPF) \
+$(XATSHOME)/prelude/DATS/CATS/JS/Node/*.?ats ./prelude/DATS/CATS/JS/Node/.
 #
 PREDATSCATS:: \
 PREDATSCATS_Xint
