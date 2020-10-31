@@ -477,6 +477,12 @@ d0e0.node() of
 //
   }
 //
+| D0Eanno(d0e1, s0e2) =>
+  {
+    val () = synread_d0exp(d0e1)
+    val () = synread_s0exp(s0e2)
+  }
+//
 | D0Equal(qtok, d0e1) =>
   {
     val () = synread_qname(qtok)
