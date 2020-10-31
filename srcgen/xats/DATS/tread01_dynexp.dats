@@ -194,6 +194,18 @@ D1Cinclude
 *)
   }
 //
+| D1Csortdef
+  ( knd
+  , tid0, def1) =>
+  {
+(*
+    val () =
+    tread01_s0tid(tid0)  
+*)
+    val () =
+    tread01_s1rtdef(def1)
+  }
+//
 | D1Csexpdef
   ( knd
   , sid0, smas

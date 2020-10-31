@@ -400,14 +400,33 @@ list_foreach$fwork<s1qua><env>(s1q, env) = tread01_s1qua(s1q)
 } (* end of [tread01_s1qualst] *)
 //
 (* ****** ****** *)
+
+implement
+//{}(*tmp*)
+tread01_s1rtdef
+  (def0) =
+(
+case+
+def0.node() of
+| S1RTDEFsort(s1t1) =>
+  tread01_sort1(s1t1)
+| S1RTDEFsbst(s1a1, s1es) =>
+  {
+    val () = tread01_s1arg(s1a1)
+    val () = tread01_s1explst(s1es)
+  }
+)
+
+(* ****** ****** *)
 //
 implement
 //{}(*tmp*)
-tread01_effs1expopt(opt) =
+tread01_effs1expopt
+  (opt0) =
 (
-case+ opt of
+case+ opt0 of
 | EFFS1EXPnone() => ()
-| EFFS1EXPsome(s1e) => tread01_s1exp(s1e)
+| EFFS1EXPsome(s1e1) => tread01_s1exp(s1e1)
 )
 //
 (* ****** ****** *)
