@@ -753,6 +753,7 @@ function
 XATS2JS_string_forall_cfr
   (cs, f0)
 {
+var i0;
 var
 res = true;
 var
@@ -772,6 +773,7 @@ function
 XATS2JS_string_rforall_cfr
   (cs, f0)
 {
+var i0;
 var
 res = true;
 var
@@ -791,6 +793,7 @@ function
 XATS2JS_string_vt_forall_cfr
   (cs, f0)
 {
+var i0;
 var
 res = true;
 var
@@ -809,6 +812,7 @@ function
 XATS2JS_string_vt_rforall_cfr
   (cs, f0)
 {
+var i0;
 var
 res = true;
 var
