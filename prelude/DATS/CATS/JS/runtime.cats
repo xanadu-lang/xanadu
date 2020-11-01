@@ -737,6 +737,7 @@ function
 XATS2JS_strtmp_vt_alloc
   (bsz)
 {
+  var
   cs =
   new Array(bsz+1);
   cs[bsz] = 0; return cs;
