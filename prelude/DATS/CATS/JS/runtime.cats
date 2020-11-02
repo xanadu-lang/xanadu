@@ -644,9 +644,9 @@ XATS2JS_string_vt2t
   (cs)
 {
 cs.pop(); // remove the last '0'
-let cs =
+let res = // from array to string
 String.fromCharCode.apply(null, cs);
-return cs; // XATS2JS_string_vt2t
+return res; // XATS2JS_string_vt2t
 }
 /* ****** ****** */
 function
