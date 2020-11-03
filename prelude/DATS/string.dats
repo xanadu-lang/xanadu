@@ -117,6 +117,21 @@ string_neq(x1, x2) =
 (* ****** ****** *)
 
 impltmp<>
+string_print(cs) =
+let
+impltmp
+gseq_print$beg<>() = ()
+impltmp
+gseq_print$sep<>() = ()
+impltmp
+gseq_print$end<>() = ()
+in
+gseq_print<string><cgtz>(cs)
+end // end of [string_print]
+
+(* ****** ****** *)
+
+impltmp<>
 string_length
   (xs) =
 (
@@ -142,6 +157,31 @@ end
 // end of [if]
 } (* end of [string_length] *)
 
+(* ****** ****** *)
+//
+impltmp
+<>(*tmp*)
+string_vt_length =
+string_vt_length1<>
+//
+impltmp
+<>(*tmp*)
+string_vt_length0(cs) =
+let
+val n0 =
+string_vt_length1<>(cs)
+in
+let
+  val () = g_free(cs) in n0
+end
+end (* [string_vt_length0] *)
+//
+impltmp
+<>(*tmp*)
+string_vt_length1(cs) =
+$UN.cast01
+(glseq_length1<string_vt><cgtz>(cs))
+//
 (* ****** ****** *)
 //
 impltmp<>
