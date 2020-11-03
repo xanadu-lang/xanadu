@@ -45,6 +45,20 @@ UN =
 "prelude/SATS/unsafe.sats"
 
 (* ****** ****** *)
+//
+impltmp<>
+string_nil() =
+string_make_list<>
+(list_nil())
+//
+(* ****** ****** *)
+//
+impltmp<>
+string_vt_nil() =
+string_vt_make_list_vt<>
+(list_vt_nil())
+//
+(* ****** ****** *)
 
 impltmp<>
 string_nilq(cs) =
@@ -183,6 +197,54 @@ end // end of [else]
 } (* end of [string_forall/uncons] *)
 
 (* ****** ****** *)
+impltmp
+string_listize(cs) =
+let
+val cs =
+string_streamize(cs)
+in
+stream_vt_listize<cgtz>(cs)
+end // end of [string_listize]
+(* ****** ****** *)
+impltmp
+string_rlistize(cs) =
+let
+val cs =
+string_streamize(cs)
+in
+stream_vt_rlistize<cgtz>(cs)
+end // end of [string_rlistize]
+(* ****** ****** *)
+impltmp
+<>(*tmp*)
+string_streamize
+  (cs) =
+(
+  auxmain(0)
+) where
+{
+val n0 =
+string_length<>(cs)
+fun
+auxmain
+(i0: int):
+stream_vt(cgtz) =
+$llazy
+(
+if
+(i0 >= n0)
+then
+strmcon_vt_nil()
+else
+let
+val ci = cs[i0]
+val i0 = succ(i0)
+in
+strmcon_vt_cons(ci, auxmain(i0))
+end // end of [else]
+)
+} (* end of [string_streamize] *)
+(* ****** ****** *)
 
 impltmp<>
 string_make_list
@@ -295,6 +357,21 @@ strtmp_vt_set_at<>(p0, i0, c0)
 //
 } (* end of [string_vt_make_list_vt] *)
 
+(* ****** ****** *)
+//
+impltmp
+<>(*tmp*)
+string_vt_make_stream
+  (cs) =
+string_vt_make_list_vt
+  (stream_listize(cs))
+impltmp
+<>(*tmp*)
+string_vt_make_stream_vt
+  (cs) =
+string_vt_make_list_vt
+  (stream_vt_listize(cs))
+//
 (* ****** ****** *)
 //
 impltmp
@@ -453,6 +530,13 @@ impltmp
 gseq_unlist<xs><x0> = string_make_list<>
 impltmp
 gseq_unlist_vt<xs><x0> = string_make_list_vt<>
+
+(* ****** ****** *)
+
+impltmp
+gseq_unstream<xs><x0> = string_make_stream<>
+impltmp
+gseq_unstream_vt<xs><x0> = string_make_stream_vt<>
 
 (* ****** ****** *)
 
