@@ -59,7 +59,6 @@ FP0 = "./../SATS/filpath.sats"
   dpath_make = $FP0.dirpath_make
   macdef
   fpath_dname = $FP0.filpath_get_dirname
-
 //
 #staload
 GLO = "./../SATS/global.sats"
