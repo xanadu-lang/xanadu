@@ -1852,17 +1852,6 @@ val () =
 the_prelude_load
 ( XATSENV
 , 0(*static*)
-, "prelude/SATS/gios.sats")
-val () =
-the_prelude_load
-( XATSENV
-, 0(*static*)
-, "prelude/SATS/rand.sats")
-//
-val () =
-the_prelude_load
-( XATSENV
-, 0(*static*)
 , "prelude/SATS/optn.sats")
 val () =
 the_prelude_load
