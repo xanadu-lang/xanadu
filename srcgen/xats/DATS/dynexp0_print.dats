@@ -600,7 +600,9 @@ case+ x0.node() of
   (tok0, d0e1) =>
   fprint!(out, "D0Equal(", tok0, "; ", d0e1, ")")
 //
-| D0Enone(tok) => fprint!(out, "D0Enone(", tok, ")")
+| D0Enone1(tok) => fprint!(out, "D0Enone1(", tok, ")")
+//
+| D0Eexport(g0e) => fprint!(out, "D0Eexport(", g0e, ")")
 //
 ) (* end of [fprint_d0exp] *)
 

@@ -1465,8 +1465,8 @@ d0e0.node() of
   in
     FXITMatm(d1e0) where
     {
-      val d1e0 =
-      d1exp_make_node(loc0, D1Eanno(d1e1, s1e2))
+    val d1e0 =
+    d1exp_make_node(loc0, D1Eanno(d1e1, s1e2))
     }
   end // end of [D0Eanno]
 //
@@ -1476,15 +1476,26 @@ d0e0.node() of
   in
     FXITMatm(d1e0) where
     {
-      val d1e0 =
-      d1exp_make_node(loc0, D1Equal(tok1, d1e2))
+    val d1e0 =
+    d1exp_make_node(loc0, D1Equal(tok1, d1e2))
     }
   end // end of [D0Equal]
 //
-| D0Enone(_(*tokerr*)) =>
+| D0Enone1(tokerr) =>
   let
-    val d1e0 = d1exp_none(loc0) in FXITMatm(d1e0)
+  val d1e0 = d1exp_none(loc0) in FXITMatm(d1e0)
   end // end of [D0Enone]
+//
+| D0Eexport(g0e1) =>
+  let
+    val g1e1 = trans01_gexp(g0e1)
+  in
+    FXITMatm(d1e0) where
+    {
+    val
+    d1e0 = d1exp_make_node(loc0, D1Eexport(g1e1))
+    }
+  end // end of [D0Eexport]
 //
 end (* end of [auxitm] *)
 
@@ -1966,14 +1977,14 @@ trans01_vardeclist
   (d0cs) =
 list_vt2t(d1cs) where
 {
-  val
-  d1cs =
-  list_map<v0ardecl><v1ardecl>
-    (d0cs) where
-  {
-    implement
-    list_map$fopr<v0ardecl><v1ardecl> = trans01_vardecl
-  }
+val
+d1cs =
+list_map<v0ardecl><v1ardecl>
+  (d0cs) where
+{
+implement
+list_map$fopr<v0ardecl><v1ardecl> = trans01_vardecl
+}
 } (* end of [trans01_vardeclist] *)
 
 (* ****** ****** *)

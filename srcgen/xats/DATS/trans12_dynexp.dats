@@ -4023,13 +4023,18 @@ val
 isr =
 (
 ifcase
-| isr > 0 => true
-| isr < 0 => false
-| _(* else *) =>
-  let
-  val-
-  T_FUN(fnk) = knd.node() in funkind_isrec(fnk)
-  end
+|
+isr > 0 => true
+|
+isr < 0 => false
+|
+_(* else *) =>
+(
+funkind_isrec(fnk)
+) where
+{
+val-T_FUN(fnk) = knd.node()
+}
 ) : bool // endval
 //
 val
@@ -4084,6 +4089,7 @@ in
 end where
 {
 //
+//
 fun
 ishdr
 ( f1d0
@@ -4092,9 +4098,21 @@ let
 val+
 F1UNDECL(rcd) = f1d0
 in
-  case+ rcd.def of
-  | None() => true | Some(d1e) => false
+case+ rcd.def of
+| None() => true
+| Some(d1e1) => isext(d1e1)
 end
+and
+isext
+( d1e1
+: d1exp): bool =
+(
+case+
+d1e1.node() of
+| D1Eexport _ => true
+|
+_ (*non-D1Eexport*) => false
+)
 //
 fun
 auxd2vs
@@ -4144,8 +4162,35 @@ trans12_farglst(rcd.arg)
 val res =
 trans12_effsexpopt(rcd.res)
 //
+local
+val opt = rcd.def
+in
+val ext =
+(
+case+ opt of
+|
+None() => None()
+|
+Some(d1e) =>
+(
+case+
+d1e.node() of
+|
+D1Eexport(g1e) => Some(g1e)
+|
+_(*D1Eexport*) => None(*void*)
+)
+) : g1expopt // end-of-val
+//
 val def =
-  trans12_dexpopt(rcd.def)
+(
+case+ ext of
+|
+Some _ => None()
+|
+None _ =>
+trans12_dexpopt(opt)): d2expopt
+end // end of [local]
 //
 val
 ((*void*)) =
@@ -4154,17 +4199,21 @@ the_trans12_popfree(pf0|(*void*))
 val wtp =
 (
 case+ rcd.wtp of
-| WTHS1EXPnone
-    ((*void*)) => None()
-| WTHS1EXPsome
-    (tok, s1e) => Some(trans12_sexp(s1e))
+|
+WTHS1EXPnone
+  ((*void*)) => None()
+|
+WTHS1EXPsome
+  (tok, s1e) => Some(trans12_sexp(s1e))
 ) : s2expopt // end of [val]
 //
 in
 F2UNDECL(
 @{
  loc=loc
-,nam=nam,d2c=d2c,arg=arg,res=res,def=def,wtp=wtp}
+,nam=nam
+,d2c=d2c
+,arg=arg,res=res,ext=ext,def=def,wtp=wtp}
 ) (* F2UNDECL *)
 end // end of [auxf1d0]
 //
@@ -4181,42 +4230,47 @@ auxf1ds
 ) : f2undeclist =
 (
 case+ d2vs of
-| list_nil() =>
-  list_nil((*void*))
-| list_cons(d2v0, d2vs) =>
-  (
-    list_cons(f2d0, f2ds)
-  ) where
-  {
-    val-
-    list_cons
-    (d2c0, d2cs) = d2cs
-    val-
-    list_cons
-    (f1d0, f1ds) = f1ds
-    val f2d0 =
-    auxf1d0(d1cl, d2v0, d2c0, f1d0)
-    val ((*void*)) =
-    if
-    ishdr(f1d0) then let
-      val
-      s2e0 =
-      f2undecl_get_sexp(f2d0)
-      val
-      t2p0 = s2exp_erase(s2e0)
-    in
-      d2cst_set_sexp(d2c0, s2e0);
-      d2cst_set_type(d2c0, t2p0);
-      d2var_set_sexp(d2v0, s2e0);
-      d2var_set_type(d2v0, t2p0);
+|
+list_nil() =>
+list_nil((*void*))
+|
+list_cons(d2v0, d2vs) =>
+(
+  list_cons(f2d0, f2ds)
+) where
+{
+  val-
+  list_cons
+  (d2c0, d2cs) = d2cs
+  val-
+  list_cons
+  (f1d0, f1ds) = f1ds
+  val
+  f2d0 =
+  auxf1d0
+  (d1cl, d2v0, d2c0, f1d0)
+  val ((*void*)) =
+  if
+  ishdr(f1d0) then let
+    val
+    s2e0 =
+    f2undecl_get_sexp(f2d0)
+    val
+    t2p0 = s2exp_erase(s2e0)
+  in
+    d2cst_set_sexp(d2c0, s2e0);
+    d2cst_set_type(d2c0, t2p0);
+    d2var_set_sexp(d2v0, s2e0);
+    d2var_set_type(d2v0, t2p0);
 (*
-      println!("trans12_decl: aux_fundecl: auxf1ds: d2v0 = ", d2v0);
-      println!("trans12_decl: aux_fundecl: auxf1ds: t2p0 = ", t2p0);
+    println!("trans12_decl: aux_fundecl: auxf1ds: d2v0 = ", d2v0);
+    println!("trans12_decl: aux_fundecl: auxf1ds: t2p0 = ", t2p0);
 *)
-    end // end of [then] // end of [if]
-    val f2ds =
-    auxf1ds(d1cl, d2vs, d2cs, f1ds)
-  }
+  end // end of [then] // end of [if]
+  val
+  f2ds =
+  auxf1ds(d1cl, d2vs, d2cs, f1ds)
+}
 )
 //
 fun
@@ -4277,12 +4331,12 @@ in
   ishdr(f1d0)
   then
   (
-    auxd2vs_nrc(isr, d2cs, f1ds)
+  auxd2vs_nrc(isr, d2cs, f1ds)
   ) (* end of [then] *)
   else
   (
   let
-  val () =
+    val () =
     the_dexpenv_add_cst(d2c0)
   in
     auxd2vs_nrc(isr, d2cs, f1ds)
