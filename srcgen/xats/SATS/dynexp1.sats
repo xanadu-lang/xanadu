@@ -587,7 +587,7 @@ d1exp_node =
   ( token(*qual*)
   , d1exp(*deid*)) // HX: qualified expression
 //
-| D1Eexname of (g0nam) // HX: for specifying names
+| D1Eexname of (g1nam) // HX: for specifying names
 //
 // end of [d1exp_node]
 //
@@ -801,6 +801,18 @@ fprint_d1cstdecl: fprint_type(d1cstdecl)
 overload print with print_d1cstdecl
 overload prerr with prerr_d1cstdecl
 overload fprint with fprint_d1cstdecl
+//
+(* ****** ****** *)
+//
+datatype
+d1transd =
+D1TRANSD of @{
+  stadyn= int
+, source= filpath
+, transd=
+  Option(d1eclist)
+} where
+  filpath= $FP0.filpath
 //
 (* ****** ****** *)
 //

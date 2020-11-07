@@ -93,7 +93,7 @@ $FP0.fprint_filpath_full2
 (* ****** ****** *)
 //
 implement
-fprint_val<g0nam> = fprint_g0nam
+fprint_val<g1nam> = fprint_g1nam
 implement
 fprint_val<g1exp> = fprint_g1exp
 //
@@ -995,7 +995,7 @@ fprint!
 , "d2c=", rcd.d2c, ", "
 , "arg=", rcd.arg, ", "
 , "res=", rcd.res, ", "
-, "ext=", rcd.ext, ", "
+, "xnm=", rcd.xnm, ", "
 , "def=", rcd.def, ", ", "wtp=", rcd.wtp, "}")
 end // end of [fprint_f2undecl]
 

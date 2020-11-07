@@ -32,9 +32,12 @@
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
-
+//
+#staload
+FP0 = "./filpath.sats"
+//
+(* ****** ****** *)
 #staload "./staexp0.sats"
-
 (* ****** ****** *)
 //
 typedef
@@ -989,6 +992,25 @@ fprint_d0cstdecl: fprint_type(d0cstdecl)
 overload print with print_d0cstdecl
 overload prerr with prerr_d0cstdecl
 overload fprint with fprint_d0cstdecl
+//
+(* ****** ****** *)
+//
+datatype
+d0parsed =
+D0PARSED of @{
+  stadyn= int
+, source= filpath
+, parsed=
+  Option(d0eclist)
+} where
+  filpath= $FP0.filpath
+//
+(* ****** ****** *)
+//
+fun
+d0parsed_get_parsed
+( p0kg
+: d0parsed): Option(d0eclist)
 //
 (* ****** ****** *)
 

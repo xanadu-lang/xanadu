@@ -58,7 +58,6 @@ S0E = "./staexp0.sats"
 #staload
 D0E = "./dynexp0.sats"
 //
-typedef g0nam = $S0E.g0nam
 typedef d0exp = $D0E.d0exp
 typedef sq0eid = $S0E.sq0eid
 typedef dq0eid = $S0E.dq0eid
@@ -68,6 +67,7 @@ typedef dq0eid = $S0E.dq0eid
 #staload
 S1E = "./staexp1.sats"
 //
+typedef g1nam = $S1E.g1nam
 typedef g1exp = $S1E.g1exp
 typedef g1mac = $S1E.g1mac
 //
@@ -367,14 +367,29 @@ overload .tqas with d2var_set_tqas
 //
 (* ****** ****** *)
 //
-(*
+datatype x2knd =
+| X2KNDnone of ()
+| X2KNDsome of ( int )
+datatype x2nam =
+| X2NAMnone of ()
+| X2NAMsome of (g1nam)
 //
 fun
-d2cst_get_exnm(d2cst): exnam
+d2cst_get_xknd(d2cst): x2knd
+fun
+d2cst_get_xnam(d2cst): x2nam
 //
-overload .exnm with d2cst_get_exnm
-//
+(*
+fun
+d2cst_set_xknd
+(d2c0: d2cst, xknd: x2knd): void
+fun
+d2cst_set_xnam
+(d2c0: d2cst, xnam: x2nam): void
 *)
+//
+overload .xknd with d2cst_get_xknd
+overload .xnam with d2cst_get_xnam
 //
 (* ****** ****** *)
 //
@@ -421,8 +436,14 @@ d2cst_make_idtp
 ( id0: token
 , knd: tnode
 , tqas: tq2as, s2e1: s2exp): d2cst
+//
 fun
 stamp_d2cst_kind(d2cst, tnode): void
+//
+fun
+stamp_d2cst_xknd(d2cst, x2knd): void
+fun
+stamp_d2cst_xnam(d2cst, x2nam): void
 //
 (* ****** ****** *)
 //
@@ -1111,6 +1132,8 @@ overload fprint with fprint_v2ardecl
 //
 typedef
 g1expopt = $S1E.g1expopt
+typedef
+g1namopt = $S1E.g1namopt
 //
 datatype
 f2undecl =
@@ -1120,7 +1143,7 @@ F2UNDECL of @{
 , d2c= d2cst
 , arg= f2arglst
 , res= effs2expopt
-, ext= Option(g0nam)
+, xnm= g1namopt
 , def= d2expopt, wtp= s2expopt
 }
 //
@@ -1146,6 +1169,18 @@ fprint_f2undecl: fprint_type(f2undecl)
 overload print with print_f2undecl
 overload prerr with prerr_f2undecl
 overload fprint with fprint_f2undecl
+//
+(* ****** ****** *)
+//
+datatype
+d2transd =
+D2TRANSD of @{
+  stadyn= int
+, source= filpath
+, transd=
+  Option(d2eclist)
+} where
+  filpath= $FP0.filpath
 //
 (* ****** ****** *)
 //

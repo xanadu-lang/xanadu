@@ -4165,7 +4165,7 @@ trans12_effsexpopt(rcd.res)
 local
 val opt = rcd.def
 in
-val ext =
+val xnm =
 (
 case+ opt of
 |
@@ -4180,11 +4180,11 @@ D1Eexname(gnm) => Some(gnm)
 |
 _(*D1Eexname*) => None(*void*)
 )
-) : Option(g0nam) // end-of-val
+) : Option(g1nam) // end-of-val
 //
 val def =
 (
-case+ ext of
+case+ xnm of
 |
 Some _ => None()
 |
@@ -4213,7 +4213,7 @@ F2UNDECL(
  loc=loc
 ,nam=nam
 ,d2c=d2c
-,arg=arg,res=res,ext=ext,def=def,wtp=wtp}
+,arg=arg,res=res,xnm=xnm,def=def,wtp=wtp}
 ) (* F2UNDECL *)
 end // end of [auxf1d0]
 //

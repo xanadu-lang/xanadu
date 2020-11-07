@@ -1490,8 +1490,10 @@ d0e0.node() of
   (
   FXITMatm(d1e0) where
   {
-    val
-    d1e0 = d1exp_make_node(loc0, D1Eexname(gnm1))
+  val
+  gnm1 = trans01_gnam(gnm1)
+  val
+  d1e0 = d1exp_make_node(loc0, D1Eexname(gnm1))
   }
   ) // end of [D0Eexname]
 //
@@ -2544,8 +2546,10 @@ dirpath_make
 val () =
 (
 ifcase
-| is_sats(fp0) => knd := 0(*sta*)
-| _(*non-sats*) => knd := 1(*dyn*)
+|
+is_sats(fp0) => (knd := 0)
+|
+_(*non-sats*) => (knd := 1)
 )
 //
 in
@@ -2553,22 +2557,30 @@ d1csopt where
 {
 val
 ( pf1
-| ()) = the_filpathlst_push(fp0)
+| ()) =
+the_filpathlst_push(fp0)
 val
 ( pf2
-| ()) = the_dirpathlst_push(dp0)
+| ()) =
+the_dirpathlst_push(dp0)
 //
 val
+dparsed =
+parse_from_filpath_toplevel
+  (knd, fp0)
+val
 d0csopt =
-parse_from_filpath_toplevel(knd, fp0)
+d0parsed_get_parsed(dparsed)
+//
 val
 d1csopt =
 (
 case+ d0csopt of
 |
-~None_vt() => None_vt()
+None() => None_vt()
 |
-~Some_vt(d0cs) => Some_vt(trans01_declist(d0cs))
+Some(d0cs) =>
+Some_vt(trans01_declist(d0cs))
 ) : Option_vt(d1eclist)
 //
 val () = the_filpathlst_pout(pf1|(*void*))
