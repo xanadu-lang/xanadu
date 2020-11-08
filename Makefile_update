@@ -82,17 +82,20 @@ PREDATSCATS_Xint:: ; \
 $(CPF) $(XATSHOME)/prelude/DATS/CATS/Xint/*.dats ./prelude/DATS/CATS/Xint/.
 #
 ######
-
+#
 XATSLIB:: \
 XATSLIB_libc
 XATSLIB_libc:: ; \
 $(CPF) $(XATSHOME)/xatslib/libc/SATS/*.sats ./xatslib/libc/SATS/.
 XATSLIB_libc:: ; \
 $(CPF) $(XATSHOME)/xatslib/libc/DATS/*.dats ./xatslib/libc/DATS/.
-XATSLIB_libc:: ; \
-$(CPF) $(XATSHOME)/xatslib/libc/DATS/CATS/Xint/*.dats ./xatslib/libc/DATS/CATS/Xint/.
 #
-
+XATSLIB_libc:: ; \
+$(CPF) $(XATSHOME)/xatslib/libc/DATS/CATS/Xint/*.?ats ./xatslib/libc/DATS/CATS/Xint/.
+#
+XATSLIB_libc:: ; \
+$(CPF) $(XATSHOME)/xatslib/libc/DATS/CATS/JS/Node/*.?ats ./xatslib/libc/DATS/CATS/JS/Node/.
+#
 ######
 
 XATSLIB:: \
