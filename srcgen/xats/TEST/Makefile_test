@@ -13,4 +13,4 @@ $(MAKE) -f Makefile_prelude
 all:: ; \
 $(MAKE) -f Makefile_xatslib
 
-###### end of [Makefile] ######
+###### end of [Makefile_test] ######
