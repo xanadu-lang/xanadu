@@ -28,107 +28,102 @@
 (* ****** ****** *)
 //
 // Author: Hongwei Xi
-// Start Time: November, 2020
+// Start Time: October, 2018
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
+#dynload
+"./xatsopt_main0.dats"
+(* ****** ****** *)
+#staload
+"./../SATS/xatsopt.sats"
+(* ****** ****** *)
 //
+#include
+"share/atspre_staload.hats"
+#staload
+UN = "prelude/SATS/unsafe.sats"
+//
+(* ****** ****** *)
+//
+extern
 fun
-xatsopt_version
-  (out: FILEref): void
+echo_argc_argv
+  {n:nat}
+( out: FILEref
+, argc: int(n)
+, argv: !argv(n)): void
+//
+implement
+echo_argc_argv
+{n}
+(out, argc, argv) =
+(
+loop(argv, 0(*i0*))
+) where
+{
+fun
+loop
+{ i:nat
+| i <= n} .<n-i>.
+( argv
+: !argv(n)
+, i0: int(i)): void =
+(
+if
+(i0 >= argc)
+then
+fprintln!(out)
+else
+let
+val () =
+if
+(i0 > 0)
+then
+fprint(out, ' ')
+in
+fprint(out, argv[i0]); loop(argv, i0+1)
+end (*let*) // end of [else]
+)
+} (* end of [ech0_argc_argv] *)
+//
+(* ****** ****** *)
+//
+implement
+main0(argc, argv) =
+(
+//
+if
+(argc >= 2)
+then
+{
+  val () =
+  xatsopt_main0(argc, argv)
+}
+else
+{
+//
+val () =
+prerrln!
+("Hello from ATS3(xatsopt)!")
+//
+val
+XATSHOME = the_XATSHOME_get()
+val
+((*void*)) =
+prerrln!
+("xatsopt: XATSHOME=",XATSHOME)
+//
+}
+// end of [if]
+) where
+{
+// (*
+val out = stderr_ref
+val ( ) = echo_argc_argv(out, argc, argv)
+// *)
+} (* end of [main] *)
 //
 (* ****** ****** *)
 
-#staload
-D0E = "./../SATS/dynexp0.sats"
-#staload
-D1E = "./../SATS/dynexp1.sats"
-#staload
-D2E = "./../SATS/dynexp2.sats"
-#staload
-D3E = "./../SATS/dynexp3.sats"
-#staload
-HIR = "./../SATS/intrep0.sats"
-
-(* ****** ****** *)
-//
-typedef
-d0parsed = $D0E.d0parsed
-typedef
-d1transd = $D1E.d1transd
-typedef
-d2transd = $D2E.d2transd
-typedef
-d3transd = $D3E.d3transd
-//
-typedef
-h0comped = $HIR.h0comped
-//
-(* ****** ****** *)
-//
-fun
-trans01_package
-  (p0kg: d0parsed): d1transd
-fun
-trans02_package
-  (p0kg: d0parsed): d2transd
-fun
-trans03_package
-  (p0kg: d0parsed): d3transd
-//
-(* ****** ****** *)
-//
-fun
-trs03cmp30_package
-  (p0kg: d0parsed): h0comped
-//
-(* ****** ****** *)
-fun
-the_fixity_load
-(
-  XATSENV: string
-) : void =
-  "ext#libxatsopt_the_fixity_load"
-(* ****** ****** *)
-fun
-the_basics_load
-( XATSENV: string
-, stadyn: int, given: string
-) : void =
-  "ext#libxatsopt_the_basics_load"
-//
-(* ****** ****** *)
-fun
-the_prelude_load
-( XATSENV: string
-, stadyn: int, given: string
-) : void =
-  "ext#libxatsopt_the_prelude_load"
-//
-(* ****** ****** *)
-fun
-the_preludes_load
-(
-  XATSENV: string
-) : void =
-  "ext#libxatsopt_the_preludes_load"
-fun
-the_preludes_load_if
-(
-  XATSENV: string, flag: &int
-) : void =
-  "ext#libxatsopt_the_preludes_load_if"
-//
-(* ****** ****** *)
-//
-fun
-the_XATSHOME_get((*void*)): string
-//
-(* ****** ****** *)
-fun
-xatsopt_main0
-{n:int | n >= 1}(int(n), !argv(n)): void
-//
-(* ****** ****** *)
-
-(* end of [xats_xatsopt.sats] *)
+(* end of [xats_xatsopt.dats] *)

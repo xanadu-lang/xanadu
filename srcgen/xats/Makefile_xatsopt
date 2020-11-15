@@ -159,11 +159,11 @@ intrep0_print.dats \
 intrep0_jsoniz.dats \
 intrep0_statyp.dats \
 intrep0_dynexp.dats \
-xatsopt_util0.dats \
 tcomp30_util0.dats \
 tcomp30_statyp.dats \
 tcomp30_dynexp.dats \
-
+xatsopt_util0.dats \
+xatsopt_main0.dats \
 ######
 
 OBJSATS := \
@@ -172,19 +172,14 @@ OBJDATS := \
 $(patsubst %.dats, BUILD/%_dats.o, $(SRCDATS))
 
 ######
-
-XATSOPT =\
-xatsopt_main0.dats
-
-######
 #
 all: \
 xatsopt
 xatsopt: \
-DATS/$(XATSOPT) \
+DATS/xatsopt.dats \
 $(OBJSATS) $(OBJDATS) ; \
-$(PATSCC) -cleanaft \
--o xatsopt $(INCLUDE) $(CFLAGS) $(GCFLAG) $^ $(LIBGC)
+$(PATSCC) -cleanaft -o xatsopt \
+$(INCLUDE) $(CFLAGS) $(GCFLAG) $^ $(LIBGC)
 #
 ######
 
@@ -192,8 +187,6 @@ libxatsopt: \
 $(OBJSATS) $(OBJDATS) \
 BUILD/libxatsopt_dats.o ; \
 ($(AR) -r $@.a $^ && $(MVF) $@.a ./../../lib)
-BUILD/libxatsopt_dats.o: \
-DATS/$(XATSOPT); $(PATSCC) -DATS _LIBXATSOPT_ -o $@ -c $<
 
 ######
 
@@ -231,7 +224,7 @@ $(PATSOPT) --output-a .depend --depgen -s $(SATS_SRCSATS)
 depend:: ; \
 $(PATSOPT) --output-a .depend --depgen -d $(DATS_SRCDATS)
 depend:: ; \
-$(PATSOPT) --output-a .depend --depgen -d DATS/$(XATSOPT)
+$(PATSOPT) --output-a .depend --depgen -d DATS/xatsopt.dats
 #
 depend:: ; \
 $(SED) -i -e 's/^SATS/BUILD/' -e 's/^DATS/BUILD/' .depend
