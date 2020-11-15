@@ -184,8 +184,7 @@ $(INCLUDE) $(CFLAGS) $(GCFLAG) $^ $(LIBGC)
 ######
 
 libxatsopt: \
-$(OBJSATS) $(OBJDATS) \
-BUILD/libxatsopt_dats.o ; \
+$(OBJSATS) $(OBJDATS) ; \
 ($(AR) -r $@.a $^ && $(MVF) $@.a ./../../lib)
 
 ######
