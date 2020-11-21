@@ -1121,13 +1121,15 @@ d1exp_make_node(loc, D1Eid0(tok))
 //
 in
 case+ opt of
-| ~None_vt() =>
-   FXITMatm(d1e0)
-| ~Some_vt(fxty) =>
-  (case+ fxty of
-   | $FIX.FIXTYnon() => FXITMatm(d1e0)
-   | _(*non-FIXTYnon*) => FXITMopr(d1e0, fxty)
-  ) (* end of [Some_vt] *)
+| ~
+None_vt() =>
+FXITMatm(d1e0)
+| ~
+Some_vt(fxty) =>
+(case+ fxty of
+ | $FIX.FIXTYnon() => FXITMatm(d1e0)
+ | _(*non-FIXTYnon*) => FXITMopr(d1e0, fxty)
+) (* end of [Some_vt] *)
 end // end of [auxid0_IDENT]
 
 and
@@ -1136,11 +1138,13 @@ auxid0_BSLASH
 //
 val loc = tok.loc()
 //
-val d1e0 =
-  d1exp_make_node(loc, D1Ebs0())
+val
+d1e0 =
+d1exp_make_node(loc, D1Ebs0())
 //
 in
-  FXITMopr(d1e0, $FIX.backslash_fixty)
+  FXITMopr
+  ( d1e0, $FIX.backslash_fixty )
 end // end of [auxid0_BSLASH]
 
 fun
@@ -1155,8 +1159,8 @@ val-
 T0INTsome(tok) = int.node()
 //
 in
-  FXITMatm
-  (d1exp_make_node(loc, D1Eint(tok)))
+FXITMatm
+(d1exp_make_node(loc, D1Eint(tok)))
 end // end of [auxint]
 and
 auxchr
@@ -1170,8 +1174,8 @@ val-
 T0CHRsome(tok) = chr.node()
 //
 in
-  FXITMatm
-  (d1exp_make_node(loc, D1Echr(tok)))
+FXITMatm
+(d1exp_make_node(loc, D1Echr(tok)))
 end // end of [auxchr]
 and
 auxflt
@@ -1185,8 +1189,8 @@ val-
 T0FLTsome(tok) = flt.node()
 //
 in
-  FXITMatm
-  (d1exp_make_node(loc, D1Eflt(tok)))
+FXITMatm
+(d1exp_make_node(loc, D1Eflt(tok)))
 end // end of [auxflt]
 and
 auxstr
@@ -1200,9 +1204,29 @@ val-
 T0STRsome(tok) = str.node()
 //
 in
-  FXITMatm
-  (d1exp_make_node(loc, D1Estr(tok)))
+FXITMatm
+(d1exp_make_node(loc, D1Estr(tok)))
 end // end of [auxstr]
+
+(* ****** ****** *)
+
+fun
+auxopid
+( id0
+: d0eid)
+: d1eitm = let
+//
+val loc = id0.loc()
+val-
+I0DNTsome
+  (tok) = id0.node()
+//
+in
+FXITMatm
+(d1exp_make_node(loc, D1Eid0(tok)))
+end // end of [auxopid]
+
+(* ****** ****** *)
 
 fun
 auxitm
@@ -1210,8 +1234,7 @@ auxitm
 : d0exp)
 : d1eitm = let
 //
-val
-loc0 = d0e0.loc()
+val loc0 = d0e0.loc()
 //
 (*
 val () =
@@ -1236,6 +1259,8 @@ d0e0.node() of
 | D0Echr(chr) => auxchr(chr)
 | D0Eflt(flt) => auxflt(flt)
 | D0Estr(str) => auxstr(str)
+//
+| D0Eopid(id0) => auxopid(id0)
 //
 | D0Eapps(d0es) =>
   FXITMatm(d1e0) where
@@ -1292,7 +1317,7 @@ d0e0.node() of
     FXITMatm(d1e0) where
     {
       val d1e0 =
-        d1exp_make_node
+      d1exp_make_node
         (loc0, D1Eif0(d1e1, d1e2, opt3))
     }
   end (* end of [D0Eif0] *)
@@ -1316,19 +1341,32 @@ d0e0.node() of
   ( tok(*let*)
   , d0cs
   , topt, d0es, tend) => let
-    val d1cs = trans01_declist(d0cs)
+//
+    val
+    (pf0|()) =
+    the_trans01_pushnil()
+//
+    val d1cs =
+    trans01_declist(d0cs)
     val d1es =
     (
     case+ d0es of
-    | list_nil() =>
-      (
-        list_sing(d1e0)
-      ) where
-      {
-        val d1e0 = d1exp_none(tend.loc())
-      }
-    | list_cons _ => trans01_dexplst(d0es)
+    |
+    list_nil() =>
+    (
+      list_sing(d1e0)) where
+    {
+      val
+      d1e0 = d1exp_none(tend.loc())
+    }
+    |
+    list_cons _ => trans01_dexplst(d0es)
     ) : d1explst // end of [val]
+//
+    val
+    ((*void*)) =
+    the_trans01_popfree( pf0 |(*void*) )
+//
   in
     FXITMatm
     (
@@ -1336,22 +1374,34 @@ d0e0.node() of
     )
   end // end of [D0Elet] *)
 //
-| D0Ewhere(d0e1, d0cs) => let
+| D0Ewhere
+  (d0e1, d0cs) =>
+  ( case+ d0cs of
+    |
+    d0eclseq_WHERE
+    (_, _, d0cs, _) => let
 //
-    val d1e1 = trans01_dexp(d0e1)
+      val
+      (pf0|()) =
+      the_trans01_pushnil()
 //
-  in
-    case+ d0cs of
-    | d0eclseq_WHERE
-      (_, _, d0cs, _) => let
-        val d1cs = trans01_declist(d0cs)
-      in
-        FXITMatm
-        (
-          d1exp_make_node(loc0, D1Ewhere(d1e1, d1cs))
-        )
-      end // end of [d0eclseq_WHERE]
-  end // end of [D0Ewhere]
+      // HX: this needs to
+      val // be processed first!
+      d1cs = trans01_declist(d0cs)
+//
+      val d1e1 = trans01_dexp(d0e1)
+//
+      val
+      ((*void*)) =
+      the_trans01_popfree( pf0 |(*void*) )
+//
+    in
+      FXITMatm
+      (
+      d1exp_make_node(loc0, D1Ewhere(d1e1, d1cs))
+      )
+    end // end of [d0eclseq_WHERE]
+  ) (* end of [D0Ewhere] *)
 //
 | D0Ebrack
   (tbeg, d0es, tend) => let
@@ -1359,9 +1409,7 @@ d0e0.node() of
     trans01_dexplst(d0es)
     val d1e0 =
     (
-      d1exp_make_node
-        (loc0, D1Ebrack(d1es))
-      // d1exp_make_node
+    d1exp_make_node(loc0, D1Ebrack(d1es))
     ) (* end of [val] *)
   in
 (*
@@ -2748,24 +2796,39 @@ None_vt()
 |
 Some_vt(fp0) =>
 let
-  val () =
-  (
-  ifcase
-  | is_sats(fp0) => knd := 0(*sta*)
-  | _(*non-sats*) => knd := 1(*dyn*)
-  )
+val () =
+(
+ifcase
+|
+is_sats(fp0) => knd := 0(*sta*)
+|
+_(*non-sats*) => knd := 1(*dyn*)
+)
 in
-  let
-  val res =
-  trans01_staload_from_filpath(knd, fp0)
-  in
-    flag := res.0; res.1
-  end
+(
+flag := result.0; result.1
+) where
+{
+val
+(pf0|()) =
+the_trans01_savecur((*void*))
+//
+val
+result =
+trans01_staload_from_filpath
+  (knd(*stadyn*), fp0(*fpath*))
+//
+val
+((*void*)) =
+the_trans01_restore(pf0|(*void*))
+//
+} (* end of [where] *)
+//
 end // end of [Some_vt]
 ) : Option_vt(d1eclist)
 //
-val opt1 = option_vt2t(opt1)
-val opt2 = option_vt2t(opt2)
+val opt1 = option_vt2t(opt1) // fpath
+val opt2 = option_vt2t(opt2) // d1cls
 //
 in
 //
@@ -3347,13 +3410,26 @@ d0cl.node() of
   ( tbeg, head
   , topt, body, tend) =>
   let
+//
+    val
+    (pf1|()) =
+    the_trans01_pushnil()
+//
     val
     head = trans01_declist(head)
+//
+    val
+    (pf2|()) =
+    the_trans01_pushnil()
+//
     val
     body = trans01_declist(body)
+//
+    val ((*void*)) =
+    the_trans01_locjoin(pf1, pf2 | (*none*))
+//
   in
-    d1ecl_make_node
-    ( loc0, D1Clocal(head, body) )
+    d1ecl_make_node( loc0, D1Clocal(head, body) )
   end // end of [D0Clocal]
 //
 | D0Cinclude _ => aux_include(d0cl)

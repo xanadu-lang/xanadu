@@ -3072,8 +3072,8 @@ val () =
 the_gmacenv_add(sym0, gmac)
 //
 in
-  d2ecl_make_node
-  ( loc0, D2Cdefine( d1cl ) )
+d2ecl_make_node
+( loc0 , D2Cd1ecl( d1cl ) )
 end // end of [aux_define]
 
 (* ****** ****** *)
@@ -3149,7 +3149,7 @@ auxd1cls(fopt, d1cs)
 in
 flag := res.0; Some(res.1)
 end
-)
+) (* case *)
 : fmodenvopt // end-of-val
 ) where
 {
@@ -3217,13 +3217,13 @@ case+ mopt of
 (0(*nshare*), menv) where
 {
 val
-(pf | ()) =
+(pf0 | ()) =
 the_trans12_savecur((*void*))
 //
 val d2cs = trans12_declist(d1cs)
 //
 val envs =
-the_trans12_restore(pf|(*void*))
+the_trans12_restore(pf0|(*nil*))
 //
 val menv =
 fmodenv_make
@@ -3250,19 +3250,19 @@ None() => ((*void*))
 |
 Some(menv) =>
 let
-val
-nmopt =
-g1exp_nmspace(src1)
+  val
+  nmopt =
+  g1exp_nmspace(src1)
 in
 case+ nmopt of
-|
-~None_vt() =>
- the_nmspace_open(menv)
-|
-~Some_vt(nm0) =>
- the_sexpenv_add
- (nm0, S2ITMfmodenv(menv))
-end
+| ~
+None_vt() =>
+the_nmspace_open(menv)
+| ~
+Some_vt(nm0) =>
+the_sexpenv_add
+(nm0, S2ITMfmodenv(menv))
+end // end of [Some]
 ) : void // end of val
 //
 in

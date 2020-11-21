@@ -64,14 +64,28 @@ vtypedef
 symenv(itm:type) = $ENV.symenv(itm)
 //
 (* ****** ****** *)
+//
+static
+fun
+the_fxtyenv_savecur(): void
+and
+the_fxtyenv_restore(): void
+//
+(* ****** ****** *)
 
 local
 
-#staload $FIX
-
+(* ****** ****** *)
+//
+#staload $FIX(*open*)
+//
+(* ****** ****** *)
+//
 absimpl
 fxtyenv_view = unit_v
-
+//
+(* ****** ****** *)
+//
 val
 [l0:addr]
 (pf | p0) =
@@ -80,8 +94,12 @@ val r0 =
 ref_make_viewptr(pf | p0)
 val
 (pfbox | p0) = ref_get_viewptr(r0)
+//
+(* ****** ****** *)
 
-in (* in-of-local *)
+in(* in-of-local *)
+
+(* ****** ****** *)
 
 (*
 implement
@@ -119,6 +137,7 @@ end // end of [let]
 prval vbox(pf) = pfbox
 } (* end of [the_fxtyenv_search] *)
 
+(* ****** ****** *)
 
 implement
 the_fxtyenv_insert
@@ -155,7 +174,7 @@ end (* end of [the_fxtyenv_insert] *)
 (* ****** ****** *)
 
 implement
-the_fxtyenv_pout
+the_fxtyenv_pop
 (
   pfenv | (*none*)
 ) = let
@@ -164,10 +183,23 @@ the_fxtyenv_pout
 in
   $effmask_ref
   ($ENV.symenv_pop{fixty}(!p0))
-end // end of [the_fxtyenv_pout]
+end // end of [the_fxtyenv_pop]
 
 implement
-the_fxtyenv_push
+the_fxtyenv_popfree
+(
+  pfenv | (*none*)
+) = 
+$effmask_ref
+(
+$MAP.symmap_free
+(the_fxtyenv_pop(pfenv|(*void*)))
+) (* end of [the_fxtyenv_popfree] *)
+
+(* ****** ****** *)
+
+implement
+the_fxtyenv_pushnil
   () = (pfenv | ()) where
 {
 //
@@ -180,18 +212,7 @@ the_fxtyenv_push
   $effmask_ref
   ($ENV.symenv_pushnil{fixty}(!p0))
 //
-} // end of [the_fxtyenv_push]
-
-implement
-the_fxtyenv_popfree
-(
-  pfenv | (*none*)
-) = 
-$effmask_ref
-(
-  $MAP.symmap_free
-  (the_fxtyenv_pout(pfenv | (*void*)))
-) (* end of [the_fxtyenv_popfree] *)
+} (* end of [the_fxtyenv_pushnil] *)
 
 (* ****** ****** *)
 
@@ -223,6 +244,31 @@ in
   $effmask_ref
   ($ENV.symenv_pjoinwth0(!p0, map))
 end // end of [the_fxtyenv_pjoinwth0]
+
+(* ****** ****** *)
+
+implement
+the_fxtyenv_savecur
+  ((*void*)) =
+let
+prval
+vbox(pf) = pfbox
+in
+$effmask_ref($ENV.symenv_savecur(!p0))
+end // end of [the_fxtyenv_savecur]
+
+implement
+the_fxtyenv_restore
+  ((*void*)) =
+let
+prval
+vbox(pf) = pfbox
+in
+$effmask_ref
+(
+$MAP.symmap_free($ENV.symenv_restore(!p0))
+)
+end // end of [the_fxtyenv_restore]
 
 (* ****** ****** *)
 //
@@ -260,6 +306,128 @@ end // end of [local]
 
 local
 
+absimpl
+trans01_view = unit_v
+
+(* ****** ****** *)
+
+in(* in-of-local *)
+
+(* ****** ****** *)
+
+implement
+the_trans01_popfree
+  (pfenv | (*void*)) =
+{
+//
+prval
+unit_v() = pfenv
+//
+local
+extern
+prfun _assert_{vw:view}(): vw
+in(* in-of-local *)
+val ((*void*)) =
+the_fxtyenv_popfree(_assert_() | (*void*))
+end // end of [local]
+//
+} (* end of [the_trans01_popfree] *)
+
+(* ****** ****** *)
+
+implement
+the_trans01_pushnil
+  ((*void*)) =
+  (pf | ()) where
+{
+//
+prval pf = unit_v
+//
+val
+(
+pf0_|()) = the_fxtyenv_pushnil()
+//
+prval( ) = $UN.castview0{void}(pf0_)
+//
+} (* end of [the_trans01_pushnil] *)
+
+(* ****** ****** *)
+
+implement
+the_trans01_locjoin
+(pf1, pf2| (*void*)) =
+{
+//
+prval unit_v() = pf1
+prval unit_v() = pf2
+//
+local
+extern
+prfun _assert_{vw:view}(): vw
+in // in-of-local
+//
+val ((*void*)) =
+the_fxtyenv_locjoin
+(_assert_(), _assert_() | (*void*))
+//
+end // end of [local]
+//
+} // end of [the_trans01_locjoin]
+
+(* ****** ****** *)
+
+end // end of [local]
+
+(* ****** ****** *)
+
+local
+
+absimpl
+trans01_save_view = unit_v
+
+in (* in-of-local *)
+
+(* ****** ****** *)
+
+implement
+the_trans01_savecur
+  ((*void*)) =
+(
+  (pf | ())
+) where
+{
+//
+prval pf = unit_v(*void*)
+//
+  val () = the_fxtyenv_savecur()
+//
+} (* end of [the_trans01_savecur] *)
+
+(* ****** ****** *)
+
+implement
+the_trans01_restore
+  (pf | (*void*)) =
+let
+//
+prval unit_v() = pf
+//
+in
+{
+//
+val () = the_fxtyenv_restore()
+//
+}
+end (* end of [the_trans01_restore] *)
+
+(* ****** ****** *)
+
+end // end of [local]
+
+(* ****** ****** *)
+
+local
+
 vtypedef
 map =
 $MAP.symmap(d1eclist)
@@ -270,26 +438,42 @@ val
 (pf0 | p0) = ref_get_viewptr(r0)
 
 in (* in-of-local *)
+
+(* ****** ****** *)
 //
 implement
 trans01_staload_add
-  (fp0, d1cs) =
-let
+  (fp0, d1cs) = let
+//
+(*
+HX-2020:
+Using cached if available!
+*)
 //
 val sym =
 $FP0.filpath_get_full2(fp0)
 //
 in
 let
-prval vbox(pf) = pf0
+prval
+vbox(pf) = pf0
 in
-$MAP.symmap_insert(!p0, sym, d1cs)
-end
-end
+$MAP.symmap_insert
+( !p0(*global*), sym, d1cs )
+end // end of [let]
+end // end of [let]
+// end of [trans01_staload_add]
+//
+(* ****** ****** *)
 //
 implement
 trans01_staload_find
   (fp0) = let
+//
+(*
+HX-2020:
+Using cached if available!
+*)
 //
 val sym =
 $FP0.filpath_get_full2(fp0)
@@ -299,28 +483,35 @@ let
   prval vbox(pf) = pf0
 in
   $MAP.symmap_search(!p0, sym)
-end
-end
+end // end of [let]
+end // end of [let]
+// end of [trans01_staload_find]
 //
+(* ****** ****** *)
+
 end // end of [local]
 
 (* ****** ****** *)
 
 local
 
+(* ****** ****** *)
+//
 overload
 print with
 $FP0.print_dirpath
+//
 (*
 overload
 print with
 $FP0.print_filpath_full1
 *)
-// (*
+//
 overload
 print with
 $FP0.print_filpath_full2
-// *)
+//
+(* ****** ****** *)
 
 fun
 aux_parse
@@ -353,15 +544,16 @@ parse_from_filpath_toplevel
 val
 d1csopt =
 let
+//
 val
 d0csopt =
-d0parsed_get_parsed
-(dparsed)
+dparsed.parsed()
+//
 in
 case+
 d0csopt of
 |
-None() => None_vt()
+None() => None_vt(*void*)
 |
 Some(d0cs) =>
 Some_vt(trans01_declist(d0cs))
@@ -399,44 +591,47 @@ end
 val
 ((*void*)) =
 let
-  val knd =
-  (
+val
+knd =
+(
   case+ opt of
   | None_vt _ => 0 | Some_vt _ => 1
-  ) : int // end of [val]
-in
+) : int // end of [val]
+in(*in-of-let*)
 (*
 println!
 ("trans01_staload_from_filpath: knd = ", knd)
 *)
-end
+end // end of [let]
 //
 in
 //
 case+ opt of
-| @Some_vt(d1cs) =>
-  let
-    prval () =
-    fold@(opt) in (1, opt) 
-  end
-| ~None_vt((*void*)) =>
-  let
-    val opt = aux_parse(knd, fp0)
-  in
-    case+ opt of
-    | None_vt() =>
-      (
-        (0, opt)
-      )
-    | Some_vt(d1cs) =>
-      (
-        (0, opt)
-      ) where
-      {
-        val ((*void*)) =
-        trans01_staload_add(fp0, d1cs)
-      } (* end of [Some_vt] *)
-  end
+| @
+Some_vt(d1cs) =>
+let
+  prval () =
+  fold@(opt) in (1, opt) 
+end (* Some_vt *)
+| ~
+None_vt((*void*)) =>
+let
+  val opt = aux_parse(knd, fp0)
+in
+  case+ opt of
+  | None_vt() =>
+    (
+      (0, opt)
+    )
+  | Some_vt(d1cs) =>
+    (
+      (0, opt)
+    ) where
+    {
+      val ((*void*)) =
+      trans01_staload_add(fp0, d1cs)
+    } (* end of [Some_vt] *)
+end (* None_vt *)
 //
 end // end of [trans01_staload_from_filpath]
 

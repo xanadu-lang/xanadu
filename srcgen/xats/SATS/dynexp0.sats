@@ -451,6 +451,8 @@ d0exp_node =
 | D0Eflt of t0flt
 | D0Estr of t0str
 //
+| D0Eopid of d0eid
+//
 | D0Eapps of d0explst
 //
 | D0Esqarg of // sexparg
@@ -1011,6 +1013,10 @@ fun
 d0parsed_get_parsed
 ( p0kg
 : d0parsed): Option(d0eclist)
+//
+overload
+.parsed with
+d0parsed_get_parsed
 //
 (* ****** ****** *)
 
