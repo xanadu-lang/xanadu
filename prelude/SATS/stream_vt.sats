@@ -94,6 +94,10 @@ fun
 <a:vt>
 stream_vt_print
   (xs: stream_vt(a)): void
+fun
+<a:vt>
+streax_vt_print
+  (xs: streax_vt(a)): void
 //
 fun
 <a:vt>
@@ -102,6 +106,8 @@ stream_vt_print0
 //
 fun<>
 stream_vt_print$len(): sint
+fun<>
+streax_vt_print$len(): sint
 //
 fun<>
 stream_vt_print$beg(): void
@@ -152,6 +158,11 @@ fun
 <a:vt>
 stream_vt_streamize
 (xs: stream_vt(a)): stream_vt(a)
+//
+fun
+<a:vt>
+streax_vt_streamize
+(xs: streax_vt(a)): stream_vt(a)
 //
 (* ****** ****** *)
 //
@@ -213,6 +224,11 @@ fun
 <y0:vt>
 stream_vt_map0
   (xs: stream_vt(x0)): stream_vt(y0)
+fun
+<x0:vt>
+<y0:vt>
+streax_vt_map0
+  (xs: streax_vt(x0)): streax_vt(y0)
 //
 (* ****** ****** *)
 //
@@ -224,6 +240,10 @@ fun
 <x0:vt>
 stream_vt_filter0
   (xs: stream_vt(x0)): stream_vt(x0)
+fun
+<x0:vt>
+streax_vt_filter0
+  (xs: streax_vt(x0)): streax_vt(x0)
 //
 (* ****** ****** *)
 //
@@ -235,6 +255,11 @@ fun
 <y0:vt>
 stream_vt_mapopt0
   (xs: stream_vt(x0)): stream_vt(y0)
+fun
+<x0:vt>
+<y0:vt>
+streax_vt_mapopt0
+  (xs: streax_vt(x0)): streax_vt(y0)
 //
 (* ****** ****** *)
 //
@@ -243,18 +268,33 @@ fun
 <y0:vt>
 stream_vt_mapoptn0
   (xs: stream_vt(x0)): stream_vt(y0)
+fun
+<x0:vt>
+<y0:vt>
+streax_vt_mapoptn0
+  (xs: streax_vt(x0)): streax_vt(y0)
 //
 fun
 <x0:vt>
 <y0:vt>
 stream_vt_maplist0
   (xs: stream_vt(x0)): stream_vt(y0)
+fun
+<x0:vt>
+<y0:vt>
+streax_vt_maplist0
+  (xs: streax_vt(x0)): streax_vt(y0)
 //
 fun
 <x0:vt>
 <y0:vt>
 stream_vt_mapstrm0
   (xs: stream_vt(x0)): stream_vt(y0)
+fun
+<x0:vt>
+<y0:vt>
+streax_vt_mapstrm0
+  (xs: streax_vt(x0)): streax_vt(y0)
 //
 (* ****** ****** *)
 //
@@ -267,6 +307,11 @@ fun
 <y0:vt>
 stream_vt_imap0
   (xs: stream_vt(x0)): stream_vt(y0)
+fun
+<x0:vt>
+<y0:vt>
+streax_vt_imap0
+  (xs: streax_vt(x0)): streax_vt(y0)
 //
 (* ****** ****** *)
 //
@@ -274,6 +319,10 @@ fun
 <x0:vt>
 stream_vt_ifilter0
   (xs: stream_vt(x0)): stream_vt(x0)
+fun
+<x0:vt>
+streax_vt_ifilter0
+  (xs: streax_vt(x0)): streax_vt(x0)
 //
 (* ****** ****** *)
 //
@@ -282,6 +331,11 @@ fun
 <y0:vt>
 stream_vt_imapopt0
   (xs: stream_vt(x0)): stream_vt(y0)
+fun
+<x0:vt>
+<y0:vt>
+streax_vt_imapopt0
+  (xs: streax_vt(x0)): streax_vt(y0)
 //
 (* ****** ****** *)
 //
@@ -301,6 +355,8 @@ fun
 stream_vt_z2forcmp0
   ( xs: stream_vt(x0)
   , ys: stream_vt(y0)): sint
+//
+(* ****** ****** *)
 //
 fun
 <x0:vt
