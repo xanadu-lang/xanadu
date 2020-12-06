@@ -51,7 +51,7 @@ list_make_nval_vt
 loop(n0, list_vt_nil())
 ) where
 {
-fun
+fnx
 loop
 {i,j:nat}.<i>.
 ( i0
@@ -124,7 +124,7 @@ list_length
   loop(xs, 0)
 ) where
 {
-fun
+fnx
 loop{i,j:int}
 ( xs
 : list(a, i)
@@ -143,11 +143,11 @@ impltmp
 list_get_at
   (xs, i0) =
 (
-  auxlst(xs, i0)
+  loop(xs, i0)
 ) where
 {
-fun
-auxlst
+fnx
+loop
 {n:int}
 ( xs
 : list(a, n)
@@ -159,8 +159,8 @@ case+ xs of
 list_cons(x0, xs) =>
 if
 (i0 > 0)
-then auxlst(xs, pred(i0)) else x0
-) (* end of [auxlst] *)
+then loop(xs, pred(i0)) else x0
+) (* end of [auxloop] *)
 } (* end of [list_get_at] *)
 //
 (* ****** ****** *)
@@ -179,7 +179,7 @@ impltmp
 list_append
 {m,n}
 (xs, ys) = let
-fun
+fnx
 loop
 {m:nat} .<m>.
 ( xs
@@ -224,12 +224,12 @@ let
 val
 res = list_vt_nil()
 in
-list_vt_reverse<a>(auxmain(xss, res))
+list_vt_reverse<a>(loop(xss, res))
 end
 ) where
 {
-fun
-auxmain
+fnx
+loop
 ( xss
 : list(list(a))
 , res: list_vt(a)): list_vt(a) =
@@ -237,7 +237,7 @@ auxmain
 case+ xss of
 | list_nil() => res
 | list_cons(xs, xss) =>
-  auxmain(xss, list_rappend_vt(xs, res))
+  loop(xss, list_rappend_vt(xs, res))
 )
 } (* end of [list_concat_vt] *)
 //
@@ -251,7 +251,7 @@ list_rappend
   loop(xs, ys)
 ) where
 {
-fun
+fnx
 loop
 {m,n:nat}.<m>.
 ( xs
@@ -277,7 +277,7 @@ list_rappend_vt
   loop(xs, ys)
 ) where
 {
-fun
+fnx
 loop
 {m,n:nat}.<m>.
 ( xs
@@ -309,7 +309,7 @@ impltmp
 list_forall(xs) =
   (loop(xs)) where
 {
-fun
+fnx
 loop
 (xs: list(a)): bool =
 (
@@ -329,7 +329,7 @@ impltmp
 list_foreach(xs) =
   (loop(xs)) where
 {
-fun
+fnx
 loop
 (xs: list(a)): void =
 (
@@ -390,7 +390,7 @@ ys = list_vt(y0)
 typedef
 ys(i:int) = list_vt(y0, i)
 //
-fun
+fnx
 loop
 {i:nat}.<i>.
 ( xs:
@@ -437,7 +437,7 @@ loop(xs, list_vt_nil((*void*)))
 ) where
 {
 //
-fun
+fnx
 loop
 {i,j:nat}.<i>.
 ( xs
@@ -600,12 +600,13 @@ end
 impltmp
 {a:t0}
 gseq_nil
-<list(a)><a>() = list_nil()
+<list(a)><a>
+((*void*)) = list_nil()
 impltmp
 {a:t0}
 gseq_cons
 <list(a)><a>
-  (x0, xs) = list_cons(x0, xs)
+( x0, xs ) = list_cons(x0, xs)
 //
 (* ****** ****** *)
 //
@@ -627,7 +628,7 @@ gseq_uncons_raw
 let
   val x0 = xs.0
   val () = xs := xs.1 in x0
-end
+end // end of [gseq_uncons_raw]
 //
 (* ****** ****** *)
 //
@@ -712,6 +713,107 @@ impltmp
 {x0:t0}
 gseq_mergesort_list
 <list(x0)><x0>( xs ) = list_mergesort_vt<x0>(xs)
+//
+(* ****** ****** *)
+//
+(*
+For gmap-operations
+#staload
+"prelude/SATS/gmap.sats"
+*)
+//
+(* ****** ****** *)
+impltmp
+{k0:t0}
+{x0:t0}
+gmap_keyq
+<list@(k0,x0)><k0><x0>
+(kxs, key) =
+(
+  loop(kxs)) where
+{
+fun
+loop
+( kxs
+: list@(k0,x0)): bool =
+(
+case+ kxs of
+|
+list_nil() => false
+|
+list_cons(kx1, kxs) =>
+if
+g_equal<k0>
+(key, kx1.0) then true else loop(kxs)
+)
+} (*where*) // end of [gmap_keyq]
+(* ****** ****** *)
+impltmp
+{k0:t0}
+{x0:t0}
+gmap_search_opt
+<list@(k0,x0)><k0><x0>
+(kxs, key) =
+(
+  loop(kxs)) where
+{
+fun
+loop
+( kxs
+: list@(k0,x0)): optn_vt(x0) =
+(
+case+ kxs of
+|
+list_nil() =>
+optn_vt_nil(*void*)
+|
+list_cons(kx1, kxs) =>
+if
+g_equal<k0>
+(key, kx1.0)
+then optn_vt_cons(kx1.1) else loop(kxs)
+)
+} (*where*) // end of [gmap_search_opt]
+(* ****** ****** *)
+impltmp
+{k0:t0}
+{x0:t0}
+gmap_insert_opt
+<list@(k0,x0)><k0><x0>
+(kxs, key, itm) =
+optn_vt_nil(*void*) where
+{
+val () =
+( kxs := list_cons((key, itm), kxs) )
+} (* end of [gmap_insert_opt] *)
+(* ****** ****** *)
+//
+impltmp
+{k0:t0}
+{x0:t0}
+gmap_streamize
+<list@(k0,x0)><k0><x0> = list_streamize
+//
+impltmp
+{k0:t0}
+{x0:t0}
+gmap_streamize_key
+<list@(k0,x0)><k0><x0>(kxs) =
+(
+  gseq_map_stream(kxs)) where
+{
+impltmp map$fopr<(k0,x0)><k0>(kx) = kx.0
+}
+impltmp
+{k0:t0}
+{x0:t0}
+gmap_streamize_itm
+<list@(k0,x0)><k0><x0>(kxs) =
+(
+  gseq_map_stream(kxs)) where
+{
+impltmp map$fopr<(k0,x0)><x0>(kx) = kx.1
+}
 //
 (* ****** ****** *)
 //
