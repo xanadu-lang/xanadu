@@ -139,6 +139,12 @@ d2p0.node() of
 | D2Pnil() => ()
 | D2Pany() => ()
 //
+| D2Pint _ => ()
+| D2Pbtf _ => ()
+| D2Pchr _ => ()
+| D2Pflt _ => ()
+| D2Pstr _ => ()
+//
 | D2Pvar(d2v1) => ()
 //
 | D2Pcon1(d2c1) => ()
@@ -311,22 +317,22 @@ d2e0.node() of
     )
   } (* end of [D2Edtsel] *)
 //
-| D2Eif0
-  (d2e1, d2e2, opt3) =>
-  {
-  val () = tread12_d2exp(d2e1)
-  val () = tread12_d2exp(d2e2)
-  val () = tread12_d2expopt(opt3)
-  }
+|
+D2Eif0
+(d2e1, d2e2, opt3) =>
+{
+val () = tread12_d2exp(d2e1)
+val () = tread12_d2exp(d2e2)
+val () = tread12_d2expopt(opt3)
+}
 //
-| D2Ecase
-  (knd0, d2e1, dcls) =>
-  {
-  val () = tread12_d2exp(d2e1)
-(*
-  val () = tread12_d2claulst(dcls)
-*)
-  }
+|
+D2Ecase
+(knd0, d2e1, dcls) =>
+{
+val () = tread12_d2exp(d2e1)
+val () = tread12_d2claulst(dcls)
+}
 //
 | D2Elet
   (d2cs, d2e1) =>
@@ -390,14 +396,13 @@ d2e0.node() of
 //
   }
 //
-| D2Etry0
-  ( knd0, d2e1, dcls ) =>
-  {
-  val () = tread12_d2exp(d2e1)
-(*
-  val () = tread12_d2claulst(dcls)
-*)
-  }
+|
+D2Etry0
+( knd0, d2e1, dcls ) =>
+{
+val () = tread12_d2exp(d2e1)
+val () = tread12_d2claulst(dcls)
+}
 //
 | D2Eaddr(d2e1) =>
   {
@@ -516,6 +521,8 @@ case+ s2es of
 ) (* end of [auxlst] *)
 } (* end of [tread12_dsapparg] *)
 
+(* ****** ****** *)
+
 implement
 //{}(*tmp*)
 tread12_dtapparg
@@ -549,6 +556,98 @@ case+ s2es of
 ) (* end of [auxlst] *)
 } (* end of [tread12_dtapparg] *)
 
+(* ****** ****** *)
+
+implement
+//{}(*tmp*)
+tread12_d2gua(d2g0) =
+(
+case+
+d2g0.node() of
+|
+D2GUAexp(d2e1) =>
+{
+val () = tread12_d2exp(d2e1)
+}
+|
+D2GUAmat(d2e1, d2p2) =>
+{
+val () = tread12_d2exp(d2e1)
+val () = tread12_d2pat(d2p2)
+}
+) (* end of [tread12_d2gua] *)
+
+(* ****** ****** *)
+
+implement
+//{}(*tmp*)
+tread12_d2gpat(dgpt) =
+(
+case+
+dgpt.node() of
+|
+D2GPATpat(d2p1) =>
+{
+val () = tread12_d2pat(d2p1)
+}
+|
+D2GPATgua(d2p1, d2gs) =>
+{
+val () = tread12_d2pat(d2p1)
+val () = tread12_d2gualst(d2gs)
+}  
+) (* end of [tread12_d2gpat] *)
+
+(* ****** ****** *)
+
+implement
+//{}(*tmp*)
+tread12_d2clau(dcl0) =
+(
+case+
+dcl0.node() of
+|
+D2CLAUpat(dgpt) =>
+{
+  val () =
+  tread12_d2gpat(dgpt)
+}
+|
+D2CLAUexp(dgpt, d2e1) =>
+{
+//
+  val () =
+  tread12_d2gpat(dgpt)
+//
+  val () = tread12_d2exp(d2e1)
+//
+}
+) (* end of [tread12_d2clau] *)
+
+(* ****** ****** *)
+//
+implement
+//{}(*tmp*)
+tread12_d2gualst(d2gs) =
+(
+list_foreach<d2gua>(d2gs)
+) where
+{
+implement(env)
+list_foreach$fwork<d2gua><env>(d2g, env) = tread12_d2gua(d2g)
+} (* end of [tread12_d2gualst] *)
+//
+implement
+//{}(*tmp*)
+tread12_d2claulst(dcls) =
+(
+list_foreach<d2clau>(dcls)
+) where
+{
+implement(env)
+list_foreach$fwork<d2clau><env>(dcl, env) = tread12_d2clau(dcl)
+} (* end of [tread12_d2claulst] *)
+//
 (* ****** ****** *)
 
 implement
@@ -756,10 +855,8 @@ d2cl.node() of
 *)
     val () =
     tread12_tq2arglst(tqas)
-(*
     val () =
     tread12_ti2arglst(ti2s)
-*)
 //
     val () =
     tread12_f2arglst( f2as )
@@ -782,10 +879,8 @@ d2cl.node() of
 *)
     val () =
     tread12_tq2arglst(tqas)
-(*
     val () =
     tread12_ti2arglst(ti2s)
-*)
 //
     val () =
       tread12_f2arglst(f2as)
@@ -889,6 +984,27 @@ list_foreach<tq2arg>(tqas)
 implement(env)
 list_foreach$fwork<tq2arg><env>(tq2a, env) = tread12_tq2arg(tq2a)
 } (* end of [tread12_tq2arglst] *)
+//
+(* ****** ****** *)
+//
+implement
+//{}(*tmp*)
+tread12_ti2arg
+  (ti2a) =
+(
+  tread12_s2explst(ti2a.s2es())
+)
+//
+implement
+//{}(*tmp*)
+tread12_ti2arglst(tias) =
+(
+list_foreach<ti2arg>(tias)
+) where
+{
+implement(env)
+list_foreach$fwork<ti2arg><env>(ti2a, env) = tread12_ti2arg(ti2a)
+} (* end of [tread12_ti2arglst] *)
 //
 (* ****** ****** *)
 //

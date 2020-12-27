@@ -206,19 +206,20 @@ s2e0.node() of
     t2ype_make_node(s2t0, T2Ptyext(tnm1, t2ps))
   end
 //
-| S2Etyrec(knd, npf, ls2es) =>
-  let
-    val lt2ps = labs2explst_erase(ls2es)
-  in
-    t2ype_make_node(s2t0, T2Ptyrec(knd, npf, lt2ps))
-  end
+|
+S2Etyrec(knd, npf, ls2es) =>
+let
+  val lt2ps = labs2explst_erase(ls2es)
+in
+  t2ype_make_node(s2t0, T2Ptyrec(knd, npf, lt2ps))
+end
 //
 | _(*rest-of-s2exp*) => t2ype_none1(s2e0)
 //
 )
 //
 in
-if impred then auxmain(s2e0) else the_t2ype_none0
+  if impred then auxmain(s2e0) else the_t2ype_none0
 end // end of [s2exp_erase]
 
 (* ****** ****** *)
@@ -409,20 +410,21 @@ t2ype_subst$var<>(t2p0, flag)
     t2ype_make_node(s2t0, T2Plam(s2vs, t2p1))
   end
 //
-| T2Pfun
-  (fc2, npf, t2ps, t2p1) =>
-  let
-    val
-    t2p1 = auxt2p0(t2p1, flag)
-    val
-    t2ps = auxt2ps(t2ps, flag)
-  in
-    if
-    flag=fini
-    then t2p0
-    else
-    t2ype_make_node(s2t0, T2Pfun(fc2, npf, t2ps, t2p1))
-  end
+|
+T2Pfun
+(fc2, npf, t2ps, t2p1) =>
+let
+  val
+  t2p1 = auxt2p0(t2p1, flag)
+  val
+  t2ps = auxt2ps(t2ps, flag)
+in
+  if
+  flag=fini
+  then t2p0
+  else
+  t2ype_make_node(s2t0, T2Pfun(fc2, npf, t2ps, t2p1))
+end
 //
 | T2Pexi(s2vs, t2p1) => let
     val
@@ -445,28 +447,59 @@ t2ype_subst$var<>(t2p0, flag)
     t2ype_make_node(s2t0, T2Puni(s2vs, t2p1))
   end
 //
-| T2Ptyext(name, t2ps) => let
-    val
-    t2ps = auxt2ps(t2ps, flag)
-  in
-    if
-    flag=fini
-    then t2p0
-    else
-    t2ype_make_node(s2t0, T2Ptyext(name, t2ps))
-  end
+|
+T2Ptyext(name, t2ps) =>
+let
+  val
+  t2ps = auxt2ps(t2ps, flag)
+in
+  if
+  flag=fini
+  then t2p0
+  else
+  t2ype_make_node(s2t0, T2Ptyext(name, t2ps))
+end // end of [T2Ptyext]
 //
-| T2Ptyrec(knd, npf, lt2ps) =>
-  let
-    val
-    lt2ps = auxlt2ps(lt2ps, flag)
-  in
-    if
-    flag=fini
-    then t2p0
-    else
-    t2ype_make_node(s2t0, T2Ptyrec(knd, npf, lt2ps))
-  end
+|
+T2Ptyrec(knd, npf, ltps) =>
+let
+  val
+  ltps = auxlt2ps(ltps, flag)
+(*
+  val
+  s2t0 =
+  (
+  ( case+ knd of
+    | TYRECflt0() => auxlst(ltps)
+    | _(*non-TYRECflt0*) => s2t0): sort2
+  ) where
+  {
+  fun
+  auxlst
+  ( ltps
+  : labt2ypelst): sort2 =
+  ( case+ ltps of
+    | list_nil() =>
+      the_sort2_type
+    | list_cons(ltp1, ltps) =>
+      let
+      val+
+      SLABELED(lab, t2p) = ltp1
+      in
+        if
+        sort2_islin( t2p.sort() )
+        then the_sort2_vwtp else auxlst(ltps)
+      end
+  ) (* end of [auxlst] *)
+  } (* where *) // end of [val s2t0]
+*)
+in
+  if
+  flag=fini
+  then t2p0
+  else
+  t2ype_make_node(s2t0, T2Ptyrec(knd, npf, ltps))
+end // end of [T2Ptyrec]
 //
 | _ (* rest-of-t2ype *) => t2p0 // T2Pfc2,T2Pnone0/1
 //
@@ -783,6 +816,34 @@ T2Ptyrec(knd, npf, lt2ps) =>
 let
   val
   lt2ps = auxlt2ps(lt2ps, flag)
+(*
+  val
+  s2t0 =
+  (
+  ( case+ knd of
+    | TYRECflt0() => auxlst(ltps)
+    | _(*non-TYRECflt0*) => s2t0): sort2
+  ) where
+  {
+  fun
+  auxlst
+  ( ltps
+  : labt2ypelst): sort2 =
+  ( case+ ltps of
+    | list_nil() =>
+      the_sort2_type
+    | list_cons(ltp1, ltps) =>
+      let
+      val+
+      SLABELED(lab, t2p) = ltp1
+      in
+        if
+        sort2_islin( t2p.sort() )
+        then the_sort2_vwtp else auxlst(ltps)
+      end
+  ) (* end of [auxlst] *)
+  } (* where *) // end of [val s2t0]
+*)
 in
   if
   flag=fini
@@ -870,6 +931,68 @@ t2ype_evalrec(t2p0) =
 let
   var flag: int = 0 in auxt2p0(t2p0, flag)
 end (* t2ype_evalrec *) end // end of [local]
+
+(* ****** ****** *)
+
+implement
+t2ype_sortrec(t2p0) =
+(
+case+
+t2p0.node() of
+|
+T2Pxtv(xtv0) =>
+let
+val
+t2p1 = xtv0.type()
+in
+case+
+t2p1.node() of
+//
+|
+T2Pnone0() => xtv0.sort()
+|
+_(*solved*) => t2ype_sortrec(t2p1)
+//
+end // end of [T2Pxtv]
+|
+T2Ptyrec
+(knd, npf, ltps) =>
+(
+case+ knd of
+|
+TYRECflt0() =>
+auxlst(ltps) where
+{
+fun
+auxlst
+( ltps
+: labt2ypelst): sort2 =
+(
+case+ ltps of
+|
+list_nil
+((*void*)) => the_sort2_type
+|
+list_cons
+(ltp1, ltps) =>
+let
+//
+val+
+SLABELED(lab, t2p) = ltp1
+//
+val s2t = t2ype_sortrec(t2p)
+in
+if
+sort2_islin(s2t)
+then the_sort2_vwtp else auxlst(ltps)
+end // end of [list_cons]
+)
+} (* end of [T2Ptyrec] *)
+| _(*non-TYRECflt0*) => t2p0.sort()
+)
+| _ (* rest-of-t2ype*) => t2p0.sort()
+
+) (* end of [t2ype_sortrec] *)
 
 (* ****** ****** *)
 

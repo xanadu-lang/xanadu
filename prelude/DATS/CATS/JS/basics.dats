@@ -561,6 +561,39 @@ XATS2JS_string_tail_raw
 }
 (* ****** ****** *)
 impltmp
+string_length<> =
+XATS2JS_string_length
+where
+{
+#extern
+fun
+XATS2JS_string_length
+(cs : string) : nint = $exname()
+}
+//
+impltmp
+string_vt_length<> =
+XATS2JS_string_vt_length
+where
+{
+#extern
+fun
+XATS2JS_string_vt_length
+(cs : !string_vt) : nint = $exname()
+}
+impltmp
+string_vt_length1<> =
+XATS2JS_string_vt_length1
+where
+{
+#extern
+fun
+XATS2JS_string_vt_length1
+(cs : !string_vt) : nint = $exname()
+}
+//
+(* ****** ****** *)
+impltmp
 string_get_at<> =
 XATS2JS_string_get_at
 where
@@ -622,6 +655,7 @@ fun
 XATS2JS_string_vt_forall_cfr
 ( cs: ~string_vt
 , f0: (cgtz) -<cfr> bool): bool
+= $exname((*self*))
 //
 in
 XATS2JS_string_vt_forall_cfr
@@ -638,6 +672,7 @@ fun
 XATS2JS_string_vt_forall_cfr
 ( cs: !string_vt
 , f0: (cgtz) -<cfr> bool): bool
+= $exname((*self*))
 //
 in
 XATS2JS_string_vt_forall_cfr

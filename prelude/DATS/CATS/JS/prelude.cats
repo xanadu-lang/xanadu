@@ -444,6 +444,31 @@ return cs.slice(1);//tail
 }
 /* ****** ****** */
 function
+XATS2JS_string_length
+  (cs)
+{
+  return (cs.length);
+}
+//
+function
+XATS2JS_string_vt_length
+  (cs)
+{
+// HX: skipping
+// the ending null char
+  return (cs.length - 1);
+}
+function
+XATS2JS_string_vt_length1
+  (cs)
+{
+// HX: skipping
+// the ending null char
+  return (cs.length - 1);
+}
+//
+/* ****** ****** */
+function
 XATS2JS_string_get_at
   (cs, i0)
 {
@@ -521,7 +546,7 @@ let i0;
 let
 res = true;
 let
-len = cs.length
+len = cs.length-1;
 for
 ( i0 = 0
 ; i0 < len; i0 += 1)
@@ -540,7 +565,7 @@ let i0;
 let
 res = true;
 let
-len = cs.length;
+len = cs.length-1;
 for
 ( i0 = len
 ; i0 >= 1 ; i0 -= 1)

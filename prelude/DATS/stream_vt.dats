@@ -53,7 +53,7 @@ case+ r0 of
   $UN.castlin10{box}(xs)
   val () =
   ( r0.1 := auxmain(xs) )
-  in $UN.castlin10{strmcom(a)}(r0) end
+  in $UN.castlin10{strmcon(a)}(r0) end
 //
 end // end of [let]
 )
@@ -1411,6 +1411,65 @@ end // end of [strxcon_vt_cons]
 ) (* end of [auxloop] *)
 //
 } (* end of [streax_vt_imapopt0] *)
+
+(* ****** ****** *)
+
+impltmp
+<a>(*tmp*)
+stream_vt_istreamize
+  (xs) =
+(
+auxmain(0, xs)) where
+{
+fun
+auxmain
+( i0
+: nint
+, xs
+: stream_vt(a))
+: stream_vt(@(nint, a)) =
+$llazy
+(
+$free(xs);
+case+ !xs of
+| ~
+strmcon_vt_nil
+  ((*nil*)) => strmcon_vt_nil()
+| ~
+strmcon_vt_cons
+  ( x0, xs ) =>
+  strmcon_vt_cons
+  ( (i0, x0), auxmain(i0+1, xs) )
+) (* end of [auxmain] *)
+} (*where*) // end of [streax_vt_istreamize]
+
+(* ****** ****** *)
+
+impltmp
+<a>(*tmp*)
+streax_vt_istreamize
+  (xs) =
+(
+auxmain(0, xs)) where
+{
+fun
+auxmain
+( i0
+: nint
+, xs
+: streax_vt(a))
+: stream_vt(@(nint, a)) =
+$llazy
+(
+$free(xs);
+case+ !xs of
+| ~
+strxcon_vt_cons
+  ( x0, xs ) =>
+  strmcon_vt_cons
+  ( (i0, x0), auxmain(i0+1, xs) )
+) (* end of [auxmain] *)
+} (*where*) // end of [streax_vt_istreamize]
 
 (* ****** ****** *)
 //
