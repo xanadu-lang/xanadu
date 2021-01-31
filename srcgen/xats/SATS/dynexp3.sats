@@ -325,6 +325,7 @@ d3exp_node =
 //
 | D3Ei00 of (int)
 | D3Eb00 of (bool)
+| D3Ec00 of (char)
 | D3Es00 of string
 //
 | D3Eint of (token)
@@ -471,6 +472,9 @@ for the meaning of knd
   , d3explst(*frees*)) // linear
 //
 | D3Eanno of (d3exp, s2exp(*anno*))
+//
+| D3Eexist1 of
+  (s2explst(*wits*), d3exp(*packed*))
 //
 | D3Elcast of (d3exp, label(*given*))
 | D3Etcast of (d3exp, t2ype(*given*))

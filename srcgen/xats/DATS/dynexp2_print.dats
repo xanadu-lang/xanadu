@@ -394,6 +394,8 @@ case- x0.node() of
   fprint!(out, "D2Ei00(", int, ")")
 | D2Eb00(btf) =>
   fprint!(out, "D2Eb00(", btf, ")")
+| D2Ec00(chr) =>
+  fprint!(out, "D2Ec00(", chr, ")")
 | D2Es00(str) =>
   fprint!(out, "D2Es00(", str, ")")
 //
@@ -559,13 +561,20 @@ case- x0.node() of
 | D2Elazy(d2e1) =>
   fprint!(out, "D2Elazy(", d2e1, ")")
 | D2Ellazy
-  (d2e1, d2es(*frees*)) =>
+  ( d2e1
+  , d2es(*frees*)) =>
   fprint!
   (out, "D2Ellazy(", d2e1, "; ", d2es, ")")
 //
 | D2Eanno(d2e1, s2e2) =>
   fprint!
   (out, "D2Eanno(", d2e1, "; ", s2e2, ")")
+//
+| D2Eexist1
+  ( s2es(*wits*)
+  , d2e1(*packed*)) =>
+  fprint!
+  (out, "D2Eexist1(", s2es, "; ", d2e1, ")")
 //
 | D2Eg1mac(g1m0) =>
   fprint!(out, "D2Eg1mac(", g1m0, ")")

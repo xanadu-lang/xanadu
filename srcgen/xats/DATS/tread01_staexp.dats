@@ -66,6 +66,8 @@ g1e0.node() of
 | G1Eid0(gid) => ()
 //
 | G1Eint(tok) => ()
+| G1Echr(tok) => ()
+| G1Eflt(tok) => ()
 | G1Estr(tok) => ()
 //
 | G1Eif0
@@ -417,6 +419,21 @@ def0.node() of
   }
 )
 
+(* ****** ****** *)
+//
+implement
+//{}(*tmp*)
+tread01_f1unarrow
+  (arrw) =
+(
+case+ arrw of
+|
+F1UNARROWdflt() => ((*void*))
+|
+F1UNARROWlist
+( s1es ) => tread01_s1explst(s1es)
+)
+//
 (* ****** ****** *)
 //
 implement

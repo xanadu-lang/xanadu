@@ -14,10 +14,13 @@ MVF=mv -f
 RMF=rm -f
 
 ######
-
+#
 PATSCC=$(PATSHOME)/bin/patscc
 PATSOPT=$(PATSHOME)/bin/patsopt
-
+#
+# PATSOPT=\
+# $(PATSHOME)/bin/patsopt --gline
+#
 ######
 #
 CFLAGS=
@@ -76,6 +79,8 @@ tread3x.sats \
 intrep0.sats \
 tcomp30.sats \
 dynexp4.sats \
+trans34.sats \
+tread34.sats \
 xatsopt.sats \
 
 SRCDATS := \
@@ -121,6 +126,7 @@ staexp2.dats \
 statyp2.dats \
 dynexp2.dats \
 staexp2_init0.dats \
+statyp2_init0.dats \
 staexp2_util1.dats \
 staexp2_util2.dats \
 staexp2_s2cst.dats \
@@ -164,8 +170,15 @@ intrep0_dynexp.dats \
 tcomp30_util0.dats \
 tcomp30_statyp.dats \
 tcomp30_dynexp.dats \
-xatsopt_util0.dats \
-xatsopt_main0.dats \
+dynexp4.dats \
+dynexp4_print.dats \
+dynexp4_util0.dats \
+trans34_util1.dats \
+trans34_util2.dats \
+trans34_envmap.dats \
+trans34_dynexp.dats \
+tread34_dynexp.dats \
+xatsopt_util0.dats xatsopt_main0.dats \
 ######
 
 OBJSATS := \

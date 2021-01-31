@@ -147,6 +147,10 @@ G1Nint(tok) =>
 fprint!
 (out, "G1Nint(", tok, ")")
 |
+G1Nflt(tok) =>
+fprint!
+(out, "G1Nflt(", tok, ")")
+|
 G1Nstr(tok) =>
 fprint!
 (out, "G1Nstr(", tok, ")")
@@ -191,6 +195,10 @@ case+ x0.node() of
 //
 | G1Eint(int) =>
   fprint!(out, "G1Eint(", int, ")")
+| G1Echr(chr) =>
+  fprint!(out, "G1Echr(", chr, ")")
+| G1Eflt(flt) =>
+  fprint!(out, "G1Eflt(", flt, ")")
 | G1Estr(str) =>
   fprint!(out, "G1Estr(", str, ")")
 //
@@ -279,6 +287,8 @@ fprint_val<sort1> = fprint_sort1
 
 in (* in-of-local *)
 
+(* ****** ****** *)
+
 implement
 fprint_sort1
   (out, x0) =
@@ -305,25 +315,35 @@ case+ x0.node() of
 *)
 //
 | S1Tapp1
-  (s1t0, s1t1) =>
-  fprint!
-  (out, "S1Tapp1(", s1t0, "; ", s1t1, ")")
-| S1Tapp2
-  (s1t0, s1t1, s1t2) =>
+  (s1t1, s1t2) =>
   fprint!
   ( out
-  , "S1Tapp2(", s1t0, "; ", s1t1, "; ", s1t2, ")")
+  , "S1Tapp1(", s1t1, "; ", s1t2, ")")
+| S1Tapp2
+  (s1t1, s1t2, s1t3) =>
+  fprint!
+  ( out
+  , "S1Tapp2("
+  , s1t1, "; ", s1t2, "; ", s1t3, ")" )
 //
 | S1Tlist(s1ts) =>
-  fprint!(out, "S1Tlist(", s1ts, ")")
+  fprint!
+  ( out, "S1Tlist(", s1ts, ")" )
 //
 | S1Tqual(tok0, s1t1) =>
   fprint!
-  (out, "S1Tqual(", tok0, "; ", s1t1, ")")
+  ( out, "S1Tqual(", tok0, "; ", s1t1, ")" )
 //
 | S1Tnone((*void*)) => fprint!(out, "S1Tnone(", ")")
 //
-) (* end of [fprint_sort1] *)
+(*
+| _ (* else-of-S1T... *) =>
+  fprint!(out, "S1T...(", "...", ")")
+*)
+//
+) (* case *) // end of [fprint_sort1]
+
+(* ****** ****** *)
 
 end // end of [local]
 
@@ -638,6 +658,24 @@ case+ x0.node() of
 ) (* fprint_s0exp *)
 
 end // end of [local]
+
+(* ****** ****** *)
+
+implement
+print_f1unarrow(x0) =
+fprint_f1unarrow(stdout_ref, x0)
+implement
+prerr_f1unarrow(x0) =
+fprint_f1unarrow(stderr_ref, x0)
+implement
+fprint_f1unarrow(out, x0) =
+(
+case+ x0 of
+| F1UNARROWdflt() =>
+  fprint!(out, "F1UNARROWdflt(", ")")
+| F1UNARROWlist(s1es) =>
+  fprint!(out, "F1UNARROWlist(", s1es, ")")
+) (* end of [fprint_f1unarrow] *)
 
 (* ****** ****** *)
 

@@ -238,10 +238,28 @@ T2Plft
 (t2p1) = t2p0.node()
 val s2t0 = t2p0.sort()
 val hst0 = tcomp30_sort(s2t0)
-val h2t1 = tcomp30_type(t2p1)
+val h0t1 = tcomp30_type(t2p1)
 in
-h0typ_make_node(hst0, H0Tlft(h2t1))
-end
+h0typ_make_node(hst0, H0Tlft(h0t1))
+end // end of [auxlft]
+
+(* ****** ****** *)
+
+fun
+auxapp
+(t2p0: t2ype): h0typ =
+let
+val-
+T2Papp
+( t2f0
+, t2ps) = t2p0.node()
+val s2t0 = t2p0.sort()
+val hst0 = tcomp30_sort(s2t0)
+val h0f0 = tcomp30_type(t2f0)
+val h0ts = tcomp30_typelst(t2ps)
+in
+h0typ_make_node(hst0, H0Tapp(h0f0, h0ts))
+end // end of [auxapp]
 
 (* ****** ****** *)
 
@@ -264,9 +282,32 @@ h0ts = tcomp30_typelst(t2ps)
 val h0t1 = tcomp30_type(t2p1)
 //
 in
-  h0typ_make_node
-  (hst0, H0Tfun(npf, h0ts, h0t1))
+h0typ_make_node
+(hst0, H0Tfun(npf, h0ts, h0t1))
 end
+
+(* ****** ****** *)
+
+fun
+aux_tyext
+(t2p0: t2ype): h0typ =
+let
+//
+val-
+T2Ptyext
+( name
+, t2ps) = t2p0.node()
+//
+val s2t0 = t2p0.sort()
+val hst0 = tcomp30_sort(s2t0)
+//
+val
+h0ts = tcomp30_typelst(t2ps)
+//
+in
+h0typ_make_node
+( hst0, H0Ttyext(name, h0ts) )
+end // end of [aux_tyext]
 
 (* ****** ****** *)
 
@@ -291,6 +332,8 @@ in
   (hst0, H0Ttyrec(knd, npf, lhts))
 end // end of [aux_tyrec]
 
+(* ****** ****** *)
+
 in(*in-of-local*)
 
 implement
@@ -299,7 +342,8 @@ tcomp30_type
 //
 (*
 //
-val s2t0 = t2p0.sort()
+val
+s2t0 = t2p0.sort()
 //
 val () =
 println!
@@ -310,12 +354,17 @@ println!
 *)
 //
 (*
-val () =
-println!
-("tcomp30_type: hst0 = ", hst0)
+//
+(*
+HX-2021-01-16:
+The type should have been
+normalized at this point! 
+*)
+val
+t2p0 = t2ype_normize(t2p0)
 *)
 //
-in
+in(*in-of-let*)
 //
 case+
 t2p0.node() of
@@ -329,7 +378,13 @@ T2Pvar _ => auxvar(t2p0)
 T2Plft _ => auxlft(t2p0)
 //
 |
+T2Papp _ => auxapp(t2p0)
+//
+|
 T2Pfun _ => auxfun(t2p0)
+//
+|
+T2Ptyext _ => aux_tyext(t2p0)
 //
 |
 T2Ptyrec _ => aux_tyrec(t2p0)
@@ -339,6 +394,18 @@ T2Ptyrec _ => aux_tyrec(t2p0)
 val s2t0 = t2p0.sort()
 val hst0 = tcomp30_sort(s2t0)
 val data = $UN.cast{ptr}(t2p0)
+//
+(*
+val () =
+println!
+("tcomp30_type: t2p0 = ", t2p0)
+val () =
+println!
+("tcomp30_type: s2t0 = ", s2t0)
+val () =
+println!
+("tcomp30_type: hst0 = ", hst0)
+*)
 //
 in
 h0typ_make_node(hst0, H0Tnone1(data))

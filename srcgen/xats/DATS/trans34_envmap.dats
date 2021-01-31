@@ -6,7 +6,7 @@
 
 (*
 ** ATS/Xanadu - Unleashing the Potential of Types!
-** Copyright (C) 2020 Hongwei Xi, ATS Trustful Software, Inc.
+** Copyright (C) 2021 Hongwei Xi, ATS Trustful Software, Inc.
 ** All rights reserved
 **
 ** ATS is free software;  you can  redistribute it and/or modify it under
@@ -28,21 +28,28 @@
 (* ****** ****** *)
 //
 // Author: Hongwei Xi
-// Start Time: April, 2020
+// Start Time: January, 2021
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
 //
-abstype
-FILEref_tbox <= ptr
-absvwtp
-FILEptr_vtbx(l:addr) <= ptr
-//
-typedef FILEref = FILEref_tbox
-sexpdef FILEptr = FILEptr_vtbx
-vwtpdef FILEptr0 = [l:addr] FILEptr(l)
-vwtpdef FILEptr1 = [l:agtz] FILEptr(l)
+#include
+"share/atspre_staload.hats"
+#staload
+UN = "prelude/SATS/unsafe.sats"
 //
 (* ****** ****** *)
 
-(* end of [xatslib_libc.sats] *)
+#staload "./../SATS/statyp2.sats"
+#staload "./../SATS/staexp2.sats"
+#staload "./../SATS/dynexp2.sats"
+#staload "./../SATS/dynexp3.sats"
+#staload "./../SATS/dynexp4.sats"
+
+(* ****** ****** *)
+
+#staload "./../SATS/trans34.sats"
+
+(* ****** ****** *)
+
+(* end of [xats_trans34_envmap.dats] *)

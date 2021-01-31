@@ -55,7 +55,7 @@ FP0 = "./../SATS/filpath.sats"
 overload fprint with fprint_stamp
 //
 (* ****** ****** *)
-
+//
 #staload "./../SATS/xlabel0.sats"
 //
 #staload "./../SATS/lexing0.sats"
@@ -179,7 +179,7 @@ implement
 fprint_d3pat
   (out, x0) =
 (
-case- x0.node() of
+case+ x0.node() of
 //
 | D3Pnil() =>
   fprint!(out, "D3Pnil()")
@@ -301,15 +301,17 @@ x0.node() of
 | F3ARGnone2(f2a) =>
   fprint!(out, "F3ARGnone2(", f2a, ")")
 | F3ARGnone3(f3a) =>
-  fprint!(out, "F3ARGnone2(", f3a, ")")
+  fprint!(out, "F3ARGnone3(", f3a, ")")
 //
 | F3ARGsome_met(s2es) =>
   fprint!(out, "F3ARGsome_met(", s2es, ")")
 //
-| F3ARGsome_dyn(npf, d3ps) =>
-  fprint!(out, "F3ARGsome_dyn(", npf, "; ", d3ps, ")")
+| F3ARGsome_dyn(npf1, d3ps) =>
+  fprint!
+  (out, "F3ARGsome_dyn(", npf1, "; ", d3ps, ")")
 | F3ARGsome_sta(s2vs, s2ps) =>
-  fprint!(out, "F3ARGsome_sta(", s2vs, "; ", s2ps, ")")
+  fprint!
+  (out, "F3ARGsome_sta(", s2vs, "; ", s2ps, ")")
 //
 ) (* end of [fprint_f3arg] *)
 //
@@ -333,6 +335,8 @@ x0.node() of
   fprint!(out, "D3Ei00(", int, ")")
 | D3Eb00(btf) =>
   fprint!(out, "D3Eb00(", btf, ")")
+| D3Ec00(chr) =>
+  fprint!(out, "D3Ec00(", chr, ")")
 | D3Es00(str) =>
   fprint!(out, "D3Es00(", str, ")")
 //
@@ -614,6 +618,11 @@ x0.node() of
   fprint!
   ( out
   , "D3Eanno(", d3e1, "; ", s2e2, ")")
+//
+| D3Eexist1(s2es, d3e1) =>
+  fprint!
+  ( out
+  , "D3Eexist1(", s2es, "; ", d3e1, ")")
 //
 | D3Elcast(d3e1, lab2) =>
   fprint!

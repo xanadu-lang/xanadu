@@ -260,6 +260,12 @@ x0.node() of
   ( out
   , "H0Tlam(", htvs, "; ", h0t1, ")")
 //
+| H0Ttyext
+  (name, h0ts) =>
+  fprint!
+  ( out
+  , "H0Ttyext(", name, "; ", h0ts, ")")
+//
 | H0Ttyrec
   (knd0, npf1, lhts) =>
   fprint!
@@ -928,14 +934,19 @@ implement
 fprint_hvaldecl
   (out, x0) = let
 //
-val+HVALDECL(rcd) = x0
+val+
+HVALDECL(rcd) = x0
+val pat = rcd.pat
+val def = rcd.def
+val t2p = pat.type()
 //
 in
   fprint!
   ( out
   , "HVALDECL@{"
-  , ", pat=", rcd.pat
-  , ", def=", rcd.def, "}")
+  , ", pat=", pat
+  , ", t2p=", t2p
+  , ", def=", def, "}" )
 end // end of [fprint_hvaldecl]
 //
 (* ****** ****** *)
@@ -959,7 +970,7 @@ in
   , "HVARDECL@{"
   , ", hdv=", rcd.hdv
   , ", wth=", rcd.wth
-  , ", ini=", rcd.ini, "}")
+  , ", ini=", rcd.ini, "}" )
 end // end of [fprint_hvardecl]
 //
 (* ****** ****** *)

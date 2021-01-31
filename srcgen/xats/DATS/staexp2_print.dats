@@ -75,6 +75,11 @@ fprint with $LAB.fprint_label
 (* ****** ****** *)
 
 implement
+fprint_val<sort1> = fprint_sort1
+
+(* ****** ****** *)
+
+implement
 fprint_val<sort2> = fprint_sort2
 
 implement
@@ -85,6 +90,13 @@ fprint_val<s2var> = fprint_s2var
 
 implement
 fprint_val<s2txt> = fprint_s2txt
+
+(* ****** ****** *)
+
+implement
+fprint_val<t2ype> = fprint_t2ype
+
+(* ****** ****** *)
 
 implement
 fprint_val<s2exp> = fprint_s2exp
@@ -152,12 +164,29 @@ case+ s2t0 of
   ( out
   , "S2Tapp(", s2t1, "; ", s2ts, ")")
 //
-| S2Tnone0() =>
+|
+S2Tnone0() =>
+(
   fprint!(out, "S2Tnone0(", ")")
-| S2Tnone1(s1tsrc) =>
-  fprint!(out, "S2Tnone1(", s1tsrc, ")")
+)
+|
+S2Tnone1(s1tsrc) =>
+(
+fprintln!(out, "S2Tnone1(", s1tsrc, ")")
+)
 //
-) (* end of [fprint_sort2] *)
+(*
+| _ (* S2T... *) =>
+  fprint!(out, "S2T...(", "...", ")")
+*)
+//
+) where
+{
+val () =
+fprintln!
+( out
+, "fprint_sort2: s2t0 =", $UN.cast{ptr}(s2t0))
+} (* case *) // end of [fprint_sort2]
 
 end // end of [local]
 
@@ -455,6 +484,8 @@ s2e0.node() of
 //
 | S2Eint(i0) =>
   fprint!(out, "S2Eint(", i0, ")")
+| S2Ebtf(b0) =>
+  fprint!(out, "S2Ebtf(", b0, ")")
 | S2Echr(c0) =>
   fprint!(out, "S2Echr(", c0, ")")
 //
@@ -566,6 +597,9 @@ s2e0.node() of
   fprint!
   ( out, "S2Etyrec("
   , knd, "; ", npf, "; ", ls2es, ")")
+//
+| S2Et2ype(t2p1) =>
+  fprint!(out, "S2Et2ype(", t2p1, ")")
 //
 | S2Etyext(tnm1, s2es) =>
   fprint!

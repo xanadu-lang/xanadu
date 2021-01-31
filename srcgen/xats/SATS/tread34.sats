@@ -6,7 +6,7 @@
 
 (*
 ** ATS/Xanadu - Unleashing the Potential of Types!
-** Copyright (C) 2019 Hongwei Xi, ATS Trustful Software, Inc.
+** Copyright (C) 2021 Hongwei Xi, ATS Trustful Software, Inc.
 ** All rights reserved
 **
 ** ATS is free software;  you can  redistribute it and/or modify it under
@@ -28,7 +28,7 @@
 (* ****** ****** *)
 //
 // Author: Hongwei Xi
-// Start Time: September, 2019
+// Start Time: January, 2021
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
@@ -42,101 +42,87 @@
 #staload "./statyp2.sats"
 #staload "./dynexp2.sats"
 #staload "./dynexp3.sats"
+#staload "./dynexp4.sats"
 
 (* ****** ****** *)
 //
 typedef
-treader3x
+treader34
 (a:t@ype) = (a) -> void
 //
 (* ****** ****** *)
 //
-datatype trerr3x =
+datatype trerr34 =
 //
-| TRERR3Xd3pat of (d3pat)
-| TRERR3Xd3exp of (d3exp)
-//
-| TRERR3Xf3arg of (f3arg)
-| TRERR3Xd3ecl of (d3ecl)
-//
-| TRERR3Xd3exp_tcst of (d3exp)
-| TRERR3Xd3exp_tnfd of (d3exp)
-| TRERR3Xd3exp_trec of (d3exp)
-//
-| TRERR3Xd3exp_tapp of (d3exp)
-| TRERR3Xd3exp_timp2f of (d3exp, f3undecl)
+| TRERR34d4pat of (d4pat)
+| TRERR34d4exp of (d4exp)
 //
 typedef
-trerr3xlst = List0(trerr3x)
+trerr34lst = List0(trerr34)
 //
 (* ****** ****** *)
 //
 fun//{}
-trerr3x_add(trerr3x): void
+trerr34_add(trerr34): void
 //
 (* ****** ****** *)
 //
+(*
 fun
-tread3x_package
-  ( p3kg: d3transd ): void
+tread34_package
+  ( p4kg: d4transd ): void
+*)
 //
 (* ****** ****** *)
 //
 fun//{}
-tread3x_d3pat: treader3x(d3pat)
+tread34_d4pat: treader34(d4pat)
 fun//{}
-tread3x_d3patlst: treader3x(d3patlst)
+tread34_d4patlst: treader34(d4patlst)
 //
 (* ****** ****** *)
 //
 fun//{}
-tread3x_d3exp: treader3x(d3exp)
+tread34_d4exp: treader34(d4exp)
 fun//{}
-tread3x_d3explst: treader3x(d3explst)
+tread34_d4explst: treader34(d4explst)
 fun//{}
-tread3x_d3expopt: treader3x(d3expopt)
+tread34_d4expopt: treader34(d4expopt)
 //
 (* ****** ****** *)
 //
 fun//{}
-tread3x_d3gua: treader3x(d3gua)
+tread34_d4ecl: treader34(d4ecl)
 fun//{}
-tread3x_d3gpat: treader3x(d3gpat)
-fun//{}
-tread3x_d3clau: treader3x(d3clau)
-fun//{}
-tread3x_d3gualst: treader3x(d3gualst)
-fun//{}
-tread3x_d3claulst: treader3x(d3claulst)
-//
-(* ****** ****** *)
-//
-fun//{}
-tread3x_d3ecl: treader3x(d3ecl)
-fun//{}
-tread3x_d3eclist: treader3x(d3eclist)
+tread34_d4eclist: treader34(d4eclist)
 //
 (* ****** ****** *)
 
+(*
+(* ****** ****** *)
+
 fun//{}
-tread3x_v3aldecl: treader3x(v3aldecl)
+tread34_v4aldecl: treader34(v4aldecl)
 fun//{}
-tread3x_v3aldeclist: treader3x(v3aldeclist)
+tread34_v4aldeclist: treader34(v4aldeclist)
 
 (* ****** ****** *)
 
 fun//{}
-tread3x_v3ardecl: treader3x(v3ardecl)
+tread34_v4ardecl: treader34(v4ardecl)
 fun//{}
-tread3x_v3ardeclist: treader3x(v3ardeclist)
+tread34_v4ardeclist: treader34(v4ardeclist)
 
 (* ****** ****** *)
 
 fun//{}
-tread3x_f3undecl: treader3x(f3undecl)
+tread34_f4undecl: treader34(f4undecl)
 fun//{}
-tread3x_f3undeclist: treader3x(f3undeclist)
+tread34_f4undeclist: treader34(f4undeclist)
+
+(* ****** ****** *)
+*)
 
 (* ****** ****** *)
 
-(* end of [xats_tread3x.sats] *)
+(* end of [xats_tread34.sats] *)

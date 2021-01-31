@@ -576,29 +576,28 @@ d1exp_node =
 //
 | D1Etry0 of
   ( token(*TRY*)
-  , d1exp(*value*), d1claulst(*clauses*))
+  , d1exp(*value*), d1claulst(*clauses*) )
   // D1Etry0
 //
 | D1Eanno of
   ( d1exp
-  , s1exp(*anno*)) // HX: type-annotation
+  , s1exp(*anno*) ) // HX: type-annotation
 //
 | D1Equal of
   ( token(*qual*)
-  , d1exp(*deid*)) // HX: qualified expression
+  , d1exp(*deid*) ) // HX: qualified expression
+//
+(*
+|
+D1Eexist of // HX-2021-01-14: for
+(s1explstlst, d1exp) // existential introduction
+*)
 //
 | D1Eexname of (g1nam) // HX: for specifying names
+| D1Eexists of // HX-2021-01-14: $exist{..}..{..}
+  (token, d1explst(*D1Esqarglst*), d1exp) // (d1exp)
 //
 // end of [d1exp_node]
-//
-and
-f1unarrow =
-(*
-| F1UNARROWnone of
-  (token(*error*))
-*)
-| F1UNARROWdflt // default
-| F1UNARROWlist of (s1explst)
 //
 (* ****** ****** *)
 //
@@ -623,21 +622,6 @@ d1exp_none(loc: loc_t): d1exp
 fun
 d1exp_make_node
 (loc: loc_t, node: d1exp_node): d1exp
-//
-(* ****** ****** *)
-//
-fun
-print_f1unarrow:
-  print_type(f1unarrow)
-fun
-prerr_f1unarrow:
-  prerr_type(f1unarrow)
-fun
-fprint_f1unarrow: fprint_type(f1unarrow)
-//
-overload print with print_f1unarrow
-overload prerr with prerr_f1unarrow
-overload fprint with fprint_f1unarrow
 //
 (* ****** ****** *)
 //

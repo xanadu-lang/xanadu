@@ -558,27 +558,15 @@ x0.node() of
     fprint!(out, "D1Equal(", tok1, "; ", d1e2, ")")
   )
 //
-| D1Eexname(g1e1) => fprint!(out, "D1Eexname(", g1e1, ")")
+| D1Eexname(g1e1) =>
+  fprint!(out, "D1Eexname(", g1e1, ")")
+//
+| D1Eexists
+  (tok0, sqas, d1e1) =>
+  fprint!
+  (out, "D1Eexists(", tok0, "; ", sqas, "; ", d1e1, ")")
 //
 ) (* end of [fprint_d1exp] *) end // end of [local]
-
-(* ****** ****** *)
-
-implement
-print_f1unarrow(x0) =
-fprint_f1unarrow(stdout_ref, x0)
-implement
-prerr_f1unarrow(x0) =
-fprint_f1unarrow(stderr_ref, x0)
-implement
-fprint_f1unarrow(out, x0) =
-(
-case+ x0 of
-| F1UNARROWdflt() =>
-  fprint!(out, "F1UNARROWdflt(", ")")
-| F1UNARROWlist(s1es) =>
-  fprint!(out, "F1UNARROWlist(", s1es, ")")
-) (* end of [fprint_f1unarrow] *)
 
 (* ****** ****** *)
 

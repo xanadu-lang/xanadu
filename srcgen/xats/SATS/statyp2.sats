@@ -72,6 +72,11 @@ where t2srtlst = List0(t2srt)
 (* ****** ****** *)
 //
 (*
+(*
+HX:
+[t2ype] is 
+declared in staexp2.sats
+*)
 abstbox t2ype_tbox = ptr
 *)
 //
@@ -492,6 +497,12 @@ fun
 t2ypelst_subst_svarlst
 ( t2ps: t2ypelst
 , s2vs: s2varlst, tsub: t2ypelst): t2ypelst
+//
+(* ****** ****** *)
+//
+fun
+s2varlst_epred
+  (s2vs: s2varlst): s2varlst
 //
 (* ****** ****** *)
 //

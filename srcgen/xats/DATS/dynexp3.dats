@@ -49,12 +49,14 @@ LOC = "./../SATS/locinfo.sats"
   typedef loc_t = $LOC.loc_t
 //
 (* ****** ****** *)
-
+//
 #staload "./../SATS/staexp2.sats"
-#staload "./../SATS/dynexp2.sats"
 #staload "./../SATS/statyp2.sats"
+//
+#staload "./../SATS/dynexp2.sats"
+//
 #staload "./../SATS/dynexp3.sats"
-
+//
 (* ****** ****** *)
 
 local
@@ -529,13 +531,20 @@ end // end of [local]
 (* ****** ****** *)
 //
 implement
-d3ecl_none1(d2c0) =
+d3ecl_none0(loc0) =
+(
+  d3ecl_make_node
+  (loc0, D3Cnone0(*void*))
+)
+//
+implement
+d3ecl_none1(d2cl) =
 (
 d3ecl_make_node
-(loc0, D3Cnone1(d2c0))
+(loc0, D3Cnone1(d2cl))
 ) where
 {
-  val loc0 = d2c0.loc((*void*))
+  val loc0 = d2cl.loc((*void*))
 }
 //
 (* ****** ****** *)

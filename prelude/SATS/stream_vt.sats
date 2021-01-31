@@ -199,6 +199,20 @@ stream_vt_concat
 (* ****** ****** *)
 //
 fun
+<a:vt>
+stream_vt_prefixq // xs1 prefix-ofs xs2
+( xs1
+: stream_vt(a), xs2: stream_vt(a) ): bool 
+//
+(* ****** ****** *)
+fun
+<x0:vt>
+stream_vt_fset_at
+( xs: stream_vt(x0)
+, i0: nint, x0: x0): stream_vt(x0)
+(* ****** ****** *)
+//
+fun
 <xs:vt>
 <x0:vt>
 stream_vt_gappend
@@ -426,6 +440,10 @@ cons_vt with strmcon_vt_cons
 #symload append00 with stream_vt_append of 1000
 *)
 //
+(* ****** ****** *)
+
+#symload prefixq with stream_vt_prefixq of 1000
+
 (* ****** ****** *)
 
 #symload concat with stream_vt_concat of 1000

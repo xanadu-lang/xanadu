@@ -1950,12 +1950,68 @@ end // end of [aux_anno]
 
 (* ****** ****** *)
 
+fun
+aux_exist1
+( env0:
+! abstenv
+, d3e0: d3exp): d3exp = let
+//
+val
+loc0 = d3e0.loc()
+val
+t2p0 = d3e0.type()
+//
+#if(__XATSOPT_DEBUG__)
+// (*
+val () =
+println!
+("aux_exist1: d3e0 = ", d3e0)
+val () =
+println!
+("aux_exist1: t2p0 = ", t2p0)
+// *)
+#endif//__XATSOPT_DEBUG__
+//
+val-
+D3Eexist1
+(s2es, d3e1) = d3e0.node()
+//
+val d3e1 =
+trans33_dexp_dntp(env0, d3e1, t2p0)
+//
+in
+d33exp_make_node(loc0, t2p0, D3Eexist1(s2es, d3e1))
+end // end of [aux_exist1]
+
+(* ****** ****** *)
+
 (*
 fun
 aux_tcast
 ( env0:
 ! abstenv
-, d3e0: d3exp): d3exp = let
+, d3e0
+: d3exp ): d3exp = let
+//
+val
+loc0 = d3e0.loc()
+val-
+D3Elcast
+(d3e1, lab2) = d3e0.node()
+in
+  ... ...
+end // end of [aux_lcast]
+*)
+
+(* ****** ****** *)
+
+(*
+fun
+aux_tcast
+( env0:
+! abstenv
+, d3e0
+: d3exp ): d3exp = let
 //
 val
 loc0 = d3e0.loc()
@@ -2004,6 +2060,11 @@ in
 //
 case+
 d3e0.node() of
+//
+| D3Ei00 _ => d3e0
+| D3Eb00 _ => d3e0
+| D3Ec00 _ => d3e0
+| D3Es00 _ => d3e0
 //
 | D3Eint _ => d3e0
 | D3Ebtf _ => d3e0
@@ -2075,20 +2136,22 @@ D3Ecase _ => aux_case(env0, d3e0)
 | D3Elazy _ => aux_lazy(env0, d3e0)
 | D3Ellazy _ => aux_llazy(env0, d3e0)
 //
-| D3Eanno
-  (d3e1, s2e2) => aux_anno(env0, d3e0)
+| D3Eanno _ => aux_anno(env0, d3e0)
 //
-| D3Elcast
-  (d3e1, lab2) =>
-  let // HX: for abstype-handling!
-    val
-    d3e1 =
-    trans33_dexp(env0, d3e1)
-    val
-    de30 =
-    d33exp_proj_up
-    (loc0, env0, d3e1, lab2) in d3e0
-  end // end of [D3Elcast]
+| D3Eexist1 _ => aux_exist1(env0, d3e0)
+//
+|
+D3Elcast
+(d3e1, lab2) =>
+let // HX: for abstype-handling!
+  val
+  d3e1 =
+  trans33_dexp(env0, d3e1)
+  val
+  de30 =
+  d33exp_proj_up
+  (loc0, env0, d3e1, lab2) in d3e0
+end // end of [D3Elcast]
 //
 |
 D3Etcast
@@ -2600,12 +2663,6 @@ aux_fundecl
 , d3cl: d3ecl): d3ecl =
 let
 //
-val-
-D3Cfundecl
-( knd
-, mopt
-, tqas, f3ds) = d3cl.node()
-//
 fun
 auxf3d0
 ( env0:
@@ -2680,12 +2737,18 @@ end
 end
 }
 //
-val f3ds = auxf3ds(env0, f3ds)
-//
 in
 let
 val
 loc0 = d3cl.loc()
+val-
+D3Cfundecl
+( knd
+, mopt
+, tqas, f3ds) = d3cl.node()
+//
+val f3ds = auxf3ds(env0, f3ds)
+//
 in
   d3ecl_make_node
   (loc0, D3Cfundecl(knd, mopt, tqas, f3ds))
@@ -2700,15 +2763,6 @@ aux_valdecl
 ! abstenv
 , d3cl: d3ecl): d3ecl =
 let
-//
-val
-loc0 = d3cl.loc()
-//
-val-
-D3Cvaldecl
-( knd
-, mopt
-, v3ds) = d3cl.node()
 //
 fun
 auxv3d0
@@ -2781,13 +2835,22 @@ end
 } (* end of [auxv3ds] *)
 //
 in
-  let
-  val
-  v3ds = auxv3ds(env0, v3ds)
-  in
-  d3ecl_make_node
-  (loc0, D3Cvaldecl(knd, mopt, v3ds))
-  end
+let
+val
+loc0 = d3cl.loc()
+//
+val-
+D3Cvaldecl
+( knd
+, mopt
+, v3ds) = d3cl.node()
+//
+val
+v3ds = auxv3ds(env0, v3ds)
+in
+d3ecl_make_node
+( loc0, D3Cvaldecl(knd, mopt, v3ds) )
+end
 end // end of [aux_valdecl]
 
 (* ****** ****** *)
@@ -2799,23 +2862,21 @@ aux_vardecl
 , d3cl: d3ecl): d3ecl =
 let
 //
+in
+let
 val
 loc0 = d3cl.loc()
-//
 val-
 D3Cvardecl
 ( knd
 , mopt
 , v3ds) = d3cl.node()
-//
+val
+v3ds = auxv3ds(env0, d3cl, v3ds)
 in
-  let
-  val
-  v3ds = auxv3ds(env0, d3cl, v3ds)
-  in
   d3ecl_make_node
   (loc0, D3Cvardecl(knd, mopt, v3ds))
-  end
+end
 end where
 {
 //

@@ -73,6 +73,8 @@ typedef g1mac = $S1E.g1mac
 //
 typedef s1exp = $S1E.s1exp
 //
+typedef f1unarrow = $S1E.f1unarrow
+//
 (* ****** ****** *)
 //
 #staload
@@ -84,7 +86,6 @@ typedef d1ecl = $D1E.d1ecl
 //
 typedef d1eclist = $D1E.d1eclist
 //
-typedef f1unarrow = $D1E.f1unarrow
 typedef decmodopt = $D1E.decmodopt
 //
 (* ****** ****** *)
@@ -593,6 +594,7 @@ d2pat_node =
 //
 | D2Pi00 of (int) // int
 | D2Pb00 of (bool) // bool
+| D2Pc00 of (char) // char
 | D2Ps00 of string // string
 //
 | D2Pint of (token)
@@ -787,6 +789,7 @@ d2exp_node =
 //
 | D2Ei00 of (int) // int
 | D2Eb00 of (bool) // bool
+| D2Ec00 of (char) // char
 | D2Es00 of string // string
 //
 | D2Eint of (token) // int
@@ -875,7 +878,13 @@ d2exp_node =
 | D2Eanno of
   (d2exp(*applst*), s2exp(*type*))
 //
-| D2Eg1mac of (g1mac) // HX: error!
+|
+D2Eexist1 of
+(s2explst(*wits*), d2exp(*packed*))
+//
+|
+D2Eg1mac of
+(g1mac(*unknown*))// HX: macro error!
 //
 | D2Enone0 of () | D2Enone1 of (d1exp)
 //

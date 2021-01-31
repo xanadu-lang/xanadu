@@ -94,6 +94,12 @@ FS0 = "./../SATS/filsrch.sats"
 #staload "./../SATS/tcomp30.sats"
 //
 (* ****** ****** *)
+//
+#staload "./../SATS/dynexp4.sats"
+#staload "./../SATS/trans34.sats"
+#staload "./../SATS/tread34.sats"
+//
+(* ****** ****** *)
 #staload "./../SATS/xatsopt.sats"
 (* ****** ****** *)
 //
@@ -190,8 +196,11 @@ end // end of [local]
 #dynload "./lexing0_kword.dats"
 #dynload "./lexing0_util0.dats"
 //
+(* ****** ****** *)
+//
 #dynload "./staexp0.dats"
 #dynload "./dynexp0.dats"
+//
 #dynload "./staexp0_print.dats"
 #dynload "./dynexp0_print.dats"
 //
@@ -206,8 +215,12 @@ end // end of [local]
 #dynload "./synread_staexp.dats"
 #dynload "./synread_dynexp.dats"
 //
+(* ****** ****** *)
+//
 #dynload "./staexp1.dats"
 #dynload "./dynexp1.dats"
+//
+#dynload "./effect0.dats"
 //
 #dynload "./staexp1_print.dats"
 #dynload "./dynexp1_print.dats"
@@ -220,13 +233,15 @@ end // end of [local]
 #dynload "./tread01_staexp.dats"
 #dynload "./tread01_dynexp.dats"
 //
-#dynload "./effect0.dats"
+(* ****** ****** *)
 //
 #dynload "./staexp2.dats"
 #dynload "./statyp2.dats"
 #dynload "./dynexp2.dats"
+#dynload "./nmspace.dats"
 //
 #dynload "./staexp2_init0.dats"
+#dynload "./statyp2_init0.dats"
 //
 #dynload "./staexp2_util1.dats"
 #dynload "./staexp2_util2.dats"
@@ -246,8 +261,6 @@ end // end of [local]
 //
 #dynload "./dynexp2_print.dats"
 //
-#dynload "./nmspace.dats"
-//
 #dynload "./gmacro1_define.dats"
 #dynload "./dmacro2_macdef.dats"
 //
@@ -258,6 +271,8 @@ end // end of [local]
 //
 #dynload "./tread12_staexp.dats"
 #dynload "./tread12_dynexp.dats"
+//
+(* ****** ****** *)
 //
 #dynload "./dynexp3.dats"
 //
@@ -280,6 +295,8 @@ end // end of [local]
 #dynload "./trans3x_dynexp.dats"
 #dynload "./tread3x_dynexp.dats"
 //
+(* ****** ****** *)
+//
 #dynload "./intrep0.dats"
 #dynload "./intrep0_print.dats"
 #dynload "./intrep0_jsoniz.dats"
@@ -290,7 +307,24 @@ end // end of [local]
 #dynload "./tcomp30_statyp.dats"
 #dynload "./tcomp30_dynexp.dats"
 //
-#dynload "./xatsopt_util0.dats"
+(* ****** ****** *)
+//
+#dynload "./dynexp4.dats"
+#dynload "./dynexp4_print.dats"
+#dynload "./dynexp4_util0.dats"
+//
+#dynload "./trans34_util1.dats"
+#dynload "./trans34_util2.dats"
+#dynload "./trans34_envmap.dats"
+#dynload "./trans34_dynexp.dats"
+#dynload "./tread34_dynexp.dats"
+//
+(* ****** ****** *)
+//
+(*
+// #define ATS_DYNLOADFLAG 0
+// #dynload "./xatsopt_util0.dats"
+*)
 //
 (* ****** ****** *)
 implement

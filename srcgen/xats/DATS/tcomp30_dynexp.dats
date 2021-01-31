@@ -482,6 +482,7 @@ implement
 tcomp30_dpat
   (d3p0) = let
 //
+#if(__XATSOPT_DEBUG__)
 (*
 val
 loc0 = d3p0.loc()
@@ -489,11 +490,15 @@ val
 t2p0 = d3p0.type()
 val () =
 println!
+("tcomp30_dpat: loc0 = ", loc0)
+val () =
+println!
 ("tcomp30_dpat: d3p0 = ", d3p0)
 val () =
 println!
 ("tcomp30_dpat: t2p0 = ", t2p0)
 *)
+#endif//__XATSOPT_DEBUG__
 //
 in(*in-of-let*)
 //
@@ -1577,10 +1582,14 @@ D3Elam
 ( knd
 , f3as, res1
 , arrw, body) = d3e0.node()
+//
 val
-hfas = tcomp30_farglst(f3as)
-val body = tcomp30_dexp(body)
-}
+hfas =
+tcomp30_farglst(f3as)
+val
+body = tcomp30_dexp(body)
+//
+} (* where *)
 //
 in
   h0exp_make_node(loc0, h0t0, hend)
@@ -1931,6 +1940,9 @@ val
 t2p0 = d3e0.type()
 val () =
 println!
+("tcomp30_dexp: loc0 = ", loc0)
+val () =
+println!
 ("tcomp30_dexp: d3e0 = ", d3e0)
 val () =
 println!
@@ -2041,6 +2053,10 @@ D3Eassgn _ => aux_assgn(d3e0)
 |
 D3Eanno
 (d3e1, _) => tcomp30_dexp(d3e1)
+|
+D3Eexist1
+(_, d3e1) => tcomp30_dexp(d3e1)
+//
 |
 D3Enone0 _ =>
 let

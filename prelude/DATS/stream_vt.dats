@@ -581,6 +581,88 @@ strmcon_vt_cons(x0, auxmain1(xss, xs1))
 (* ****** ****** *)
 //
 impltmp
+<a>(*tmp*)
+stream_vt_prefixq
+  (xs1, xs2) =
+(
+  auxloop(xs1, xs2)
+) where
+{
+fun
+auxloop
+( xs1
+: stream_vt(a)
+, xs2
+: stream_vt(a)): bool =
+(
+case+ !xs1 of
+| ~
+strmcon_vt_nil() =>
+(g_free(xs2); true)
+| ~
+strmcon_vt_cons(x1, xs1) =>
+(
+  case+ !xs2 of
+  | ~
+  strmcon_vt_nil() =>
+  (g_free(x1); g_free(xs1); false)
+  | ~
+  strmcon_vt_cons(x2, xs2) =>
+  let
+    val
+    sgn = gl_cmp00<a>(x1, x2)
+  in
+    if
+    (sgn = 0)
+    then auxloop(xs1, xs2)
+    else
+    (g_free(xs1); g_free(xs2); false)
+  end // end of [let]
+)
+) (* end of [auxloop] *)
+} (*where*) // end of [stream_vt_prefixq]
+
+(* ****** ****** *)
+
+impltmp
+<x0>(*tmp*)
+stream_vt_fset_at
+  (xs, i0, x0) =
+(
+auxmain
+(xs, 0(*i1*), x0)
+) where
+{
+fun
+auxmain
+( xs
+: stream_vt(x0)
+, i1: nint, x0: x0) =
+$llazy
+(
+free(xs); free(x0);
+case+ !xs of
+| ~
+strmcon_vt_nil() =>
+strmcon_vt_nil()
+| ~
+strmcon_vt_cons(x1, xs) =>
+if
+(i1 < i0)
+then
+strmcon_vt_cons
+(x1, auxmain(xs, i1+1, x0))
+else
+let
+val () =
+free(x1) in strmcon_vt_cons(x0, xs)
+end
+)
+} (* end of [stream_vt_fset_at] *)
+
+(* ****** ****** *)
+//
+impltmp
 <xs><x0>
 stream_vt_gappend
   (xs1, xs2) = let
