@@ -1335,6 +1335,47 @@ gseq_listize<xs><x0>( xs2 )
 //
 (* ****** ****** *)
 //
+impltmp
+<xs><x0>
+gseq_group
+(  xs  ) =
+(
+(
+stream_vt_map0<r0>(xz)
+) where
+{
+impltmp
+map0$fopr<r0><xs> =
+gseq_unlist_vt<xs><x0>
+}
+) where
+{
+//
+vwtpdef r0 = list_vt(x0)
+//
+val xz =
+gseq_group_list<xs><x0>(xs)
+} (* end of [gseq_group] *)
+//
+impltmp
+<xs><x0>
+gseq_group_list
+(  xs  ) =
+let
+val xs =
+gseq_streamize<xs><x0>(xs)
+in
+(
+stream_vt_group_list<x0>(xs)
+) where
+{
+impltmp
+group0$test<x0> = group$test<x0>
+}
+end // end of [gseq_group_list]
+//
+(* ****** ****** *)
+//
 // For gseq-i-operations
 //
 (* ****** ****** *)
