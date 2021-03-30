@@ -1,16 +1,22 @@
 ######
 #
-# For some testing xatsopt
+# For testing xatsopt
 #
 ######
-
-MAKE=make
-
+all::
 ######
-
-all:: ; \
-$(MAKE) -f Makefile_prelude
-all:: ; \
-$(MAKE) -f Makefile_xatslib
-
+MAKE=make
+######
+XATSOPT=./../xatsopt
+######
+all:: \
+prelude
+prelude:: ; \
+$(MAKE) XATSOPT=$(XATSOPT) -f Makefile_prelude > /dev/null
+######
+all:: \
+xatslib
+xatslib:: ; \
+$(MAKE) XATSOPT=$(XATSOPT) -f Makefile_xatslib > /dev/null
+######
 ###### end of [Makefile_test] ######
