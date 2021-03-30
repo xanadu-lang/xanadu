@@ -313,6 +313,9 @@ end // end of [local]
 #dynload "./dynexp4_print.dats"
 #dynload "./dynexp4_util0.dats"
 //
+#dynload "./cstrnt0.dats"
+#dynload "./cstrnt0_print.dats"
+//
 #dynload "./trans34_util1.dats"
 #dynload "./trans34_util2.dats"
 #dynload "./trans34_envmap.dats"
@@ -968,8 +971,13 @@ println!("//process_fpath: d3cs = ", d3cs)
 //
 (* ****** ****** *)
 //
+(*
 val
 h0pkg = trs03cmp30_package(p0kg)
+*)
+//
+val
+h0pkg = trs04cmp30_package(p0kg)
 //
 (* ****** ****** *)
 //

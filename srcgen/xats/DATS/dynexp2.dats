@@ -273,12 +273,49 @@ $STM.eq_stamp_stamp(x1.stamp(), x2.stamp())
 local
 
 absimpl
+d2typ_tbox = $rec{
+  d2typ_loc= loc_t
+, d2typ_node= d2typ_node
+}
+
+in (* in-of-local *)
+
+(* ****** ****** *)
+
+implement
+d2typ_get_loc(x0) = x0.d2typ_loc
+implement
+d2typ_get_node(x0) = x0.d2typ_node
+
+(* ****** ****** *)
+
+implement
+d2typ_make_node
+(loc, node) = $rec
+{
+  d2typ_loc= loc, d2typ_node= node
+} (* end of [d2typ_make_node] *)
+
+(* ****** ****** *)
+
+end // end of [local]
+
+(* ****** ****** *)
+
+local
+
+absimpl
 d2pat_tbox = $rec
-{ d2pat_loc= loc_t
-, d2pat_node= d2pat_node
+{
+//
+d2pat_loc= loc_t
+,
+d2pat_node= d2pat_node
+//
 (*
 , d2pat_type= t2ype_tbox
 *)
+//
 } (* end of [absimpl] *)
 
 in (* in-of-local *)
@@ -293,12 +330,15 @@ d2pat_get_node
 implement
 d2pat_make_node
   (loc0, node) = $rec
-{ d2pat_loc= loc0
+{
+  d2pat_loc= loc0
 , d2pat_node= node
+//
 (*
 , d2pat_type= the_t2ype_none
 *)
-} (* d2pat_make_node *)
+//
+} (*$rec*) // d2pat_make_node
 //
 end // end of [local]
 
@@ -848,7 +888,7 @@ d2p0.node() of
 | _ (*else*) => the_s2exp_none0
 )
 implement
-d2patlst_get_sexps
+d2patlst_get_s2es
   (d2ps) =
 list_vt2t(d2ps) where
 {
@@ -860,7 +900,7 @@ list_map<d2pat><s2exp>
 implement
 list_map$fopr<d2pat><s2exp> = d2pat_get_sexp
 }
-} (* end of [d2patlst_get_sexps] *)
+} (* end of [d2patlst_get_s2es] *)
 
 (* ****** ****** *)
 
@@ -925,7 +965,7 @@ case+ arg of
       | list_nil() => FC2fun((*void*))
       | list_cons _ => FC2cloref(*void*)
       ) : funclo2 // end-of-val
-      val s2es = d2patlst_get_sexps(d2ps)
+      val s2es = d2patlst_get_s2es(d2ps)
     in
       s2exp_fun_full(fc2, npf, s2es, res)
     end
@@ -936,7 +976,7 @@ case+ arg of
   end
 )
 //
-} (* end of [f2undecl_get_s2exp] *)
+} (* end of [f2undecl_get_sexp] *)
 
 (* ****** ****** *)
 

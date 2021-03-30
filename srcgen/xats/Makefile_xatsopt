@@ -78,6 +78,7 @@ trans3x.sats \
 tread3x.sats \
 intrep0.sats \
 tcomp30.sats \
+cstrnt0.sats \
 dynexp4.sats \
 trans34.sats \
 tread34.sats \
@@ -170,6 +171,8 @@ intrep0_dynexp.dats \
 tcomp30_util0.dats \
 tcomp30_statyp.dats \
 tcomp30_dynexp.dats \
+cstrnt0.dats \
+cstrnt0_print.dats \
 dynexp4.dats \
 dynexp4_print.dats \
 dynexp4_util0.dats \

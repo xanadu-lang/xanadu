@@ -28,68 +28,79 @@
 (* ****** ****** *)
 //
 // Author: Hongwei Xi
-// Start Time: January, 2021
+// Start Time: March 27, 2021
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
-//
-#include
-"share/atspre_staload.hats"
-#staload
-UN = "prelude/SATS/unsafe.sats"
-//
+#staload "./xbasics.sats"
+(* ****** ****** *)
+#staload "./locinfo.sats"
 (* ****** ****** *)
 
-#staload "./../SATS/statyp2.sats"
-#staload "./../SATS/staexp2.sats"
-#staload "./../SATS/dynexp2.sats"
-#staload "./../SATS/dynexp3.sats"
-#staload "./../SATS/dynexp4.sats"
-
-(* ****** ****** *)
-
-#staload "./../SATS/trans34.sats"
+#staload S2E = "./staexp2.sats"
+#staload S2T = "./statyp2.sats"
 
 (* ****** ****** *)
 //
-datavtype
-tr34env =
-TR34ENV of tr34stk
+typedef s2exp = $S2E.s2exp
+typedef t2ype = $S2T.t2ype
 //
-and
-tr34stk =
+(* ****** ****** *)
 //
-| tr34stk_nil of ()
+abstbox c0str_tbox = ptr
+typedef c0str = c0str_tbox
+typedef c0strlst = List0(c0str)
+typedef c0stropt = Option(c0str)
+typedef c0strlstopt = Option(c0strlst)
+//
+(* ****** ****** *)
+//
+datatype
+c0str_node =
+//
+| C0Siequ of (s2exp, s2exp)
+//
+| C0Stequ of (s2exp, s2exp)
+| C0Stlte of (s2exp, s2exp)
+//
+(* ****** ****** *)
+//
+fun
+c0str_get_loc
+( c0s: c0str ): loc_t
+fun
+c0str_get_node
+( c0s: c0str ): c0str_node
+//
+overload .loc with c0str_get_loc
+overload .node with c0str_get_node
+//
+fun
+print_c0str : print_type(c0str)
+fun
+prerr_c0str : prerr_type(c0str)
+fun
+fprint_c0str : fprint_type(c0str)
+//
+overload print with print_c0str
+overload prerr with prerr_c0str
+overload fprint with fprint_c0str
+//
+fun
+c0str_get_store
+( c0s: c0str ): c0strlstopt
+fun
+c0str_make_node
+( loc0
+: loc_t, node: c0str_node): c0str
+//
+(* ****** ****** *)
+//
+fun
+c0str_make_tcast
+( loc0: loc_t
+, s2e1: s2exp, s2e2: s2exp): c0str
 //
 (* ****** ****** *)
 
-absimpl
-tr34env_vtype = tr34env
-
-(* ****** ****** *)
-
-implement
-tr34env_make_nil() =
-TR34ENV(tr34stk_nil(*void*))
-
-(* ****** ****** *)
-//
-implement
-tr34env_free_nil
-  (env0) =
-(
-let
-val+
-~TR34ENV(stk0) = env0
-in
-case+ stk0 of
-//
-|
-~tr34stk_nil((*void*)) => ()
-//
-end
-) (* end of [tr34env_free_nil] *)
-//
-(* ****** ****** *)
-
-(* end of [xats_trans34_envmap.dats] *)
+(* end of [xats_cstrnt0.sats] *)

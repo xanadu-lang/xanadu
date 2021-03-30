@@ -82,6 +82,8 @@ fprint_val<sort1> = fprint_sort1
 implement
 fprint_val<sort2> = fprint_sort2
 
+(* ****** ****** *)
+
 implement
 fprint_val<s2cst> = fprint_s2cst
 
@@ -97,20 +99,46 @@ implement
 fprint_val<t2ype> = fprint_t2ype
 
 (* ****** ****** *)
-
+//
 implement
 fprint_val<s2exp> = fprint_s2exp
+//
+(* ****** ****** *)
+//
+implement
+fprint_val<s2itm> = fprint_s2itm
+//
+(* ****** ****** *)
+//
 (*
 implement
 fprint_val<s2eff> = fprint_s2eff
 *)
 implement
 fprint_val<labs2exp> = fprint_labs2exp
-
+//
 (* ****** ****** *)
 
 implement
-fprint_val<s2itm> = fprint_s2itm
+print_kxtv2(x0) =
+fprint_kxtv2(stdout_ref, x0) 
+implement
+prerr_kxtv2(x0) =
+fprint_kxtv2(stderr_ref, x0) 
+
+implement
+fprint_kxtv2(out, x0) =
+(
+case+ x0 of
+|
+KXTV2non() => fprint!(out, "KXTV2non")
+|
+KXTV2tmp() => fprint!(out, "KXTV2tmp")
+|
+KXTV2uni() => fprint!(out, "KXTV2uni")
+|
+KXTV2join() => fprint!(out, "KXTV2join")
+) (* end of [fprint_kxtv2] *)
 
 (* ****** ****** *)
 
@@ -123,14 +151,16 @@ fprint_sort2(stderr_ref, x0)
 
 local
 
+(*
 implement
 fprint_val<sort2> = fprint_sort2
+*)
 
 in (* in-of-local *)
 
 implement
 fprint_sort2
-  (out, s2t0) =
+( out, s2t0 ) =
 (
 case+ s2t0 of
 //
@@ -182,10 +212,12 @@ fprintln!(out, "S2Tnone1(", s1tsrc, ")")
 //
 ) where
 {
+(*
 val () =
 fprintln!
 ( out
-, "fprint_sort2: s2t0 =", $UN.cast{ptr}(s2t0))
+, "fprint_sort2: s2t0 = ", $UN.cast{ptr}(s2t0))
+*)
 } (* case *) // end of [fprint_sort2]
 
 end // end of [local]
@@ -194,17 +226,21 @@ end // end of [local]
 
 implement
 fprint_t2bas
-  (out, s2tb) =
+( out, s2tb ) =
 (
 case+ s2tb of
-| T2BASpre(sym) =>
-  fprint!(out, "T2BASpre(", sym, ")")
-| T2BASabs(abs) =>
-  fprint!(out, "T2BASabs(", abs, ")")
-| T2BASdat(dat) =>
-  fprint!(out, "T2BASdat(", dat, ")")
-| T2BASimp(knd, sym) =>
-  fprint!(out, "T2BASimp(", knd, "; ", sym, ")")
+|
+T2BASpre(sym) =>
+fprint!(out, "T2BASpre(", sym, ")")
+|
+T2BASabs(abs) =>
+fprint!(out, "T2BASabs(", abs, ")")
+|
+T2BASdat(dat) =>
+fprint!(out, "T2BASdat(", dat, ")")
+|
+T2BASimp(knd, sym) =>
+fprint!(out, "T2BASimp(", knd, "; ", sym, ")")
 )
 
 (* ****** ****** *)
@@ -264,9 +300,11 @@ fprint!(out, x0.sym())
 val () =
 fprint!
 (out, "(", x0.stamp(), ")")
+//
 (*
 val () =
-fprint!(out, ": ", x0.sort())
+fprint!
+( out, "(", x0.sort(), ")" )
 *)
 //
 } (* end of [fprint_s2cst] *)
@@ -288,16 +326,18 @@ fprint_s2var
 val () =
 fprint!(out, x0.sym())
 val () =
-fprint!(out, "(", x0.stamp(), ")")
+fprint!
+(out, "(", x0.stamp(), ")")
 (*
 val () =
-fprint!(out, ":(", x0.sort(), ")")
+fprint!
+( out, "(", x0.sort(), ")" )
 *)
 //
 } (* end of [fprint_s2var] *)
 //
 (* ****** ****** *)
-
+//
 (*
 implement
 print_s2eff(x0) =
@@ -306,12 +346,13 @@ implement
 prerr_s2eff(x0) =
 fprint_s2eff(stderr_ref, x0) 
 *)
+//
 (*
 local
-
+//
 implement
 fprint_val<s2eff> = fprint_s2eff
-
+//
 in (* in-of-local *)
 //
 implement
@@ -333,7 +374,7 @@ case+ s2f0 of
 //
 end // end of [local]
 *)
-
+//
 (* ****** ****** *)
 //
 implement
@@ -353,15 +394,19 @@ fprint_abstdf2
   (out, x0) =
 (
 case+ x0 of
-| ABSTDF2none() =>
-  fprint!(out, "ABSTDF2none(", ")")
-| ABSTDF2some() =>
-  fprint!(out, "ABSTDF2some(", ")")
-| ABSTDF2lteq(t2p) =>
-  fprint!(out, "ABSTDF2lteq(", t2p, ")")
-| ABSTDF2eqeq(s2e, t2p) =>
-  fprint!
-  (out, "ABSTDF2eqeq(", s2e, "; ", t2p, ")")
+|
+ABSTDF2none() =>
+fprint!(out, "ABSTDF2none(", ")")
+|
+ABSTDF2some() =>
+fprint!(out, "ABSTDF2some(", ")")
+|
+ABSTDF2lteq(t2p) =>
+fprint!(out, "ABSTDF2lteq(", t2p, ")")
+|
+ABSTDF2eqeq(s2e, t2p) =>
+fprint!
+(out, "ABSTDF2eqeq(", s2e, "; ", t2p, ")")
 )
 //
 (* ****** ****** *)
@@ -383,14 +428,17 @@ fprint_effs2expopt
   (out, x0) =
 (
 case+ x0 of
-| EFFS2EXPnone() =>
-  fprint!(out, "EFFS2EXPnone(", ")")
-| EFFS2EXPsome(s2e) =>
-  fprint!(out, "EFFS2EXPsome(", s2e, ")")
+|
+EFFS2EXPnone() =>
+fprint!(out, "EFFS2EXPnone(", ")")
+|
+EFFS2EXPsome(s2e) =>
+fprint!(out, "EFFS2EXPsome(", s2e, ")")
 (*
-| EFFS2EXPsome(s2f, s2e) =>
-  fprint!
-  (out, "EFFS2EXPsome(", s2f, "; ", s2e, ")")
+|
+EFFS2EXPsome(s2f, s2e) =>
+fprint!
+(out, "EFFS2EXPsome(", s2f, "; ", s2e, ")")
 *)
 ) (* end of [fprint_effs2expopt] *)
 
@@ -415,13 +463,16 @@ fprint_s2txt
   (out, s2tx) =
 (
 case+ s2tx of
-| S2TXTsrt(s2t) =>
-  fprint!(out, "S2TXTsrt(", s2t, ")")
-| S2TXTsub(s2v, s2ps) =>
-  fprint!(out, "S2TXTsub(", s2v, "; ", s2ps, ")")
+|
+S2TXTsrt(s2t) =>
+fprint!(out, "S2TXTsrt(", s2t, ")")
+|
+S2TXTsub(s2v, s2ps) =>
+fprint!(out, "S2TXTsub(", s2v, "; ", s2ps, ")")
 //
 (*
-| S2TXTerr(loc0) => fprint!(out, "S2TXTerr(...)")
+|
+S2TXTerr(loc0) => fprint!(out, "S2TXTerr(...)")
 *)
 //
 ) (* end of [fprint_s2txt] *)
@@ -484,13 +535,18 @@ s2e0.node() of
 //
 | S2Eint(i0) =>
   fprint!(out, "S2Eint(", i0, ")")
+(*
+| S2Eirp(rep) =>
+  fprint!(out, "S2Eirp(", rep, ")")
+*)
+//
 | S2Ebtf(b0) =>
   fprint!(out, "S2Ebtf(", b0, ")")
 | S2Echr(c0) =>
   fprint!(out, "S2Echr(", c0, ")")
 //
-| S2Estr(s0) =>
-  fprint!(out, "S2Estr(", s0, ")")
+| S2Estr(str) =>
+  fprint!(out, "S2Estr(", str, ")")
 //
 | S2Ecst(s2c) =>
   fprint!(out, "S2Ecst(", s2c, ")")
@@ -510,9 +566,12 @@ s2e0.node() of
 (*
     val s2e = "..."
 *)
-    val s2e = s2xtv_get_sexp(xtv)
+  val stm = xtv.stamp()
+  val s2e = s2xtv_get_sexp(xtv)
   in
-    fprint!(out, "S2Extv(", s2e, ")")
+  fprint!
+  ( out
+  , "S2Extv(", stm, ")[", s2e, "]")
   end
 //
 | S2Eapp

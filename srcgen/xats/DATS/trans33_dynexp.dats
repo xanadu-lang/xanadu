@@ -400,6 +400,8 @@ end // end of [aux_tuple]
 
 in (* in-of-local *)
 
+(* ****** ****** *)
+
 implement
 trans33_dpat
 (env0, d3p0) = let
@@ -422,10 +424,18 @@ d3p0.node() of
 //
 | D3Pvar _ => d3p0
 //
+| D3Pi00 _ => d3p0
+| D3Pb00 _ => d3p0
+| D3Ps00 _ => d3p0
+//
 | D3Pint _ => d3p0
 | D3Pbtf _ => d3p0
 | D3Pchr _ => d3p0
+| D3Pflt _ => d3p0
 | D3Pstr _ => d3p0
+//
+| D3Pcon1 _ => d3p0
+| D3Pcon2 _ => d3p0
 //
 | D3Pbang _ =>
   auxbang(env0, d3p0)
@@ -437,6 +447,11 @@ d3p0.node() of
 | D3Psym0 _ =>
   auxsym0(env0, d3p0)
 //
+| D3Psap0 _ => (d3p0)
+| D3Psap1 _ => (d3p0)
+//
+| D3Pdap1 _ => (d3p0)
+//
 | D3Pdapp _ =>
   auxdapp(env0, d3p0)
 //
@@ -444,12 +459,23 @@ d3p0.node() of
   aux_tuple(env0, d3p0)
 //
 |
+D3Panno(d3p1, s2e2) =>
+(
+d3pat_anno(d3p1, s2e2)
+) where
+{
+val
+d3p1 = 
+trans33_dpat(env0, d3p1)
+} (* D3Panno *)
+//
+|
 D3Ptcast(d3p1, t2p2) =>
 let
-  val
-  d3p1 = // HX: abstype-handling!
-  trans33_dpat(env0, d3p1) in d3p1
-end where
+val
+d3p1 = // HX: abstype-handling!
+trans33_dpat
+(env0, d3p1) in d3p1 end where
 {
 val
 loc1 = d3p1.loc()
@@ -469,12 +495,20 @@ println!
 ("trans33_dpat: D3Ptcast: t2p2 = ", t2p2)
 } (* where *) // end of [D3Ptcast]
 //
-| D3Pnone0 _ => d3p0 // HX: interp
-| D3Pnone1 _ => d3p0 // HX: errmsg
+|
+D3Pnone0 _ => d3p0 // HX: interp
+|
+D3Pnone1 _ => d3p0 // HX: errmsg
+|
+D3Pnone2 _ => d3p0 // HX: errmsg
 //
-| _ (* rest-of-d3pat *) => d3p0
+(*
+| _ (* rest-of-d3pat *) => (d3p0)
+*)
 //
-end // end of [trans33_dpat]
+end (*end*) // end of [trans33_dpat]
+
+(* ****** ****** *)
 
 end // end of [local]
 
@@ -501,10 +535,12 @@ val env0 =
 $UN.castvwtp0{abstenv}(env0)
 val d3p0 = trans33_dpat(env0, d3p0)
 in
-let prval () = $UN.cast2void(env0) in d3p0 end
+let
+prval () = $UN.cast2void(env0) in d3p0
 end
+end // end of [let]
 }
-end // end of [trans33_dpatlst]
+end (*let*) // end of [trans33_dpatlst]
 
 (* ****** ****** *)
 //
@@ -605,17 +641,15 @@ d33exp_if0_up
 , d3e1, d3e2, opt3) =
 let
 //
-val d3e1 =
-d33exp_dntp
-( env0
-, d3e1, the_t2ype_bool)
-//
 val tres =
 (
 case+ opt3 of
-| None _ => the_t2ype_void
-| Some _ => t2ype_new(loc0)
-) : t2ype // end of [val]
+|
+None _ =>
+the_t2ype_void
+|
+Some _ =>
+t2ype_new(loc0)): t2ype
 //
 val d3e2 =
 d33exp_dntp(env0, d3e2, tres)
@@ -639,6 +673,47 @@ end // end of [d33exp_if0_up]
 //
 (* ****** ****** *)
 //
+implement
+d33exp_if1_up
+( loc0
+, env0
+, d3e1
+, d3e2, opt3, tinv) =
+let
+//
+val tres =
+(
+case+ opt3 of
+|
+None _ =>
+the_t2ype_void
+|
+Some _ =>
+t2ype_new(loc0)): t2ype
+//
+val d3e2 =
+d33exp_dntp(env0, d3e2, tres)
+//
+val opt3 =
+(
+case+ opt3 of
+|
+None() => None()
+|
+Some(d3e3) =>
+Some
+(d33exp_dntp(env0, d3e3, tres))
+) : d3expopt // end of [val]
+//
+in
+d33exp_make_node
+( loc0
+, tres
+, D3Eif1(d3e1, d3e2, opt3, tinv))
+end // end of [d33exp_if1_up]
+//
+(* ****** ****** *)
+//
 fun
 d33exp_seqn_up
 ( loc0
@@ -652,7 +727,7 @@ d33exp_seqn_up
 )
 //
 (* ****** ****** *)
-
+//
 fun
 d33exp_tuple_up
 ( loc0
@@ -681,6 +756,7 @@ d33exp_lam_up
   d23exp_lam_up
   (loc0, knd0, f3as, res0, arrw, body)
 )
+//
 fun
 d33exp_fix_up
 ( loc0
@@ -1513,7 +1589,7 @@ d33exp_assgn_up(loc0, env0, d3e1, d3e2)
 end // end of [aux_assgn]
 
 (* ****** ****** *)
-
+//
 fun
 aux_if0
 ( env0:
@@ -1527,18 +1603,23 @@ D3Eif0
 ( d3e1
 , d3e2, opt3) = d3e0.node()
 //
-val d3e1 = trans33_dexp(env0, d3e1)
-val d3e2 = trans33_dexp(env0, d3e2)
-val opt3 = trans33_dexpopt(env0, opt3)
+val
+d3e1 =
+trans33_dexp_dntp
+(env0, d3e1, the_t2ype_bool)
+//
+val
+d3e2 = trans33_dexp(env0, d3e2)
+val
+opt3 = trans33_dexpopt(env0, opt3)
 //
 in
-d33exp_if0_up(loc0, env0, d3e1, d3e2, opt3)
+  d33exp_if0_up
+  ( loc0, env0, d3e1, d3e2, opt3 )
 end (* end of [aux_if0] *)
-
-(* ****** ****** *)
-
+//
 fun
-aux_case
+aux_if1
 ( env0:
 ! abstenv
 , d3e0: d3exp): d3exp = let
@@ -1546,7 +1627,38 @@ aux_case
 val
 loc0 = d3e0.loc()
 val-
-D3Ecase
+D3Eif1
+( d3e1
+, d3e2
+, opt3, tinv) = d3e0.node()
+//
+val
+d3e1 =
+trans33_dexp_dntp
+(env0, d3e1, the_t2ype_bool)
+//
+val
+d3e2 = trans33_dexp(env0, d3e2)
+val
+opt3 = trans33_dexpopt(env0, opt3)
+//
+in
+d33exp_if1_up
+(loc0, env0, d3e1, d3e2, opt3, tinv)
+end (* end of [aux_if1] *)
+//
+(* ****** ****** *)
+//
+fun
+aux_cas0
+( env0:
+! abstenv
+, d3e0: d3exp): d3exp = let
+//
+val
+loc0 = d3e0.loc()
+val-
+D3Ecas0
 ( knd0
 , d3e1, dcls) = d3e0.node()
 //
@@ -1557,9 +1669,34 @@ trans33_dclaulst_dntp(env0, dcls, tres)
 //
 in
 d33exp_make_node
-(loc0, tres, D3Ecase(knd0, d3e1, dcls))
-end (* end of [aux_case] *)
-
+(loc0, tres, D3Ecas0(knd0, d3e1, dcls))
+end (* end of [aux_cas0] *)
+//
+fun
+aux_cas1
+( env0:
+! abstenv
+, d3e0: d3exp): d3exp = let
+//
+val
+loc0 = d3e0.loc()
+val-
+D3Ecas1
+( knd0
+, d3e1
+, dcls, tinv) = d3e0.node()
+//
+val tres = t2ype_new(loc0)
+val d3e1 = trans33_dexp(env0, d3e1)
+val dcls =
+trans33_dclaulst_dntp(env0, dcls, tres)
+//
+in
+d33exp_make_node
+( loc0
+, tres, D3Ecas1(knd0, d3e1, dcls, tinv))
+end (* end of [aux_cas1] *)
+//
 (* ****** ****** *)
 
 fun
@@ -2111,9 +2248,10 @@ D3Ewhere _ => aux_where(env0, d3e0)
 D3Eassgn _ => aux_assgn(env0, d3e0)
 //
 | D3Eif0 _ => aux_if0(env0, d3e0)
+| D3Eif1 _ => aux_if1(env0, d3e0)
 //
-|
-D3Ecase _ => aux_case(env0, d3e0)
+| D3Ecas0 _ => aux_cas0(env0, d3e0)
+| D3Ecas1 _ => aux_cas1(env0, d3e0)
 //
 | D3Elam _ => aux_lam(env0, d3e0)
 | D3Efix _ => aux_fix(env0, d3e0)
@@ -2191,9 +2329,9 @@ end (* trans33_dexp *) end // end of [local]
 //
 implement
 trans33_dexp_dntp
-(env0, d3e0, t2p1) =
+(env0, d3e0, t2p0) =
 (
-d33exp_dntp(env0, d3e0, t2p1)
+d33exp_dntp(env0, d3e0, t2p0)
 ) where
 {
 val
@@ -2204,7 +2342,7 @@ println!
 ("trans33_dexp_dntp: d3e0 = ", d3e0)
 val () =
 println!
-("trans33_dexp_dntp: t2p1 = ", t2p1)
+("trans33_dexp_dntp: t2p0 = ", t2p0)
 *)
 }
 //
@@ -2488,7 +2626,8 @@ f3arg_make_node
 ) where
 {
   val
-  d3ps = trans33_dpatlst(env0, d3ps)
+  d3ps =
+  trans33_dpatlst(env0, d3ps)
 } (* F3ARGsome_dyn *)
 //
 | _(*non-F3ARGsome_dyn*) => f3a0

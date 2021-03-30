@@ -119,7 +119,7 @@ val () =
 //
 val () = implenv_free_nil(env0)
 //
-} (* end of [trans3t_package] *)
+} (* end of [trans3t_envless] *)
 
 (* ****** ****** *)
 
@@ -222,7 +222,9 @@ let
 in
 d3exp_make_node
 ( loc0
-, t2p0, D3Etnfd(d3e0, tpth) )
+, t2p0
+, D3Eterr
+  (d3e0, TI3ERRnfd(), tpth) )
 end
 |
 ~Some_vt
@@ -254,7 +256,9 @@ let
 in
 d3exp_make_node
 ( loc0
-, t2p0, D3Etrec(d3e0_, tpth) )
+, t2p0
+, D3Eterr
+  (d3e0_, TI3ERRrec(), tpth) )
 end // end of [then]
 else
 let
@@ -501,8 +505,21 @@ d3e0.node() of
     d3exp_make_node
     (loc0, t2p0, D3Eif0(d3e1, d3e2, opt3))
   end
+| D3Eif1
+  (d3e1, d3e2, opt3, tinv) =>
+  let
+    val d3e1 =
+    trans3t_dexp(env0, d3e1)
+    val d3e2 =
+    trans3t_dexp(env0, d3e2)
+    val opt3 =
+    trans3t_dexpopt(env0, opt3)
+  in
+    d3exp_make_node
+    (loc0, t2p0, D3Eif1(d3e1, d3e2, opt3, tinv))
+  end
 //
-| D3Ecase
+| D3Ecas0
   (knd0, d3e1, dcls) =>
   let
     val d3e1 =
@@ -511,7 +528,18 @@ d3e0.node() of
     trans3t_dclaulst(env0, dcls)
   in
     d3exp_make_node
-    (loc0, t2p0, D3Ecase(knd0, d3e1, dcls))
+    (loc0, t2p0, D3Ecas0(knd0, d3e1, dcls))
+  end
+| D3Ecas1
+  (knd0, d3e1, dcls, tinv) =>
+  let
+    val d3e1 =
+    trans3t_dexp(env0, d3e1)
+    val dcls =
+    trans3t_dclaulst(env0, dcls)
+  in
+    d3exp_make_node
+    (loc0, t2p0, D3Ecas1(knd0, d3e1, dcls, tinv))
   end
 //
 | D3Elam

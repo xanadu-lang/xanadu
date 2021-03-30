@@ -380,6 +380,11 @@ fprint_h0pat(stderr_ref, x0)
 implement
 fprint_h0pat(out, x0) =
 (
+fprint!(out, ":", x0.type())
+) where
+{
+val () =
+(
 case+
 x0.node() of
 //
@@ -440,7 +445,7 @@ x0.node() of
 (*
 | _(* H0P... *) => fprint!(out, "H0P...(...)")
 *)
-)
+) (*val*) } (*where*) // end of [fprint_h0pat]
 //
 (* ****** ****** *)
 //
@@ -504,6 +509,11 @@ fprint_h0exp(stderr_ref, x0)
 //
 implement
 fprint_h0exp(out, x0) =
+(
+fprint!(out, ":", x0.type())
+) where
+{
+val () =
 (
 case+
 x0.node() of
@@ -634,11 +644,11 @@ x0.node() of
   ( out
   , "H0Eassgn(", h0e1, "; ", h0e2, ")")
 //
-| H0Eif0
+| H0Eift1
   (h0e1, h0e2, opt3) =>
   fprint!
   ( out
-  , "H0Eif0("
+  , "H0Eift1("
   , h0e1, "; ", h0e2, "; ", opt3, ")")
 //
 | H0Ecase
@@ -715,7 +725,7 @@ x0.node() of
 (*
 | _(* H0E... *) => fprint!(out, "H0E...(...)")
 *)
-)
+) (*val*) } (*where*) // end of [fprint_h0exp]
 //
 (* ****** ****** *)
 //

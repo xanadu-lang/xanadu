@@ -460,10 +460,10 @@ t2ype_projize
 (* ****** ****** *)
 //
 fun
-t2ype_renam
+t2ype_gnvar
 (t2p0: t2ype, s2v1: s2var): t2ype
 fun
-t2ype_renams
+t2ype_gnvars
 (t2p0: t2ype, s2vs: s2varlst): t2ype
 //
 fun
@@ -479,10 +479,12 @@ t2ype_revars
 //
 fun{}
 t2ype_subst
-  (t2yp0: t2ype): t2ype
+  (t2p0: t2ype): t2ype
 fun{}
 t2ype_subst$var
   (t2ype, flag: &int >> _): t2ype
+//
+(* ****** ****** *)
 //
 fun
 t2ype_subst_svar
@@ -499,6 +501,11 @@ t2ypelst_subst_svarlst
 , s2vs: s2varlst, tsub: t2ypelst): t2ypelst
 //
 (* ****** ****** *)
+//
+// HX:
+// only keeping
+// impredicative ones; i.e.,
+// erasing predicative ones
 //
 fun
 s2varlst_epred

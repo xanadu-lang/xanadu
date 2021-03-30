@@ -244,28 +244,28 @@ end // end of [local]
 local
 
 absimpl
-f1arg_tbox = $rec{
-  f1arg_loc= loc_t
-, f1arg_node= f1arg_node
-} (* f1arg_tbox *)
+d1typ_tbox = $rec{
+  d1typ_loc= loc_t
+, d1typ_node= d1typ_node
+}
 
 in (* in-of-local *)
 
 (* ****** ****** *)
 
 implement
-f1arg_get_loc(x0) = x0.f1arg_loc
+d1typ_get_loc(x0) = x0.d1typ_loc
 implement
-f1arg_get_node(x0) = x0.f1arg_node
+d1typ_get_node(x0) = x0.d1typ_node
 
 (* ****** ****** *)
 
 implement
-f1arg_make_node
+d1typ_make_node
 (loc, node) = $rec
 {
-  f1arg_loc= loc, f1arg_node= node
-} (* end of [f1arg_make_node] *)
+  d1typ_loc= loc, d1typ_node= node
+} (* end of [d1typ_make_node] *)
 
 (* ****** ****** *)
 
@@ -302,6 +302,38 @@ d1pat_make_node
 {
   d1pat_loc= loc, d1pat_node= node
 } (* end of [d1pat_make_node] *)
+
+(* ****** ****** *)
+
+end // end of [local]
+
+(* ****** ****** *)
+
+local
+
+absimpl
+f1arg_tbox = $rec{
+  f1arg_loc= loc_t
+, f1arg_node= f1arg_node
+} (* f1arg_tbox *)
+
+in (* in-of-local *)
+
+(* ****** ****** *)
+
+implement
+f1arg_get_loc(x0) = x0.f1arg_loc
+implement
+f1arg_get_node(x0) = x0.f1arg_node
+
+(* ****** ****** *)
+
+implement
+f1arg_make_node
+(loc, node) = $rec
+{
+  f1arg_loc= loc, f1arg_node= node
+} (* end of [f1arg_make_node] *)
 
 (* ****** ****** *)
 

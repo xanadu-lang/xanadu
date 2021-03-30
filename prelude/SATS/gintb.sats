@@ -27,69 +27,76 @@
 
 (* ****** ****** *)
 //
+// For generic bounded integers
+//
+(* ****** ****** *)
+//
 // Author: Hongwei Xi
-// Start Time: January, 2021
+// Start Time: Jan/Feb, 2021
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
-//
-#include
-"share/atspre_staload.hats"
-#staload
-UN = "prelude/SATS/unsafe.sats"
-//
-(* ****** ****** *)
 
-#staload "./../SATS/statyp2.sats"
-#staload "./../SATS/staexp2.sats"
-#staload "./../SATS/dynexp2.sats"
-#staload "./../SATS/dynexp3.sats"
-#staload "./../SATS/dynexp4.sats"
-
-(* ****** ****** *)
-
-#staload "./../SATS/trans34.sats"
+abstype
+sint8_type(i: int)
+abstype
+uint8_type(i: int)
+sexpdef
+sint8 = sint8_type
+sexpdef
+uint8 = uint8_type
 
 (* ****** ****** *)
 //
-datavtype
-tr34env =
-TR34ENV of tr34stk
+sexpdef ui8lb =  0
+sexpdef si8lb = -128
+sexpdef si8ub = +127
+sexpdef ui8ub = +255
 //
-and
-tr34stk =
+(* ****** ****** *)
 //
-| tr34stk_nil of ()
+sexpdef
+si8ck(i: int) =
+(si8lb <= i && i <= si8ub)
+sexpdef
+ui8ck(i: int) =
+(ui8lb <= i && i <= ui8ub)
+//
+(* ****** ****** *)
+//
+fun<>
+gintb_succ_sint8
+{ i : int
+| si8ck(i+1) }
+( x : sint8(i) ) : sint8(i+1)
+fun<>
+gintb_pred_sint8
+{ i : int
+| si8ck(i-1) }
+( x : sint8(i) ) : sint8(i-1)
 //
 (* ****** ****** *)
 
-absimpl
-tr34env_vtype = tr34env
-
-(* ****** ****** *)
-
-implement
-tr34env_make_nil() =
-TR34ENV(tr34stk_nil(*void*))
-
-(* ****** ****** *)
+fun<>
+gintb_add_sint8_sint8
+{ i,j : int
+| si8ck(i+j) }
+( x : sint8(i)
+, y : sint8(j) ) : sint8(i+j)
+fun<>
+gintb_sub_sint8_sint8
+{ i,j : int
+| si8ck(i-j) }
+( x : sint8(i)
+, y : sint8(j) ) : sint8(i-j)
 //
-implement
-tr34env_free_nil
-  (env0) =
-(
-let
-val+
-~TR34ENV(stk0) = env0
-in
-case+ stk0 of
-//
-|
-~tr34stk_nil((*void*)) => ()
-//
-end
-) (* end of [tr34env_free_nil] *)
+fun<>
+gintb_mul_sint8_sint8
+{ i,j : int
+| si8ck(i*j) }
+( x : sint8(i)
+, y : sint8(j) ) : sint8(i*j)
 //
 (* ****** ****** *)
 
-(* end of [xats_trans34_envmap.dats] *)
+(* end of [gintb.sats] *)

@@ -13,12 +13,12 @@
 ** the terms of  the GNU GENERAL PUBLIC LICENSE (GPL) as published by the
 ** Free Software Foundation; either version 3, or (at  your  option)  any
 ** later version.
-** 
+**
 ** ATS is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without  even  the  implied  warranty  of MERCHANTABILITY or
 ** FITNESS FOR A PARTICULAR PURPOSE.  See the  GNU General Public License
 ** for more details.
-** 
+**
 ** You  should  have  received  a  copy of the GNU General Public License
 ** along  with  ATS;  see the  file COPYING.  If not, please write to the
 ** Free Software Foundation,  51 Franklin Street, Fifth Floor, Boston, MA
@@ -28,7 +28,7 @@
 (* ****** ****** *)
 //
 // Author: Hongwei Xi
-// Start Time: January, 2021
+// Start Time: March, 2021
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
@@ -39,57 +39,44 @@
 UN = "prelude/SATS/unsafe.sats"
 //
 (* ****** ****** *)
-
-#staload "./../SATS/statyp2.sats"
+//
 #staload "./../SATS/staexp2.sats"
-#staload "./../SATS/dynexp2.sats"
-#staload "./../SATS/dynexp3.sats"
-#staload "./../SATS/dynexp4.sats"
-
-(* ****** ****** *)
-
-#staload "./../SATS/trans34.sats"
-
-(* ****** ****** *)
-//
-datavtype
-tr34env =
-TR34ENV of tr34stk
-//
-and
-tr34stk =
-//
-| tr34stk_nil of ()
 //
 (* ****** ****** *)
-
-absimpl
-tr34env_vtype = tr34env
-
+//
+#staload "./../SATS/cstrnt0.sats"
+//
 (* ****** ****** *)
-
 implement
-tr34env_make_nil() =
-TR34ENV(tr34stk_nil(*void*))
-
+print_c0str(x0) =
+fprint_c0str(stdout_ref, x0)
+implement
+prerr_c0str(x0) =
+fprint_c0str(stderr_ref, x0)
 (* ****** ****** *)
 //
 implement
-tr34env_free_nil
-  (env0) =
+fprint_c0str
+  (out, x0) =
 (
-let
-val+
-~TR34ENV(stk0) = env0
-in
-case+ stk0 of
-//
+case+ x0.node() of
 |
-~tr34stk_nil((*void*)) => ()
-//
-end
-) (* end of [tr34env_free_nil] *)
+C0Siequ(s2e1, s2e2) =>
+fprint!
+( out
+, "C0Siequ(", s2e1, "; ", s2e2, ")")
+|
+C0Stequ(s2e1, s2e2) =>
+fprint!
+( out
+, "C0Stequ(", s2e1, "; ", s2e2, ")")
+|
+C0Stlte(s2e1, s2e2) =>
+fprint!
+( out
+, "C0Stlte(", s2e1, "; ", s2e2, ")")
+) (* end of [fprint_c0str] *)
 //
 (* ****** ****** *)
 
-(* end of [xats_trans34_envmap.dats] *)
+(* end of [xats_cstrnt0_print.dats] *)

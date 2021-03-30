@@ -995,25 +995,25 @@ end
 
 implement
 d3pat_dntp
-(d3p0, t2p1) = let
+(d3p1, t2p2) = let
 //
-val loc0 = d3p0.loc()
-val t2p0 = d3p0.type()
+val loc0 = d3p1.loc()
+val t2p1 = d3p1.type()
 //
 (*
 val () =
 println!
-("d3pat_dntp: d3p0 = ", d3p0)
-val () =
-println!
-("d3pat_dntp: t2p0 = ", t2p0)
+("d3pat_dntp: d3p1 = ", d3p1)
 val () =
 println!
 ("d3pat_dntp: t2p1 = ", t2p1)
+val () =
+println!
+("d3pat_dntp: t2p2 = ", t2p2)
 *)
 //
 val
-test = unify2(loc0, t2p0, t2p1)
+test = unify2(loc0, t2p1, t2p2)
 //
 (*
 val () =
@@ -1024,9 +1024,10 @@ in
 //
 if
 test
-then d3p0 else d3pat_tcast(d3p0, t2p1)
+then
+d3p1 else d3pat_tcast(d3p1, t2p2)
 //
-end // end of [d3pat_dntp]
+end (*let*) // end of [d3pat_dntp]
 
 (* ****** ****** *)
 implement
@@ -1034,10 +1035,10 @@ d3pat_dap0_up
 ( loc0, d3f0 ) =
 let
 val npf2 = ~1
-val d3ps = list_nil
+val d3ps = list_nil()
 in
 d3pat_dapp_up(loc0, d3f0, npf2, d3ps)
-end // end of [d3pat_dap0_up]
+end (*let*) // end of [d3pat_dap0_up]
 (* ****** ****** *)
 implement
 d3pat_dap1_up
@@ -1046,7 +1047,7 @@ let
 val tres = t2ype_new(loc0)
 in
 d3pat_make_node(loc0, tres, D3Pdap1(d3f0))
-end // end of [d3pat_dap1_up]
+end (*let*) // end of [d3pat_dap1_up]
 (* ****** ****** *)
 
 implement
@@ -1075,7 +1076,7 @@ in(*in-of-let*)
 d3pat_make_node
 (loc0, tres, D3Pdapp(d3f0, npf0, d3ps))
 //
-end // end of [d3pat_dapp_up]
+end (*let*) // end of [d3pat_dapp_up]
 
 (* ****** ****** *)
 
@@ -1131,7 +1132,7 @@ val t2p0 =
 in
   d3pat_make_node
   (loc0, t2p0, D3Ptuple(knd1, npf2, d3ps))
-end (* end of [d3pat_tuple_up] *)
+end (*let*) // end of [d3pat_tuple_up]
 
 (* ****** ****** *)
 
@@ -1252,31 +1253,32 @@ end
 list_cons
 (s2e0, s2es1) =>
 (
-  case+
-  s2e0.node() of
-  |
-  S2Eany(k0) =>
-  let
-  val
-  t2p0 =
-  t2ype_new_loc_var(loc0, s2v0)
-  in
-    if
-    (k0 >= 2)
-    then
-    list_vt_cons
-    (t2p0, auxtsub(s2vs, s2es))
-    else
-    list_vt_cons
-    (t2p0, auxtsub(s2vs, s2es1))
-  end
-  |
-  _(*non-S2Eany*) =>
-  let
-    val t2p0 = s2exp_erase(s2e0)
-  in
-    list_vt_cons(t2p0, auxtsub(s2vs, s2es))
-  end
+case+
+s2e0.node() of
+|
+S2Eany(k0) =>
+let
+val
+t2p0 =
+t2ype_new_loc_var(loc0, s2v0)
+in
+  if
+  (k0 >= 2)
+  then
+  list_vt_cons
+  (t2p0, auxtsub(s2vs, s2es))
+  else
+  list_vt_cons
+  (t2p0, auxtsub(s2vs, s2es1))
+end
+|
+_(*non-S2Eany*) =>
+let
+  val t2p0 = s2exp_erase(s2e0)
+in
+  list_vt_cons
+  ( t2p0, auxtsub(s2vs, s2es) )
+end
 )
 )
 ) (* end of [auxtsub] *)
@@ -1284,8 +1286,11 @@ list_cons
 } // where // end of [auxmain]
 //
 in
-  auxmain(d3f0.type((*void*)))
-end (* end of [d23pat_sapp_up] *)
+let
+val
+t2p0 = d3f0.type() in auxmain(t2p0)
+end
+end (*let*) // end of [d23pat_sapp_up]
 
 (* ****** ****** *)
 //
@@ -1301,16 +1306,16 @@ d3exp_make_node(loc0, t2p0, d3en)
 (*
 implement
 d23exp_anno
-(d3e0, t2p1) =
+(d3e0, t2p0) =
 let
 val
 loc0 = d3e0.loc()
 val
 d3e0 =
-d23exp_dntp(d3e0, t2p1)
+d23exp_dntp(d3e0, t2p0)
 in
 d23exp_make_node
-(loc0, t2p1, D3Edntp(d3e0, t2p1))
+(loc0, t2p0, D3Edntp(d3e0, t2p0))
 end // end of [d23exp_anno]
 *)
 
@@ -1344,7 +1349,7 @@ if
 test
 then d3e0 else d3exp_tcast(d3e0, t2p1)
 //
-end // end of [d23exp_dntp]
+end (*let*) // end of [d23exp_dntp]
 
 (* ****** ****** *)
 
@@ -1578,7 +1583,8 @@ list_cons
 (
 case+ s2es of
 |
-list_nil() =>
+list_nil
+((*void*)) =>
 (*
 let
 val
@@ -2125,11 +2131,47 @@ d23exp_make_node
 end // end of [d23exp_dtsel_up]
 //
 (* ****** ****** *)
-
+//
 implement
 d23exp_if0_up
 ( loc0
 , d3e1, d3e2, opt3) =
+let
+//
+val tres =
+(
+case+ opt3 of
+|
+None _ =>
+the_t2ype_void
+|
+Some _ =>
+t2ype_new(loc0)): t2ype
+//
+val d3e2 =
+d23exp_dntp(d3e2, tres)
+//
+val opt3 =
+(
+case+ opt3 of
+|
+None() => None()
+|
+Some(d3e3) =>
+Some(d23exp_dntp(d3e3, tres))
+) : d3expopt // end of [val]
+//
+in(*in-of-let*)
+d23exp_make_node
+( loc0
+, tres, D3Eif0(d3e1, d3e2, opt3))
+end // end of [d23exp_if0_up]
+
+implement
+d23exp_if1_up
+( loc0
+, d3e1
+, d3e2, opt3, tinv) =
 let
 //
 val tbtf =
@@ -2140,26 +2182,33 @@ d23exp_dntp(d3e1, tbtf)
 val tres =
 (
 case+ opt3 of
-| None _ => the_t2ype_void
-| Some _ => t2ype_new(loc0)
-) : t2ype // end of [val]
+|
+None _ =>
+the_t2ype_void
+|
+Some _ =>
+t2ype_new(loc0)): t2ype
 //
 val d3e2 =
 d23exp_dntp(d3e2, tres)
+//
 val opt3 =
 (
 case+ opt3 of
-| None() => None()
-| Some(d3e3) =>
-  Some(d23exp_dntp(d3e3, tres))
+|
+None() => None()
+|
+Some(d3e3) =>
+Some(d23exp_dntp(d3e3, tres))
 ) : d3expopt // end of [val]
 //
-in
+in(*in-of-let*)
 d23exp_make_node
 ( loc0
-, tres, D3Eif0(d3e1, d3e2, opt3))
-end // end of [d23exp_if0_up]
-
+, tres
+, D3Eif1(d3e1, d3e2, opt3, tinv))
+end // end of [d23exp_if1_up]
+//
 (* ****** ****** *)
 
 implement
@@ -2765,14 +2814,14 @@ case+
 t2p0.node() of
 |
 T2Puni
-(svs2, t2p0) =>
+(svs2, t2p1) =>
 let
 val tsub =
 auxtsub(svs2, svs1)
-val t2p0 =
+val t2p1 =
 (
 t2ype_revars
-  (t2p0, svs2, tsub)
+  (t2p1, svs2, tsub)
 // t2ype_revars
 ) where
 {
@@ -2782,7 +2831,7 @@ tsub = $UN.list_vt2t(tsub)
 val () = list_vt_free(tsub)
 in
   let
-  val () = tfun := t2p0
+  val () = tfun := t2p1
   in
   f3arg_make_node
   ( loc0
@@ -2877,22 +2926,22 @@ case+
 t2p0.node() of
 //
 | T2Puni
-  (s2vs, t2p0) =>
+  (s2vs, t2p1) =>
   (
-    tfun := t2p0;
+    tfun := t2p1;
     auxf2as_1d(f2a0, tfun)
   ) where
   {
-    val t2p0 =
-    t2ype_renams(t2p0, s2vs)
+    val t2p1 =
+    t2ype_gnvars(t2p1, s2vs)
   }
 | T2Pfun
-  (_, _, t2ps, t2p0) =>
+  (_, _, t2ps, t2p1) =>
   let
     val d3ps =
     trans23_dpatlst_dntp(d2ps, t2ps)
   in
-    tfun := t2p0;
+    tfun := t2p1;
     f3arg_make_node
     (loc0, F3ARGsome_dyn(npf1, d3ps))
    end

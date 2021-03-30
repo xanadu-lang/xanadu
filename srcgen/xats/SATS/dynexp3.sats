@@ -121,12 +121,21 @@ d3pat_node =
 | D3Psym0 of
   (d1pat(*sym*), d2pitmlst)
 //
+(*
+HX: [D3Psap0]: pred: skipped
+HX: [D3Psap1]: impred: checked
+*)
 | D3Psap0 of (d3pat, s2explst)
 | D3Psap1 of (d3pat, s2explst)
 //
-| D3Pdap1 of (d3pat)
+(*
+// HX-2021-03-21:
+// There is no [D3Pdap0] as
+// it is merged into [D3Pdapp]!
+*)
+| D3Pdap1 of (d3pat) // argless
 | D3Pdapp of
-  (d3pat, int(*npf*), d3patlst)
+  ( d3pat, int(*npf*), d3patlst )
 //
 | D3Ptuple of
   (int(*knd*), int(*npf*), d3patlst)
@@ -319,6 +328,25 @@ overload prerr with prerr_ti3arg
 overload fprint with fprint_ti3arg
 //
 (* ****** ****** *)
+//
+datatype
+ti3err =
+| TI3ERRnfd of () // notfound
+| TI3ERRrec of () // recursive
+//
+//
+fun
+print_ti3err: print_type(ti3err)
+fun
+prerr_ti3err: prerr_type(ti3err)
+fun
+fprint_ti3err: fprint_type(ti3err)
+//
+overload print with print_ti3err
+overload prerr with prerr_ti3err
+overload fprint with fprint_ti3err
+//
+(* ****** ****** *)
 
 datatype
 d3exp_node =
@@ -356,22 +384,20 @@ for the meaning of knd
   (d1exp(*sym*), d2pitmlst)
 //
 | D3Efcon of (d2con)
+| D3Efcst of (d2cst)
+//
 | D3Etcon of
   ( d2con
-  , ti3arg(*s2es*)
+  , ti3arg(*t2ps*)
   , ti2arglst(*sess*))
-//
-| D3Efcst of (d2cst)
 | D3Etcst of
   ( d2cst
-  , ti3arg(*s2es*)
+  , ti3arg(*t2ps*)
   , ti2arglst(*sess*))
 //
-| D3Etnfd of
+| D3Eterr of
   ( d3exp(*tcst*)
-  , t3implst (*path*) )
-| D3Etrec of
-  ( d3exp(*tcst*)
+  , ti3err(*kind*)
   , t3implst (*path*) )
 //
 | D3Etimp of
@@ -427,10 +453,14 @@ for the meaning of knd
 | D3Eif0 of
   ( d3exp(*cond*)
   , d3exp(*then*), d3expopt(*else*))
+| D3Eif1 of
+  ( d3exp(*cond*)
+  , d3exp(*then*), d3expopt(*else*), st2inv)
 //
-| D3Ecase of
+| D3Ecas0 of
   (int(*knd*), d3exp(*val*), d3claulst)
-  // D3Ecase
+| D3Ecas1 of
+  (int(*knd*), d3exp(*val*), d3claulst, st2inv)
 //
 | D3Elam of
   ( token(*knd*)
@@ -632,6 +662,8 @@ d3gpat_node =
 | D3GPATpat of (d3pat)
 | D3GPATgua of (d3pat, d3gualst)
 //
+(* ****** ****** *)
+//
 fun
 d3clau_get_loc(d3clau): loc_t
 fun
@@ -648,16 +680,7 @@ d3gpat_get_node(d3gpat): d3gpat_node
 overload .loc with d3gpat_get_loc
 overload .node with d3gpat_get_node
 //
-fun
-print_d3clau : (d3clau) -> void
-fun
-prerr_d3clau : (d3clau) -> void
-fun
-fprint_d3clau : fprint_type(d3clau)
-//
-overload print with print_d3clau
-overload prerr with prerr_d3clau
-overload fprint with fprint_d3clau
+(* ****** ****** *)
 //
 fun
 print_d3gpat : (d3gpat) -> void
@@ -669,6 +692,19 @@ fprint_d3gpat : fprint_type(d3gpat)
 overload print with print_d3gpat
 overload prerr with prerr_d3gpat
 overload fprint with fprint_d3gpat
+//
+fun
+print_d3clau : (d3clau) -> void
+fun
+prerr_d3clau : (d3clau) -> void
+fun
+fprint_d3clau : fprint_type(d3clau)
+//
+overload print with print_d3clau
+overload prerr with prerr_d3clau
+overload fprint with fprint_d3clau
+//
+(* ****** ****** *)
 //
 fun
 d3clau_make_node

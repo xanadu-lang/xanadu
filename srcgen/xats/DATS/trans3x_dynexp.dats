@@ -490,6 +490,24 @@ d3exp_make_node
 , t2p0, D3Eif0(d3e1, d3e2, opt3))
 end
 |
+D3Eif1
+( d3e1
+, d3e2, opt3, tinv) =>
+let
+val d3e1 =
+trans3x_dexp(env0, d3e1)
+val d3e2 =
+trans3x_dexp(env0, d3e2)
+val opt3 =
+trans3x_dexpopt(env0, opt3)
+in
+d3exp_make_node
+( loc0
+, t2p0
+, D3Eif1(d3e1, d3e2, opt3, tinv))
+end
+//
+|
 D3Elam _ =>
 let
 val dend = aux_lam(env0, dend)
@@ -1160,7 +1178,7 @@ val env0 =
 $UN.castvwtp0{tr3xenv}(env0)
 val d3cl = trans3x_decl(env0, d3cl)
 in
-let prval () = $UN.cast2void(env0) in d3cl end
+  let prval() = $UN.cast2void(env0) in d3cl end
 end
 }
 end // end of [trans3x_declist]

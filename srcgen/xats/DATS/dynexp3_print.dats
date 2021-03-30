@@ -144,19 +144,20 @@ implement
 fprint_val<t3imp> = fprint_t3imp
 //
 (* ****** ****** *)
+
+implement
+fprint_val<d3ecl> = fprint_d3ecl
+
+(* ****** ****** *)
 //
 implement
 fprint_val<d3gua> = fprint_d3gua
+//
 implement
 fprint_val<d3clau> = fprint_d3clau
 implement
 fprint_val<d3gpat> = fprint_d3gpat
 //
-(* ****** ****** *)
-
-implement
-fprint_val<d3ecl> = fprint_d3ecl
-
 (* ****** ****** *)
 //
 implement
@@ -178,6 +179,11 @@ fprint_d3pat(stderr_ref, x0)
 implement
 fprint_d3pat
   (out, x0) =
+(
+fprint!(out, ":", x0.type())
+) where
+{
+val () =
 (
 case+ x0.node() of
 //
@@ -245,21 +251,21 @@ case+ x0.node() of
   (d3f0, s2vs) =>
   fprint!
   ( out
-  , "D3Psapp(", d3f0, "; ", s2vs, ")")
+  , "D3Psap0(", d3f0, "; ", s2vs, ")")
 | D3Psap1
   (d3f0, s2vs) =>
   fprint!
   ( out
-  , "D3Psapp(", d3f0, "; ", s2vs, ")")
+  , "D3Psap1(", d3f0, "; ", s2vs, ")")
 //
 | D3Pdap1(d3f0) =>
   fprint!
   ( out, "D3Pdap1(", d3f0, ")")
 | D3Pdapp
-  (d3f0, npf0, d3ps) =>
+  (d3f0, npf1, d3ps) =>
   fprint!
   ( out, "D3Pdapp("
-  , d3f0, "; ", npf0, "; ", d3ps, ")")
+  , d3f0, "; ", npf1, "; ", d3ps, ")")
 //
 | D3Ptuple
   (knd1, npf2, ldps) =>
@@ -275,11 +281,14 @@ case+ x0.node() of
   fprint!
   (out, "D3Ptcast(", d3p1, "; ", t2p2, ")")
 //
-| D3Pnone0() => fprint!(out, "D3Pnone0(", ")")
-| D3Pnone1(d1psrc) => fprint!(out, "D3Pnone1(", d1psrc, ")")
-| D3Pnone2(d2psrc) => fprint!(out, "D3Pnone2(", d2psrc, ")")
+| D3Pnone0
+  ((*void*)) => fprint!(out, "D3Pnone0(", ")")
+| D3Pnone1
+  ( d1psrc ) => fprint!(out, "D3Pnone1(", d1psrc, ")")
+| D3Pnone2
+  ( d2psrc ) => fprint!(out, "D3Pnone2(", d2psrc, ")")
 //
-) (* end of [fprint_d3pat] *)
+) (*val*) } (*where*) // end of [fprint_d3pat]
 //
 (* ****** ****** *)
 //
@@ -318,6 +327,46 @@ x0.node() of
 (* ****** ****** *)
 //
 implement
+print_ti3arg(x0) =
+fprint_ti3arg(stdout_ref, x0) 
+implement
+prerr_ti3arg(x0) =
+fprint_ti3arg(stderr_ref, x0) 
+//
+implement
+fprint_ti3arg
+  (out, x0) =
+(
+case+ x0 of
+| TI3ARGnone() =>
+  fprint!(out, "TI3ARGnone(", ")")
+| TI3ARGsome(t2ps) =>
+  fprint!(out, "TI3ARGsome(", t2ps, ")")
+)
+//
+(* ****** ****** *)
+//
+implement
+print_ti3err(x0) =
+fprint_ti3err(stdout_ref, x0) 
+implement
+prerr_ti3err(x0) =
+fprint_ti3err(stderr_ref, x0) 
+//
+implement
+fprint_ti3err
+  (out, x0) =
+(
+case+ x0 of
+| TI3ERRnfd() =>
+  fprint!(out, "TI3ERRnfd()")
+| TI3ERRrec() =>
+  fprint!(out, "TI3ERRrec()")
+)
+//
+(* ****** ****** *)
+//
+implement
 print_d3exp(x0) =
 fprint_d3exp(stdout_ref, x0) 
 implement
@@ -327,6 +376,13 @@ fprint_d3exp(stderr_ref, x0)
 implement
 fprint_d3exp
   (out, x0) =
+(
+(*
+fprint!(out, ":", x0.type())
+*)
+) where
+{
+val () =
 (
 case+
 x0.node() of
@@ -387,21 +443,22 @@ x0.node() of
   in
   fprint!
   ( out
-  , "D3Esym0(", d1e1, ": ", t2p0, ")")
+  , "D3Esym0(", d1e1, ": ", t2p0, ")"
+  )
   end
 // *)
 //
 | D3Efcon(d2c1) =>
   fprint!(out, "D3Efcon(", d2c1, ")")
+| D3Efcst(d2c1) =>
+  fprint!(out, "D3Efcst(", d2c1, ")")
+//
 | D3Etcon
   (d2c1, ti3a, ti2s) =>
   fprint!
   ( out
   , "D3Etcon("
   , d2c1, "; ", ti3a, "; ", ti2s, ")")
-//
-| D3Efcst(d2c1) =>
-  fprint!(out, "D3Efcst(", d2c1, ")")
 | D3Etcst
   (d2c1, ti3a, ti2s) =>
   fprint!
@@ -409,25 +466,21 @@ x0.node() of
   , "D3Etcst("
   , d2c1, "; ", ti3a, "; ", ti2s, ")")
 //
-| D3Etnfd
-  (d2e1, d3es) =>
+| D3Eterr
+  (d2e1, terr, d3es) =>
   fprint!
   ( out
-  , "D3Etnfd(", d2e1, "; ", d3es, ")")
-| D3Etrec
-  (d2e1, d3es) =>
-  fprint!
-  ( out
-  , "D3Etrec(", d2e1, "; ", d3es, ")")
+  , "D3Eterr("
+  , d2e1, "; ", terr, "; ", d3es, ")")
 //
 | D3Etimp
   ( stmp
-  , d2e1, tsub1
-  , d2c2, tsub2) =>
+  , d3e1, targ
+  , d3cl, tsub) =>
   fprint!
   ( out
   , "D3Etimp(", stmp, "; "
-  , d2e1, "; ", tsub1, "; ", d2c2, "; ", tsub2, ")")
+  , d3e1, "; ", targ, "; ", d3cl, "; ", tsub, ")")
 //
 | D3Esap0
   (d3e1, s2es) =>
@@ -539,12 +592,22 @@ x0.node() of
   fprint!
   ( out, "D3Eif0("
   , d3e1, "; ", d3e2, "; ", opt3, ")")
+| D3Eif1
+  (d3e1, d3e2, opt3, tinv) =>
+  fprint!
+  ( out, "D3Eif1("
+  , d3e1, "; ", d3e2, "; ", opt3, "; ", tinv, ")")
 //
-| D3Ecase
+| D3Ecas0
   (knd0, d3e1, dcls) =>
   fprint!
-  ( out, "D3Ecase("
+  ( out, "D3Ecas0("
   , knd0, "; ", d3e1, "; ", dcls, ")")
+| D3Ecas1
+  (knd0, d3e1, dcls, tinv) =>
+  fprint!
+  ( out, "D3Ecas1("
+  , knd0, "; ", d3e1, "; ", dcls, "; ", tinv, ")")
 //
 | D3Elam
   (knd0, f3as, tres, arrw, body) =>
@@ -640,7 +703,7 @@ x0.node() of
 | D3Enone2(d3esrc) =>
   fprint!(out, "D3Enone2(", d3esrc, ")")
 //
-)
+) (*val*) } (*where*) // end of [fprint_d3exp]
 //
 (* ****** ****** *)
 //
@@ -754,26 +817,6 @@ fprint!
 (out, "D3GPATgua(", d3p, "; ", d3gs, ")")
 //
 ) (* end of [fprint_d3gpat] *)
-//
-(* ****** ****** *)
-//
-implement
-print_ti3arg(x0) =
-fprint_ti3arg(stdout_ref, x0) 
-implement
-prerr_ti3arg(x0) =
-fprint_ti3arg(stderr_ref, x0) 
-//
-implement
-fprint_ti3arg
-  (out, x0) =
-(
-case+ x0 of
-| TI3ARGnone() =>
-  fprint!(out, "TI3ARGnone(", ")")
-| TI3ARGsome(t2ps) =>
-  fprint!(out, "TI3ARGsome(", t2ps, ")")
-)
 //
 (* ****** ****** *)
 //

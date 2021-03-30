@@ -84,6 +84,9 @@ NMS = "./../SATS/nmspace.sats"
 #staload "./../SATS/trans12.sats"
 
 (* ****** ****** *)
+implement
+fprint_val<s1qua> = fprint_s1qua
+(* ****** ****** *)
 //
 implement
 fprint_val<s2cst> = fprint_s2cst
@@ -363,6 +366,71 @@ d2e1.node() of
   d2exp_tapp(loc0, d2e1, s2es)
 )
 //
+(* ****** ****** *)
+
+implement
+trans12_dtyp
+( d1t0
+: d1typ): d2typ = let
+//
+val
+loc0 = d1t0.loc()
+//
+(*
+val () =
+println!
+("trans12_dtyp: d1t0 = ", d1t0)
+*)
+//
+in
+//
+case+
+d1t0.node() of
+|
+D1TYPsome
+(tok0, opt1) =>
+let
+//
+val
+sym0 =
+dexpid_sym(tok0)
+val
+opt1 =
+trans12_sexpopt(opt1)
+val
+opt2 =
+the_dexpenv_find(sym0)
+//
+in(*in-of-let*)
+//
+case+ opt2 of
+//
+| ~
+None_vt() =>
+d2typ_make_node
+( loc0
+, D2TYPsome_tok(tok0, opt1))
+//
+| ~
+Some_vt(d2i0) =>
+(
+case+ d2i0 of
+|
+D2ITMvar(d2v0) =>
+d2typ_make_node
+( loc0
+, D2TYPsome_var(d2v0, opt1))
+|
+_ (*non-D2ITMvar*) =>
+d2typ_make_node
+( loc0
+, D2TYPsome_tok(tok0, opt1))
+)
+//
+end // end of [D1TYPsome]
+//
+end // end of [trans12_dtyp]
+
 (* ****** ****** *)
 
 local
@@ -1068,25 +1136,30 @@ d2ps =
 (
 case+
 d1p0.node() of
-| D1Plist
-  (xs1) =>
-  (
-    trans12_dpatlst(xs1)
-  )
-| D1Plist
-  (xs1, xs2) =>
-  (
-    npf := length(xs1); ys1 + ys2
-  ) where
-  {
-    val ys1 = trans12_dpatlst(xs1)
-    val ys2 = trans12_dpatlst(xs2)
-  }
+|
+D1Plist
+( xs1 ) =>
+(
+  trans12_dpatlst(xs1)
+)
+|
+D1Plist
+(xs1, xs2) =>
+(
+npf :=
+length(xs1); ys1 + ys2
+) where
+{
+val
+ys1 = trans12_dpatlst(xs1)
+val
+ys2 = trans12_dpatlst(xs2)
+}
 | _(*non-D1Plist*) =>
-  (
-    list_sing(trans12_dpat(d1p0))
-  )
-) : d2patlst // end-of-val
+(
+  list_sing(trans12_dpat(d1p0))
+)
+) : d2patlst // end of [val]
 //
 val () =
 the_trans12_add_patlst(d2ps)
@@ -1107,6 +1180,12 @@ val-
 F1ARGsome_sta
   (s1qs) = f1a0.node()
 //
+(*
+val () =
+println!
+("auxsta: s1qs = ", s1qs)
+*)
+//
 var s2vs_
   : s2varlst_vt =
   list_vt_nil(*void*)
@@ -1114,7 +1193,7 @@ var s2ps_
   : s2varlst_vt =
   list_vt_nil(*void*)
 val ((*void*)) =
-  trans12_squalst(s1qs, s2vs_, s2ps_)
+trans12_squalst(s1qs, s2vs_, s2ps_)
 //
 val s2vs =
   list_vt2t(list_vt_reverse(s2vs_))
@@ -1161,8 +1240,6 @@ f1a0.node() of
 //
 ) (* end of [trans12_farg] *)
 
-end // end of [local]
-
 implement
 trans12_farglst
   (f1as) =
@@ -1172,174 +1249,130 @@ list_map<f1arg><f2arg>(f1as)
 ) where
 {
 implement
-list_map$fopr<f1arg><f2arg>(f1a) = trans12_farg(f1a)
-} (* end of [trans12_farglst] *)
+list_map$fopr<
+f1arg><f2arg>(f1a) = trans12_farg(f1a)
+} (*where*) // end of [trans12_farglst]
 
 (* ****** ****** *)
-
+//
 implement
-trans12_dgua
-  (d1g0) =
+trans12_farglst_s2exp
+  (f1as, s2f0) =
 (
+trans12_farglst(f1as)) where
+{
+// (*
+val () =
+println!
+("trans12_farglst_s2exp: f1as = ", f1as)
+val () =
+println!
+("trans12_farglst_s2exp: s2f0 = ", s2f0)
+// *)
+} (*where*)//end of [trans12_farglst_s2exp]
 //
-case+
-d1g0.node() of
-| D1GUAexp
-  (d1e) =>
-  d2gua_make_node
-  ( d1g0.loc()
-  , D2GUAexp(trans12_dexp(d1e))
-  )
-| D1GUAmat
-  (d1e, d1p) =>
-  d2gua_make_node
-  ( d1g0.loc()
-  , D2GUAmat(trans12_dexp(d1e), trans12_dpat(d1p))
-  )
-//
-) (* end of [trans12_dgua] *)
+(* ****** ****** *)
 
+end // end of [local]
+
+(* ****** ****** *)
+//
+implement
+trans12_stqua
+  (st1q) =
+(
+case+ st1q of
+ST1QUAsome
+(loc0, s1qs) =>
+(
+ST2QUAsome
+(loc0, s2vs, s2ps)
+) where
+{
+//
+var s2vs_
+  : s2varlst_vt =
+  list_vt_nil(*void*)
+var s2ps_
+  : s2varlst_vt =
+  list_vt_nil(*void*)
+val ((*void*)) =
+trans12_squalst(s1qs, s2vs_, s2ps_)
+//
+val s2vs =
+  list_vt2t(list_vt_reverse(s2vs_))
+val s2ps =
+  list_vt2t(list_vt_reverse(s2ps_))
+}
+) (* end of [ST1QUAsome] *)
+//
 (* ****** ****** *)
 
 implement
-trans12_dgualst
-  (d1gs) =
-  (d2gs) where
-{
+trans12_stinv
+  (tinv) = let
 //
-val d2gs = auxlst(d1gs)
+val () =
+println!
+("trans12_stinv: tinv = ", tinv)
 //
-} where
-{
 fun
-auxlst
-(d1gs: d1gualst): d2gualst =
+auxd1ts
+( d1ts
+: d1typlst): d2typlst =
 (
-case+ d1gs of
-| list_nil() =>
-  list_nil()
-| list_cons
-  (d1g0, d1gs) => let
-     val d2g0 =
-       trans12_dgua(d1g0)
-     // end of [val]
-     val ((*void*)) =
-       the_trans12_add_gua(d2g0)
-     // end of [val]
-   in
-     list_cons(d2g0, auxlst(d1gs))
-   end
-)
-} (* end of [trans12_dgualst] *)
-
-(* ****** ****** *)
-
-implement
-trans12_dclau
-  (d1cl) =
-(
-//
-case+
-d1cl.node() of
-| D1CLAUgpat
-  (d1gp) =>
-  let
-    val d2gp =
-    trans12_dgpat(d1gp)
-  in
-    d2clau_make_node
-    (d1cl.loc(), D2CLAUpat(d2gp))
-  end // end of [let]
-| D1CLAUclau
-  (d1gp, d1e0) =>
-  let
-//
-    val d2gp =
-    (
-      trans12_dgpat(d1gp)
-    )
-//
-    val
-    (pf0|()) =
-    the_trans12_pushnil()
-    val () =
-    (
-      the_trans12_add_gpat(d2gp)
-    )
-    val d2e0 = trans12_dexp(d1e0)
-    val
-    ((*void*)) =
-    the_trans12_popfree(pf0|(*void*))
-//
-  in
-    d2clau_make_node
-    (d1cl.loc(), D2CLAUexp(d2gp, d2e0))
-  end // end of [let]
-//
-) (* end of [trans12_dclau] *)
-
-(* ****** ****** *)
-
-implement
-trans12_dgpat
-  (d1gp) = let
-//
-val
-loc0 = d1gp.loc()
-//
-in (* in-of-let *)
-//
-case+
-d1gp.node() of
+case+ d1ts of
 |
-D1GPATpat
-(d1p) =>
-d2gpat_make_node
-( loc0
-, D2GPATpat(trans12_dpat(d1p))
-)
+list_nil() =>
+list_nil()
 |
-D1GPATgua
-(d1p, d1gs) =>
+list_cons(d1t1, d1ts) =>
 let
 val
-d2p = trans12_dpat(d1p)
-//
-val
-(pf0|()) =
-the_trans12_pushnil()
-val () =
-(
-  the_trans12_add_pat(d2p)
+d2t1 = trans12_dtyp(d1t1)
+in
+  list_cons(d2t1, auxd1ts(d1ts))
+end
 )
+//
+fun
+auxstqs
+( stqs
+: st1qualst): st2qualst =
+(
+case+ stqs of
+|
+list_nil() =>
+list_nil()
+|
+list_cons(st1q, stqs) =>
+let
 val
-d2gs = trans12_dgualst(d1gs)
-val
-((*void*)) =
-the_trans12_popfree(pf0|(*void*))
+st2q = trans12_stqua(st1q)
+in
+  list_cons(st2q, auxstqs(stqs))
+end
+)
 //
 in
-d2gpat_make_node(loc0, D2GPATgua(d2p, d2gs))
-end
+case+ tinv of
+ST1INVsome
+(loc0, stqs, d1ts) =>
+ST2INVsome
+(loc0, stqs, d2ts) where
+{
+val (pf0|()) =
+the_sexpenv_pushnil()
 //
-end (* end of [trans12_dgpat] *)
-
-(* ****** ****** *)
-
-implement
-trans12_dclaulst
-  (d1cls) =
-list_vt2t(d2cls) where
-{
-val
-d2cls =
-list_map<d1clau><d2clau>
-  (d1cls) where
-{
-implement
-list_map$fopr<d1clau><d2clau>(d1cl) = trans12_dclau(d1cl)
-}
-} (* end of [trans12_dclaulst] *)
+val stqs = auxstqs(stqs)
+val d2ts = auxd1ts(d1ts)
+//
+val ((*void*)) =
+the_sexpenv_popfree(pf0|(*void*))
+//
+} (* end of [ST1INVsome] *)
+//
+end // end of [trans12_stinv]
 
 (* ****** ****** *)
 
@@ -2934,6 +2967,8 @@ D1Eexists
 
 in (* in-of-local *)
 
+(* ****** ****** *)
+
 implement
 trans12_deid
   (d1e0) =
@@ -3003,23 +3038,56 @@ d1e0.node() of
     val d2e2 = trans12_dexp(d1e2)
     val opt3 = trans12_dexpopt(opt3)
   } (* end of [D1Eif0] *)
-//
-| D1Ecase
-  (tok, d1e1, d1cls) =>
+| D1Eif1 // stinvar
+  ( d1e1
+  , d1e2, opt3, tinv) =>
   (
     d2exp_make_node
     ( loc0
-    , D2Ecase(knd, d2e1, d2cls))
+    , D2Eif1
+      (d2e1, d2e2, opt3, tinv) )
+  ) where
+  {
+    val d2e1 = trans12_dexp(d1e1)
+    val d2e2 = trans12_dexp(d1e2)
+    val opt3 = trans12_dexpopt(opt3)
+    val tinv = trans12_stinv(tinv)
+  } (* end of [D1Eif0] *)
+//
+| D1Ecas0
+  (tok, d1e1, dcls) =>
+  (
+    d2exp_make_node
+    ( loc0
+    , D2Ecas0(knd, d2e1, dcls))
   ) where
   {
     val knd =
     (
-      case-
-      tok.node() of T_CASE(knd) => knd
+    case-
+    tok.node() of T_CASE(knd) => knd
     ) : int // end of [val]
     val d2e1 = trans12_dexp(d1e1)
-    val d2cls = trans12_dclaulst(d1cls)
-  } (* end of [D1Ecase] *)
+    val dcls = trans12_dclaulst(dcls)
+  } (* end of [D1Ecas0] *)
+| D1Ecas1
+  ( tok
+  , d1e1, dcls, tinv) =>
+  (
+    d2exp_make_node
+    ( loc0
+    , D2Ecas0(knd, d2e1, dcls))
+  ) where
+  {
+    val knd =
+    (
+    case-
+    tok.node() of T_CASE(knd) => knd
+    ) : int // end of [val]
+    val d2e1 = trans12_dexp(d1e1)
+    val dcls = trans12_dclaulst(dcls)
+    val tinv = trans12_stinv(tinv)
+  } (* end of [D1Ecas1] *)
 //
 | D1Elam
   ( knd
@@ -3218,6 +3286,172 @@ list_cons _ =>
 d2exp_make_node(loc0, D2Eseqn(d2es, d2e1))
 //
 end // end of [trans12_dexpseq]
+
+(* ****** ****** *)
+
+implement
+trans12_dgua
+  (d1g0) =
+(
+//
+case+
+d1g0.node() of
+| D1GUAexp
+  (d1e) =>
+  d2gua_make_node
+  ( d1g0.loc()
+  , D2GUAexp(trans12_dexp(d1e))
+  )
+| D1GUAmat
+  (d1e, d1p) =>
+  d2gua_make_node
+  ( d1g0.loc()
+  , D2GUAmat(trans12_dexp(d1e), trans12_dpat(d1p))
+  )
+//
+) (* end of [trans12_dgua] *)
+
+(* ****** ****** *)
+
+implement
+trans12_dgualst
+  (d1gs) =
+  (d2gs) where
+{
+//
+val d2gs = auxlst(d1gs)
+//
+} where
+{
+fun
+auxlst
+(d1gs: d1gualst): d2gualst =
+(
+case+ d1gs of
+| list_nil() =>
+  list_nil()
+| list_cons
+  (d1g0, d1gs) => let
+     val d2g0 =
+       trans12_dgua(d1g0)
+     // end of [val]
+     val ((*void*)) =
+       the_trans12_add_gua(d2g0)
+     // end of [val]
+   in
+     list_cons(d2g0, auxlst(d1gs))
+   end
+)
+} (* end of [trans12_dgualst] *)
+
+(* ****** ****** *)
+
+implement
+trans12_dclau
+  (d1cl) =
+(
+//
+case+
+d1cl.node() of
+| D1CLAUgpat
+  (d1gp) =>
+  let
+    val d2gp =
+    trans12_dgpat(d1gp)
+  in
+    d2clau_make_node
+    (d1cl.loc(), D2CLAUpat(d2gp))
+  end // end of [let]
+| D1CLAUclau
+  (d1gp, d1e0) =>
+  let
+//
+    val d2gp =
+    (
+      trans12_dgpat(d1gp)
+    )
+//
+    val
+    (pf0|()) =
+    the_trans12_pushnil()
+    val () =
+    (
+      the_trans12_add_gpat(d2gp)
+    )
+    val d2e0 = trans12_dexp(d1e0)
+    val
+    ((*void*)) =
+    the_trans12_popfree(pf0|(*void*))
+//
+  in
+    d2clau_make_node
+    (d1cl.loc(), D2CLAUexp(d2gp, d2e0))
+  end // end of [let]
+//
+) (* end of [trans12_dclau] *)
+
+(* ****** ****** *)
+
+implement
+trans12_dgpat
+  (d1gp) = let
+//
+val
+loc0 = d1gp.loc()
+//
+in (* in-of-let *)
+//
+case+
+d1gp.node() of
+|
+D1GPATpat
+(d1p) =>
+d2gpat_make_node
+( loc0
+, D2GPATpat(trans12_dpat(d1p))
+)
+|
+D1GPATgua
+(d1p, d1gs) =>
+let
+val
+d2p = trans12_dpat(d1p)
+//
+val
+(pf0|()) =
+the_trans12_pushnil()
+val () =
+(
+  the_trans12_add_pat(d2p)
+)
+val
+d2gs = trans12_dgualst(d1gs)
+val
+((*void*)) =
+the_trans12_popfree(pf0|(*void*))
+//
+in
+d2gpat_make_node(loc0, D2GPATgua(d2p, d2gs))
+end
+//
+end (* end of [trans12_dgpat] *)
+
+(* ****** ****** *)
+
+implement
+trans12_dclaulst
+  (d1cls) =
+list_vt2t(d2cls) where
+{
+val
+d2cls =
+list_map<d1clau><d2clau>
+  (d1cls) where
+{
+implement
+list_map$fopr<d1clau><d2clau>(d1cl) = trans12_dclau(d1cl)
+}
+} (* end of [trans12_dclaulst] *)
 
 (* ****** ****** *)
 
@@ -3603,13 +3837,17 @@ def0.node() of
 //
       val id0 =
         sargid_sym(tok)
+      // end of [val]
       val s2v1 =
         s2var_make_idst(id0, s2t)
+      // end of [val]
 //
       val (pf0|()) =
         the_sexpenv_pushnil()
+      // end of [val]
       val ((*void*)) =
         the_sexpenv_add_var(s2v1)
+      // end of [val]
 //
       val s2ps1 =
       (
@@ -4379,12 +4617,34 @@ val nam = d2v0
 val d2c = d2c0
 val loc = rcd.loc
 //
+val wtp =
+(
+case+ rcd.wtp of
+|
+WTHS1EXPnone
+  ((*void*)) => None()
+|
+WTHS1EXPsome
+  (tok, s1e) =>
+  Some(trans12_sexp(s1e))
+) : s2expopt // end-of-val
+//
+//
 val
 (pf0|()) =
 the_trans12_pushnil()
 //
 val arg =
+(
+case+ wtp of
+|
+None() =>
 trans12_farglst(rcd.arg)
+|
+Some(s2f0) =>
+trans12_farglst_s2exp(rcd.arg, s2f0)
+) : f2arglst // end-of-val
+//
 val res =
 trans12_effsexpopt(rcd.res)
 //
@@ -4432,17 +4692,6 @@ end // end of [local]
 val
 ((*void*)) =
 the_trans12_popfree(pf0|(*void*))
-//
-val wtp =
-(
-case+ rcd.wtp of
-|
-WTHS1EXPnone
-  ((*void*)) => None()
-|
-WTHS1EXPsome
-  (tok, s1e) => Some(trans12_sexp(s1e))
-) : s2expopt // end of [val]
 //
 in
 F2UNDECL(
@@ -5926,24 +6175,20 @@ let
 //
 val npf = ~1
 //
-val lin = (0)
 val fc2 =
 (
   if
   nfc0 <= 0
   then FC2fun() else FC2cloref
 ) : funclo2
-val eff = S2EFFnil()
 //
 val s2es =
   list_sing(auxsid(tok0))
 val s2e0 =
   auxarg1(d1cl, nfc0+1, d1as, res0)
 in
-  s2exp_fun_full
-    (fc2, lin, eff, npf, s2es, s2e0)
-  // s2exp_fun_full
-end
+  s2exp_fun_full(fc2, npf, s2es, s2e0)
+end // end of [let]
 *)
 let
   val npf = ~1
@@ -6416,7 +6661,7 @@ case+ s1us of
   end
 )
 //
-} (* end of [trans12_datcon] *)
+} (*where*) // end of [trans12_datcon]
 
 end // end of [local]
 

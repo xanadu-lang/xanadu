@@ -248,9 +248,9 @@ end // end of [local]
 local
 
 absimpl
-f0arg_tbox = $rec{
-  f0arg_loc= loc_t
-, f0arg_node= f0arg_node
+d0typ_tbox = $rec{
+  d0typ_loc= loc_t
+, d0typ_node= d0typ_node
 }
 
 in (* in-of-local *)
@@ -258,23 +258,79 @@ in (* in-of-local *)
 (* ****** ****** *)
 
 implement
-f0arg_get_loc(x0) = x0.f0arg_loc
+d0typ_get_loc(x0) = x0.d0typ_loc
 implement
-f0arg_get_node(x0) = x0.f0arg_node
+d0typ_get_node(x0) = x0.d0typ_node
 
 (* ****** ****** *)
 
 implement
-f0arg_make_node
+d0typ_make_node
 (loc, node) = $rec
 {
-  f0arg_loc= loc, f0arg_node= node
-} (* end of [f0arg_make_node] *)
+  d0typ_loc= loc, d0typ_node= node
+} (* end of [d0typ_make_node] *)
 
 (* ****** ****** *)
 
 end // end of [local]
 
+(* ****** ****** *)
+//
+implement
+st0qua_get_loc
+  (stqa) =
+(
+case+ stqa of
+|
+ST0QUAnone
+( terr ) => terr.loc()
+|
+ST0QUAsome
+( tbeg, _, tend ) =>
+(
+  tbeg.loc() + tend.loc()
+)
+) (* end of [st0qua_get_loc] *)
+//
+implement
+st0inv_get_loc
+  (inv0) =
+(
+case+ inv0 of
+|
+ST0INVnone
+(stqs, terr) =>
+(
+  auxlst(stqs, terr.loc())
+)
+|
+ST0INVsome
+( stqs
+, tbeg, _, tend) =>
+(
+  auxlst(stqs, tend.loc())
+)
+) where
+{
+fun
+auxlst
+( stqs
+: st0qualst
+, loc1: loc_t): loc_t =
+(
+case+ stqs of
+|
+list_nil() => loc1
+|
+list_cons _ =>
+let
+val
+stqa = list_last(stqs) in stqa.loc() + loc1
+end
+)
+} (*where*) // end of [st0inv_get_loc]
+//
 (* ****** ****** *)
 
 local
@@ -333,6 +389,38 @@ case+ x0 of
   // d0pat_RPAREN_cons1
 )  
 //
+(* ****** ****** *)
+
+local
+
+absimpl
+f0arg_tbox = $rec{
+  f0arg_loc= loc_t
+, f0arg_node= f0arg_node
+}
+
+in (* in-of-local *)
+
+(* ****** ****** *)
+
+implement
+f0arg_get_loc(x0) = x0.f0arg_loc
+implement
+f0arg_get_node(x0) = x0.f0arg_node
+
+(* ****** ****** *)
+
+implement
+f0arg_make_node
+(loc, node) = $rec
+{
+  f0arg_loc= loc, f0arg_node= node
+} (* end of [f0arg_make_node] *)
+
+(* ****** ****** *)
+
+end // end of [local]
+
 (* ****** ****** *)
 
 local

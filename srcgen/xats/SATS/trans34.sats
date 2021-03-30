@@ -96,10 +96,18 @@ typedef d3claulst = $D3E.d3claulst
 (* ****** ****** *)
 //
 typedef d4pat = $D4E.d4pat
+typedef f4arg = $D4E.f4arg
 //
 typedef d4exp = $D4E.d4exp
 typedef d4ecl = $D4E.d4ecl
 //
+(* ****** ****** *)
+typedef d4gua = $D4E.d4gua
+typedef d4gpat = $D4E.d4gpat
+typedef d4clau = $D4E.d4clau
+(* ****** ****** *)
+typedef d4patlst = $D4E.d4patlst
+typedef f4arglst = $D4E.f4arglst
 (* ****** ****** *)
 typedef d4expopt = $D4E.d4expopt
 typedef d4explst = $D4E.d4explst
@@ -107,11 +115,24 @@ typedef d4explst = $D4E.d4explst
 typedef d4eclopt = $D4E.d4eclopt
 typedef d4eclist = $D4E.d4eclist
 (* ****** ****** *)
+typedef d4gualst = $D4E.d4gualst
+typedef d4claulst = $D4E.d4claulst
+(* ****** ****** *)
 //
 absvtype
 tr34env_vtype = ptr
 vtypedef
 tr34env = tr34env_vtype
+//
+(* ****** ****** *)
+//
+fun
+tr34env_make_nil
+  ((*void*)): tr34env
+//
+fun
+tr34env_free_nil
+  (env0: tr34env): void
 //
 (* ****** ****** *)
 //
@@ -154,10 +175,32 @@ tr34env_pop_lams
 (* ****** ****** *)
 //
 fun
+trans34_envless
+  (d3cls: d3eclist): d4eclist
+//
+(* ****** ****** *)
+//
+fun
 trans34_dpat
 ( env0:
 ! tr34env, d3p0: d3pat): d4pat
+fun
+trans34_dpatlst
+( env0:
+! tr34env, d3ps: d3patlst): d4patlst
 //
+(* ****** ****** *)
+fun
+trans34_dpat_dntp
+( env0:
+! tr34env
+, d3p0: d3pat, s2e0: s2exp): d4pat
+(* ****** ****** *)
+fun
+trans34_dpatlst_dnts
+( env0:
+! tr34env
+, d3ps: d3patlst, s2e0: s2explst): d4patlst
 (* ****** ****** *)
 //
 fun
@@ -174,6 +217,64 @@ fun
 trans34_dexpopt
 ( env0:
 ! tr34env, opt0: d3expopt): d4expopt
+(* ****** ****** *)
+fun
+trans34_dexp_dntp
+( env0:
+! tr34env
+, d3e0: d3exp, s2e0: s2exp): d4exp
+fun
+trans34_dexplst_dnts
+( env0:
+! tr34env
+, d3es
+: d3explst, s2es: s2explst): d4explst
+(* ****** ****** *)
+//
+fun
+trans34_farg
+( env0
+: !tr34env, f3a0: f3arg): f4arg
+fun
+trans34_farglst
+( env0
+: !tr34env, f3as: f3arglst): f4arglst
+//
+(* ****** ****** *)
+//
+typedef
+effs2expopt =
+$S2E.effs2expopt
+fun
+trans34_farglst_s2exp
+( env0
+: !tr34env
+, f3as
+: f3arglst, s2f0: s2exp
+, sres: &effs2expopt >> _ ): f4arglst
+//
+(* ****** ****** *)
+//
+fun
+trans34_dgpat_dntp
+( env0
+: !tr34env
+, d3gp
+: d3gpat, tmat: s2exp): d4gpat
+//
+fun
+trans34_dclau_dntp
+( env0
+: !tr34env
+, d3cl
+: d3clau, tmat: s2exp, tres: s2exp): d4clau
+fun
+trans34_dclaulst_dntp
+( env0
+: !tr34env
+, dcls
+: d3claulst, tmat: s2exp, tres: s2exp): d4claulst
+//
 (* ****** ****** *)
 //
 fun
@@ -200,9 +301,23 @@ f3undeclist = $D3E.f3undeclist
 (* ****** ****** *)
 
 typedef
+v3aldecl = $D3E.v3aldecl
+typedef
+v3aldeclist = $D3E.v3aldeclist
+
+(* ****** ****** *)
+
+typedef
 f4undecl = $D4E.f4undecl
 typedef
 f4undeclist = $D4E.f4undeclist
+
+(* ****** ****** *)
+
+typedef
+v4aldecl = $D4E.v4aldecl
+typedef
+v4aldeclist = $D4E.v4aldeclist
 
 (* ****** ****** *)
 //
@@ -221,6 +336,51 @@ trans34_fundeclist
 ( env0:
 ! tr34env, f3ds: f3undeclist): f4undeclist
 
+(* ****** ****** *)
+
+fun
+trans34_valdecl
+( env0:
+! tr34env, v3d0: v3aldecl): v4aldecl
+fun
+trans34_valdeclist
+( env0:
+! tr34env, v3ds: v3aldeclist): v4aldeclist
+
+(* ****** ****** *)
+//
+// HX-2021-02-20:
+// Some helper functions for trans34
+//
+(* ****** ****** *)
+fun
+trans34_d4pat_deunis(d4p0: d4pat): d4pat
+(* ****** ****** *)
+//
+fun
+trans34_d4exp_deuni1(d4e0: d4exp): d4exp
+fun
+trans34_d4exp_deunis(d4e0: d4exp): d4exp
+//
+(* ****** ****** *)
+//
+fun
+trans34_d2var_get_sexp
+( env0:
+! tr34env, d2v0: d2var): s2exp
+fun
+trans34_d2var_set_sexp
+( env0:
+! tr34env, d2v0: d2var, s2e0: s2exp): void
+//
+(* ****** ****** *)
+fun
+trans34_d3pat_get_sexp(d3pat): s2exp
+fun
+trans34_d3patlst_get_s2es(d3patlst): s2explst
+(* ****** ****** *)
+fun
+trans34_f3undecl_set_sexp(f3undecl): void
 (* ****** ****** *)
 
 (* end of [xats_trans34.sats] *)

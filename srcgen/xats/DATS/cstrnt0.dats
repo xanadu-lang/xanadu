@@ -13,12 +13,12 @@
 ** the terms of  the GNU GENERAL PUBLIC LICENSE (GPL) as published by the
 ** Free Software Foundation; either version 3, or (at  your  option)  any
 ** later version.
-** 
+**
 ** ATS is distributed in the hope that it will be useful, but WITHOUT ANY
 ** WARRANTY; without  even  the  implied  warranty  of MERCHANTABILITY or
 ** FITNESS FOR A PARTICULAR PURPOSE.  See the  GNU General Public License
 ** for more details.
-** 
+**
 ** You  should  have  received  a  copy of the GNU General Public License
 ** along  with  ATS;  see the  file COPYING.  If not, please write to the
 ** Free Software Foundation,  51 Franklin Street, Fifth Floor, Boston, MA
@@ -28,7 +28,7 @@
 (* ****** ****** *)
 //
 // Author: Hongwei Xi
-// Start Time: January, 2021
+// Start Time: March, 2021
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
@@ -39,57 +39,76 @@
 UN = "prelude/SATS/unsafe.sats"
 //
 (* ****** ****** *)
-
-#staload "./../SATS/statyp2.sats"
-#staload "./../SATS/staexp2.sats"
-#staload "./../SATS/dynexp2.sats"
-#staload "./../SATS/dynexp3.sats"
-#staload "./../SATS/dynexp4.sats"
-
-(* ****** ****** *)
-
-#staload "./../SATS/trans34.sats"
-
+#staload "./../SATS/locinfo.sats"
 (* ****** ****** *)
 //
-datavtype
-tr34env =
-TR34ENV of tr34stk
-//
-and
-tr34stk =
-//
-| tr34stk_nil of ()
+#staload "./../SATS/cstrnt0.sats"
 //
 (* ****** ****** *)
+
+local
+
+datatype
+c0str =
+C0STR of
+( loc_t
+, c0str_node
+, ref(c0strlstopt))
 
 absimpl
-tr34env_vtype = tr34env
+c0str_tbox = c0str
 
-(* ****** ****** *)
-
-implement
-tr34env_make_nil() =
-TR34ENV(tr34stk_nil(*void*))
+in (* in-of-local *)
 
 (* ****** ****** *)
 //
 implement
-tr34env_free_nil
-  (env0) =
+c0str_get_loc(x0) =
 (
-let
-val+
-~TR34ENV(stk0) = env0
-in
-case+ stk0 of
+case x0 of
+| C0STR(loc0, _, _) => loc0)
+implement
+c0str_get_node(x0) =
+(
+case x0 of
+| C0STR(_, node, _) => node)
 //
-|
-~tr34stk_nil((*void*)) => ()
+(* ****** ****** *)
 //
-end
-) (* end of [tr34env_free_nil] *)
+implement
+c0str_get_store(x0) =
+(
+case x0 of
+| C0STR(_, _, store) => !store)
+//
+(* ****** ****** *)
+//
+implement
+c0str_make_node
+(loc0, node) =
+C0STR
+(loc0, node, store) where
+{
+val
+store = ref(None{c0strlst}(*void*))
+} (*$rec*) // end of [c0str_make_node]
 //
 (* ****** ****** *)
 
-(* end of [xats_trans34_envmap.dats] *)
+end // end of [local]
+
+(* ****** ****** *)
+//
+implement
+c0str_make_tcast
+( loc0
+, s2e1(*src*)
+, s2e2(*dst*)) =
+(
+  c0str_make_node
+  (loc0, C0Stlte(s2e1, s2e2))
+)
+//
+(* ****** ****** *)
+
+(* end of [xats_cstrnt0.dats] *)

@@ -36,11 +36,15 @@
 #staload "./xbasics.sats"
 
 (* ****** ****** *)
-
 #staload "./staexp2.sats"
 #staload "./statyp2.sats"
 #staload "./dynexp2.sats"
 #staload "./dynexp3.sats"
+(* ****** ****** *)
+#staload C0S = "./cstrnt0.sats"
+(* ****** ****** *)
+
+typedef c0str = $C0S.c0str
 
 (* ****** ****** *)
 //
@@ -100,6 +104,11 @@ d4pat_node =
 | D4Pany of ()
 | D4Pvar of (d2var)
 //
+| D4Pi00 of (int)
+| D4Pb00 of (bool)
+| D4Pc00 of (char)
+| D4Ps00 of string
+//
 | D4Pint of (token)
 | D4Pbtf of (token)
 | D4Pchr of (token)
@@ -119,16 +128,27 @@ d4pat_node =
 | D4Psap0 of (d4pat, s2explst)
 | D4Psap1 of (d4pat, s2explst)
 //
-| D4Pdap1 of (d4pat)
+| D4Psapx of
+  ( d4pat
+  , s2explst, s2explst(*gua*))
+//
+(*
+// HX-2021-03-21:
+// There is no [D4Pdap0] as
+// it is merged into [D4Pdapp]!
+*)
+| D4Pdap1 of (d4pat) // argness
 | D4Pdapp of
   (d4pat, int(*npf*), d4patlst)
 //
 | D4Ptuple of
   (int(*knd*), int(*npf*), d4patlst)
 //
-| D4Panno of (d4pat, s2exp) // no s2xtv in anno
+| D4Panno of
+  (d4pat, s2exp) // no s2xtv in anno
 //
-| D4Ptcast of (d4pat, t2ype) // HX: error indication?
+| D4Ptcast of
+  (d4pat, c0str) // cstrnt generation
 //
 | D4Pnone0 of ()
 | D4Pnone1 of (d3pat) | D4Pnone2 of (d4pat)
@@ -173,6 +193,10 @@ fun
 d4pat_none1(d3p0: d3pat): d4pat
 //
 (* ****** ****** *)
+fun
+d4pat_tcast
+(d4p1: d4pat, s2e2: s2exp): d4pat
+(* ****** ****** *)
 //
 fun
 d4pat_make_node
@@ -202,7 +226,6 @@ f4arg_node =
 | F4ARGnone of (token)
 *)
 //
-| F4ARGnone2 of f2arg
 | F4ARGnone3 of f3arg
 //
 | F4ARGsome_dyn of
@@ -241,6 +264,26 @@ f4arg_make_node
 (loc: loc_t, node: f4arg_node): f4arg
 //
 (* ****** ****** *)
+//
+datatype
+ti4arg =
+| TI4ARGnone of ()
+| TI4ARGsome of s2explst
+//
+(* ****** ****** *)
+//
+fun
+print_ti4arg: print_type(ti4arg)
+fun
+prerr_ti4arg: prerr_type(ti4arg)
+fun
+fprint_ti4arg: fprint_type(ti4arg)
+//
+overload print with print_ti4arg
+overload prerr with prerr_ti4arg
+overload fprint with fprint_ti4arg
+//
+(* ****** ****** *)
 
 datatype
 d4exp_node =
@@ -259,13 +302,69 @@ d4exp_node =
 | D4Etop of (token)
 //
 | D4Evar of (d2var)
+(*
+HX-2021-03:
+For trans3x:
+Please see trans3x_envmap
+for the meaning of knd
+*)
+| D4Evknd of
+  (int(*kind*), d2var)
+//
+| D4Efcon of (d2con)
+| D4Efcst of (d2cst)
+//
+| D4Etcon of
+  ( d2con
+  , ti4arg(*s2es*)
+  , ti3arg(*t2ps*)
+  , ti2arglst(*sess*))
+| D4Etcst of
+  ( d2cst
+  , ti4arg(*s2es*)
+  , ti3arg(*t2ps*)
+  , ti2arglst(*sess*))
+//
+| D4Etimp of
+  ( stamp
+  , d4exp(*tcst*), t2ypelst(*targ*)
+  , d4ecl(*impl*), t2ypelst(*tsub*)
+  ) (* end of [D4timp] *)
+//
+| D4Esap0 of (d4exp, s2explst)
+| D4Esap1 of (d4exp, s2explst)
+//
+| D4Esapx of
+  ( d4exp
+  , s2explst, s2explst(*prop*))
+(*
+| D4Esmet of (d4exp, s2explst)
+*)
+//
+| D4Esopn of
+  ( d4exp
+  , s2varlst, s2explst(*prop*))
+//
+| D4Edapp of
+  (d4exp, int(*npf*), d4explst)
+//
+| D4Eif0 of
+  ( d4exp
+  , d4exp(*then*), d4expopt(*else*))
+//
+| D4Ecas0 of
+  (int(*knd*), d4exp(*val*), d4claulst)
+//
+| D4Eanno of
+  (d4exp, s2exp) // no s2xtv in anno
 //
 (*
 | D4Eexist1 of
-  (s2explst, d4exp)
-| D4Eopenas of
-  (s2varlst, s2explst, d4exp)
+  (s2explst(*wits*), d4exp(*packed*))
 *)
+//
+| D4Etcast of
+  (d4exp, c0str) // cstrnt generation
 //
 | D4Enone0 of () | D4Enone1 of (d3exp)
 //
@@ -309,6 +408,10 @@ fun
 d4exp_none1(d3e0: d3exp): d4exp
 //
 (* ****** ****** *)
+fun
+d4exp_tcast
+(d4e1: d4exp, s2e2: s2exp): d4exp
+(* ****** ****** *)
 //
 fun
 d4exp_make_node
@@ -328,6 +431,95 @@ fprint_d4exp: fprint_type(d4exp)
 overload print with print_d4exp
 overload prerr with prerr_d4exp
 overload fprint with fprint_d4exp
+//
+(* ****** ****** *)
+//
+datatype
+d4gua_node =
+| D4GUAexp of (d4exp)
+| D4GUAmat of (d4exp, d4pat)
+//
+fun
+d4gua_get_loc(d4gua): loc_t
+fun
+d4gua_get_node(d4gua): d4gua_node
+//
+overload .loc with d4gua_get_loc
+overload .node with d4gua_get_node
+//
+fun print_d4gua : (d4gua) -> void
+fun prerr_d4gua : (d4gua) -> void
+fun fprint_d4gua : fprint_type(d4gua)
+//
+overload print with print_d4gua
+overload prerr with prerr_d4gua
+overload fprint with fprint_d4gua
+//
+fun
+d4gua_make_node
+(loc: loc_t, node: d4gua_node): d4gua
+//
+(* ****** ****** *)
+//
+datatype
+d4clau_node =
+| D4CLAUpat of d4gpat
+| D4CLAUexp of (d4gpat, d4exp)
+and
+d4gpat_node =
+| D4GPATpat of (d4pat)
+| D4GPATgua of (d4pat, d4gualst)
+//
+(* ****** ****** *)
+//
+fun
+d4clau_get_loc(d4clau): loc_t
+fun
+d4clau_get_node(d4clau): d4clau_node
+//
+overload .loc with d4clau_get_loc
+overload .node with d4clau_get_node
+//
+fun
+d4gpat_get_loc(d4gpat): loc_t
+fun
+d4gpat_get_node(d4gpat): d4gpat_node
+//
+overload .loc with d4gpat_get_loc
+overload .node with d4gpat_get_node
+//
+(* ****** ****** *)
+//
+fun
+print_d4gpat : (d4gpat) -> void
+fun
+prerr_d4gpat : (d4gpat) -> void
+fun
+fprint_d4gpat : fprint_type(d4gpat)
+//
+overload print with print_d4gpat
+overload prerr with prerr_d4gpat
+overload fprint with fprint_d4gpat
+//
+fun
+print_d4clau : (d4clau) -> void
+fun
+prerr_d4clau : (d4clau) -> void
+fun
+fprint_d4clau : fprint_type(d4clau)
+//
+overload print with print_d4clau
+overload prerr with prerr_d4clau
+overload fprint with fprint_d4clau
+//
+(* ****** ****** *)
+//
+fun
+d4clau_make_node
+(loc: loc_t, node: d4clau_node): d4clau
+fun
+d4gpat_make_node
+(loc: loc_t, node: d4gpat_node): d4gpat
 //
 (* ****** ****** *)
 //
@@ -353,6 +545,53 @@ f4undeclist = List0(f4undecl)
 //
 (* ****** ****** *)
 //
+fun
+print_f4undecl: print_type(f4undecl)
+fun
+prerr_f4undecl: prerr_type(f4undecl)
+fun
+fprint_f4undecl: fprint_type(f4undecl)
+//
+(* ****** ****** *)
+//
+datatype
+v4aldecl =
+V4ALDECL of @{
+  loc= loc_t
+, pat= d4pat
+, def= d4expopt
+, wtp= s2expopt
+(*
+, ctp= t2pcast
+*)
+}
+//
+typedef
+v4aldeclist = List0(v4aldecl)
+//
+(* ****** ****** *)
+//
+fun
+print_v4aldecl: print_type(v4aldecl)
+fun
+prerr_v4aldecl: prerr_type(v4aldecl)
+fun
+fprint_v4aldecl: fprint_type(v4aldecl)
+//
+(* ****** ****** *)
+//
+datatype
+d4transd =
+D4TRANSD of @{
+  stadyn= int
+, source= filpath
+, transd=
+  Option(d4eclist)
+} where
+  filpath= $FP0.filpath
+//
+(* ****** ****** *)
+//
 datatype
 d4ecl_node =
 //
@@ -363,6 +602,13 @@ d4ecl_node =
   ( token(*funknd*)
   , decmodopt
   , tq2arglst(*tmpargs*), f4undeclist)
+//
+| D4Cvaldecl of
+  (token(*knd*), decmodopt, v4aldeclist)
+(*
+| D4Cvardecl of
+  (token(*knd*), decmodopt, v4ardeclist)
+*)
 //
 (* ****** ****** *)
 //
