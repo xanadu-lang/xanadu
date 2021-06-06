@@ -177,7 +177,8 @@ s2e0.node() of
     (s2t0, T2Pfun(fc2, npf, t2ps, t2p1))
   end
 //
-| S2Etop(knd, s2e1) => s2exp_erase(s2e1)
+| S2Etop(s2e1) => s2exp_erase(s2e1)
+| S2Etpz(s2e1) => s2exp_erase(s2e1)
 //
 | S2Earg(knd, s2e1) =>
   (
@@ -210,19 +211,20 @@ s2e0.node() of
     t2ype_make_node(s2t0, T2Plam(s2vs, t2p1))
   end
 //
-| S2Etyext(tnm1, s2es) =>
-  let
-    val t2ps = s2explst_erase(s2es)
-  in
-    t2ype_make_node(s2t0, T2Ptyext(tnm1, t2ps))
-  end
+|
+S2Etyext(tnm1, s2es) =>
+let
+  val t2ps = s2explst_erase(s2es)
+in
+  t2ype_make_node(s2t0, T2Ptyext(tnm1, t2ps))
+end
 //
 |
 S2Etyrec(knd, npf, ls2es) =>
 let
-  val lt2ps = labs2explst_erase(ls2es)
+val lt2ps = labs2explst_erase(ls2es)
 in
-  t2ype_make_node(s2t0, T2Ptyrec(knd, npf, lt2ps))
+t2ype_make_node(s2t0, T2Ptyrec(knd, npf, lt2ps))
 end
 //
 | _(*rest-of-s2exp*) => t2ype_none1(s2e0)
@@ -230,7 +232,9 @@ end
 )
 //
 in
-  if impred then auxmain(s2e0) else the_t2ype_none0
+if
+impred
+then auxmain(s2e0) else t2ype_none0(s2e0.sort())
 end // end of [s2exp_erase]
 
 (* ****** ****** *)
@@ -397,29 +401,31 @@ t2ype_subst$var<>(t2p0, flag)
     val t2p1 = auxt2p0(t2p1, flag)
   }
 //
-| T2Papp
-  (t2p1, t2ps) => let
-    val
-    t2p1 = auxt2p0(t2p1, flag)
-    val
-    t2ps = auxt2ps(t2ps, flag)
-  in
-    if
-    flag=fini
-    then t2p0
-    else
-    t2ype_make_node(s2t0, T2Papp(t2p1, t2ps))
-  end
-| T2Plam(s2vs, t2p1) => let
-    val
-    t2p1 = auxt2p0(t2p1, flag)
-  in
-    if
-    flag=fini
-    then t2p0
-    else
-    t2ype_make_node(s2t0, T2Plam(s2vs, t2p1))
-  end
+|
+T2Papp
+(t2p1, t2ps) => let
+val
+t2p1 = auxt2p0(t2p1, flag)
+val
+t2ps = auxt2ps(t2ps, flag)
+in
+  if
+  flag=fini
+  then t2p0
+  else
+  t2ype_make_node(s2t0, T2Papp(t2p1, t2ps))
+end // end of [T2Papp]
+|
+T2Plam(s2vs, t2p1) => let
+val
+  t2p1 = auxt2p0(t2p1, flag)
+in
+  if
+  flag=fini
+  then t2p0
+  else
+  t2ype_make_node(s2t0, T2Plam(s2vs, t2p1))
+end // end of [T2Plam]
 //
 |
 T2Pfun
@@ -433,30 +439,32 @@ in
   if
   flag=fini
   then t2p0
-  else
-  t2ype_make_node(s2t0, T2Pfun(fc2, npf, t2ps, t2p1))
+  else t2ype_make_node
+       (s2t0, T2Pfun(fc2, npf, t2ps, t2p1))
 end
 //
-| T2Pexi(s2vs, t2p1) => let
-    val
-    t2p1 = auxt2p0(t2p1, flag)
-  in
-    if
-    flag=fini
-    then t2p0
-    else
-    t2ype_make_node(s2t0, T2Pexi(s2vs, t2p1))
-  end
-| T2Puni(s2vs, t2p1) => let
-    val
-    t2p1 = auxt2p0(t2p1, flag)
-  in
-    if
-    flag=fini
-    then t2p0
-    else
-    t2ype_make_node(s2t0, T2Puni(s2vs, t2p1))
-  end
+|
+T2Pexi(s2vs, t2p1) => let
+  val
+  t2p1 = auxt2p0(t2p1, flag)
+in
+  if
+  flag=fini
+  then t2p0
+  else
+  t2ype_make_node(s2t0, T2Pexi(s2vs, t2p1))
+end
+|
+T2Puni(s2vs, t2p1) => let
+  val
+  t2p1 = auxt2p0(t2p1, flag)
+in
+  if
+  flag=fini
+  then t2p0
+  else
+  t2ype_make_node(s2t0, T2Puni(s2vs, t2p1))
+end
 //
 |
 T2Ptyext(name, t2ps) =>
@@ -1049,6 +1057,8 @@ in t2p0 end // end of [let]
 //
 end where
 {
+(* ****** ****** *)
+//
 fun
 auxbas
 ( t2p0: t2ype
@@ -1071,7 +1081,9 @@ t2p0.node() of
   }
 //
 end // end of [auxbas]
-
+//
+(* ****** ****** *)
+//
 and
 auxvar
 ( t2p0: t2ype
@@ -1082,7 +1094,9 @@ val-
 T2Pvar
 (s2v0) = t2p0.node() in t2p0
 end // end of [auxvar]
-
+//
+(* ****** ****** *)
+//
 and
 auxcst
 ( t2p0: t2ype
@@ -1091,7 +1105,9 @@ auxcst
 (
   t2ype_whnfz$cst(t2p0, flag)
 )
-
+//
+(* ****** ****** *)
+//
 and
 auxxtv
 ( t2p0: t2ype
@@ -1120,7 +1136,9 @@ in
 end
 //
 end // end of [auxxtv]
-
+//
+(* ****** ****** *)
+//
 and
 auxapp
 ( t2p0: t2ype
@@ -1158,7 +1176,9 @@ t2p1.node() of
   else t2ype_make_node(t2p0.sort(), T2Papp(t2p1, t2ps))
 //
 end // end of [auxapp]
-
+//
+(* ****** ****** *)
+//
 and
 auxt2p0
 ( t2p0: t2ype

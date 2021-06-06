@@ -389,7 +389,7 @@ d3e0.node() of
 | D3Etop _ => ()
 //
 | D3Evar _ => ()
-| D3Evknd _ => ()
+| D3Ekvar _ => ()
 //
 | D3Econ1 _ => ()
 | D3Ecst1 _ => ()
@@ -628,7 +628,8 @@ d3e0.node() of
   val () = tread3x_d3explst(d3es)
   }
 //
-| D3Eanno(d3e1, s2e2) =>
+| D3Eanno
+  (d3e1, s1e2, s2e2) =>
   {
     val () = tread3x_d3exp(d3e1)
   }

@@ -49,6 +49,7 @@
 (* ****** ****** *)
 
 typedef s2var = $S2E.s2var
+typedef s2xtv = $S2E.s2xtv
 typedef s2exp = $S2E.s2exp
 typedef t2xtv = $S2T.t2xtv
 typedef t2ype = $S2T.t2ype
@@ -72,8 +73,17 @@ typedef d2var = $D2E.d2var
 //
 typedef d2cst = $D2E.d2cst
 //
+(* ****** ****** *)
+//
+typedef tq2arg = $D2E.tq2arg
+typedef tq2arglst = $D2E.tq2arglst
+//
+(* ****** ****** *)
+//
 typedef d3pat = $D3E.d3pat
 typedef f3arg = $D3E.f3arg
+//
+(* ****** ****** *)
 //
 typedef d3exp = $D3E.d3exp
 typedef d3ecl = $D3E.d3ecl
@@ -130,9 +140,23 @@ fun
 tr34env_make_nil
   ((*void*)): tr34env
 //
+(* ****** ****** *)
+//
 fun
 tr34env_free_nil
   (env0: tr34env): void
+fun
+tr34env_free_top
+  (env0: tr34env): void
+//
+(* ****** ****** *)
+//
+fun
+tr34env_add_fun0
+  ( env0: !tr34env ) : void
+fun
+tr34env_pop_fun0
+  ( env0 : !tr34env ) : void
 //
 (* ****** ****** *)
 //
@@ -173,10 +197,109 @@ tr34env_pop_lams
   ( env0 : !tr34env ) : void
 //
 (* ****** ****** *)
+fun
+tr34env_add_dvar_sexp
+( env0:
+! tr34env
+, d2v0: d2var, s2e0: s2exp): void
+(* ****** ****** *)
+fun
+s2exp_tq2as_elim
+( loc0: loc_t
+, s2e0: s2exp, tqas: tq2arglst): s2exp
+(* ****** ****** *)
+//
+fun
+t2ype_sexpize_env
+( env0:
+! tr34env, t2p0: t2ype): s2exp
+//
+fun
+s2exp_whnfize_env
+( env0:
+! tr34env, s2e0: s2exp): s2exp
+//
+overload
+sexpize_env with t2ype_sexpize_env
+overload
+whnfize_env with s2exp_whnfize_env
+//
+(* ****** ****** *)
+//
+fun
+s2exp_eqeqize_env
+( env0:
+! tr34env
+, s2e1: s2exp, s2e2: s2exp): void
+fun
+s2exp_tpeqize_env
+( env0:
+! tr34env
+, s2e1: s2exp, s2e2: s2exp): void
+fun
+s2exp_tsubize_env
+( env0:
+! tr34env
+, s2e1: s2exp, s2e2: s2exp): void
+//
+(* ****** ****** *)
+//
+(*
+fun
+s2exp_opnx_env
+( loc0: loc_t
+, s2e0: s2exp): s2xtv
+*)
+fun
+s2exp_opny_env
+( env0:
+! tr34env
+, s2e0: s2exp)
+: (s2varlst, s2explst, s2exp)
+//
+(* ****** ****** *)
+fun
+d4exp_open_env
+( env0:
+! tr34env, d4e0: d4exp): d4exp
+fun
+d4exp_opny_env
+( env0:
+! tr34env, d4e0: d4exp): d4exp
+(* ****** ****** *)
 //
 fun
 trans34_envless
-  (d3cls: d3eclist): d4eclist
+( dcls: d3eclist ) : d4eclist
+//
+(* ****** ****** *)
+//
+(*
+fun
+trans34_s2eopn
+( env0:
+! tr34env, s2e0: s2exp): s2exp
+*)
+//
+(*
+//
+HX-2021-05-10:
+[trans34_d4popn] should
+only be applied to var-likes!
+//
+fun
+trans34_d4popn
+( env0:
+! tr34env, d4p0: d4pat): d4pat
+//
+*)
+//
+(*
+fun
+trans34_d4eopn
+( env0:
+! tr34env, d4e0: d4exp): d4exp
+*)
 //
 (* ****** ****** *)
 //
@@ -200,7 +323,8 @@ fun
 trans34_dpatlst_dnts
 ( env0:
 ! tr34env
-, d3ps: d3patlst, s2e0: s2explst): d4patlst
+, d3ps
+: d3patlst, s2e0: s2explst): d4patlst
 (* ****** ****** *)
 //
 fun
@@ -365,22 +489,25 @@ trans34_d4exp_deunis(d4e0: d4exp): d4exp
 (* ****** ****** *)
 //
 fun
-trans34_d2var_get_sexp
+tr34env_d2var_get_sexp
 ( env0:
 ! tr34env, d2v0: d2var): s2exp
 fun
-trans34_d2var_set_sexp
+tr34env_d2var_set_sexp
 ( env0:
 ! tr34env, d2v0: d2var, s2e0: s2exp): void
 //
 (* ****** ****** *)
 fun
-trans34_d3pat_get_sexp(d3pat): s2exp
+trans34_d3pat_get_sexp
+(env0: !tr34env, d3p0: d3pat): s2exp
 fun
-trans34_d3patlst_get_s2es(d3patlst): s2explst
+trans34_d3patlst_get_s2es
+(env0: !tr34env, d3ps: d3patlst): s2explst
 (* ****** ****** *)
 fun
-trans34_f3undecl_set_sexp(f3undecl): void
+trans34_f3undecl_set_sexp
+(env0: !tr34env, f3d0: f3undecl): void
 (* ****** ****** *)
 
 (* end of [xats_trans34.sats] *)

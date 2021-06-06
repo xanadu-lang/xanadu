@@ -28,7 +28,7 @@
 (* ****** ****** *)
 //
 // Author: Hongwei Xi
-// Start Time: March, 2021
+// Start Time: May 22nd, 2021
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
@@ -39,64 +39,89 @@
 UN = "prelude/SATS/unsafe.sats"
 //
 (* ****** ****** *)
-//
-#staload "./../SATS/staexp2.sats"
-//
+#staload "./../SATS/locinfo.sats"
 (* ****** ****** *)
 //
-#staload "./../SATS/cstrnt0.sats"
-//
-(* ****** ****** *)
-implement
-print_c0str(x0) =
-fprint_c0str(stdout_ref, x0)
-implement
-prerr_c0str(x0) =
-fprint_c0str(stderr_ref, x0)
-(* ****** ****** *)
-implement
-fprint_val<c0str> = fprint_c0str
-(* ****** ****** *)
-//
-implement
-fprint_c0str
-  (out, x0) =
-(
-case+ x0 of
-//
-(*
-|
-C0Heqeq(s2e1, s2e2) =>
-fprint!
-( out
-, "C0Heqeq(", s2e1, "; ", s2e2, ")")
-*)
-|
-C0Htpeq(s2e1, s2e2) =>
-fprint!
-( out
-, "C0Htpeq(", s2e1, "; ", s2e2, ")")
-//
-(*
-|
-C0Ieqeq(s2e1, s2e2) =>
-fprint!
-( out
-, "C0Ieqeq(", s2e1, "; ", s2e2, ")")
-*)
-|
-C0Itple(s2e1, s2e2) =>
-fprint!
-( out
-, "C0Itple(", s2e1, "; ", s2e2, ")")
-|
-C0Itpeq(s2e1, s2e2) =>
-fprint!
-( out
-, "C0Itpeq(", s2e1, "; ", s2e2, ")")
-//
-) (* end of [fprint_c0str] *)
+#staload "./../SATS/cstrnt1.sats"
 //
 (* ****** ****** *)
 
-(* end of [xats_cstrnt0_print.dats] *)
+local
+
+absimpl
+c1hyp_tbox = $rec
+{ c1hyp_loc= loc_t
+, c1hyp_node= c1hyp_node
+} (* $rec *)
+
+in (* in-of-local *)
+
+(* ****** ****** *)
+//
+implement
+c1hyp_get_loc
+  (c1s) = c1s.c1hyp_loc
+implement
+c1hyp_get_node
+  (c1s) = c1s.c1hyp_node
+//
+(* ****** ****** *)
+
+implement
+c1hyp_make_node
+(loc0, node) =
+$rec{
+  c1hyp_loc=loc0
+, c1hyp_node= node
+} (* $rec *) // c1hyp_make_node
+
+(* ****** ****** *)
+
+end // end of [local]
+
+(* ****** ****** *)
+
+local
+
+absimpl
+c1str_tbox = $rec
+{ c1str_loc= loc_t
+, c1str_kind= c1knd
+, c1str_node= c1str_node
+} (* $rec *)
+
+in (* in-of-local *)
+
+(* ****** ****** *)
+//
+implement
+c1str_get_loc
+  (c1s) = c1s.c1str_loc
+implement
+c1str_get_node
+  (c1s) = c1s.c1str_node
+//
+(* ****** ****** *)
+//
+implement
+c1str_make_node1
+(loc0, node) =
+c1str_make_node2
+( loc0
+, C1Knone(), node)
+implement
+c1str_make_node2
+(loc0, c1k0, node) =
+$rec{
+  c1str_loc=loc0
+, c1str_kind= c1k0
+, c1str_node= node
+} (* $rec *) // c1str_make_node2
+//
+(* ****** ****** *)
+
+end // end of [local]
+
+(* ****** ****** *)
+
+(* end of [xats_cstrnt1.dats] *)

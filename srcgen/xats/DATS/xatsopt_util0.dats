@@ -102,6 +102,8 @@ FS0 = "./../SATS/filsrch.sats"
 #staload "./../SATS/tread34.sats"
 //
 (* ****** ****** *)
+#staload "./../SATS/trans4x.sats"
+(* ****** ****** *)
 #staload "./../SATS/xatsopt.sats"
 (* ****** ****** *)
 
@@ -307,6 +309,18 @@ d3csopt of
   (trans34_envless(d3cs))
 ) : Option(d4eclist) // end-of-val
 //
+val
+c1isopt =
+(
+case+
+d4csopt of
+| None() =>
+  None(*void*)
+| Some(d4cs) =>
+  Some
+  (trans4x_envless(d4cs))
+) : Option(c1itmlst) // end-of-val
+//
 in
 D4TRANSD@{
   stadyn= stadyn
@@ -338,7 +352,24 @@ trans03_package(p0kg)
 //
 val
 p4kg =
-trans34_package(p3kg) in tcomp30_package(p3kg)
+trans34_package(p3kg)
+val () =
+tread34_package(p4kg)
+//
+in(*in-of-let*)
+//
+tcomp30_package(p3kg) where
+{
+(*
+val () =
+let
+val cstr =
+trans4x_package(p4kg)
+in
+  xatsopt_cstrnt1_solving(cstr)
+end
+*)
+} (*where*) // tcomp30_package
 //
 end // end of [trs04cmp30_package]
 //
@@ -354,12 +385,12 @@ and MICRO = 0
 //
 in
 //
-  fprint!
-  (out, "ATS/Xanadu version ");
-  fprint!
-  (out, MAJOR, ".", MINOR, ".", MICRO);
-  fprintln!
-  (out, " Copyright (c) 2018-20?? Hongwei Xi")
+fprint!
+(out, "ATS/Xanadu version ");
+fprint!
+(out, MAJOR, ".", MINOR, ".", MICRO);
+fprintln!
+(out, " Copyright (c) 2018-20?? Hongwei Xi")
 //
 end // end of [xatsopt_version]
 //

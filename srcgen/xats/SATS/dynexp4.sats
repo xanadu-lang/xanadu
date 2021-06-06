@@ -130,7 +130,15 @@ d4pat_node =
 //
 | D4Psapx of
   ( d4pat
-  , s2explst, s2explst(*gua*))
+  , s2explst, s2explst(*prop*))
+//
+(*
+| D4Popnx of
+  ( d4pat, s2xtv(*deexi*) )
+*)
+| D4Popny of
+  ( d4pat
+  , s2varlst, s2explst(*prop*))
 //
 (*
 // HX-2021-03-21:
@@ -145,10 +153,15 @@ d4pat_node =
   (int(*knd*), int(*npf*), d4patlst)
 //
 | D4Panno of
-  (d4pat, s2exp) // no s2xtv in anno
+  ( d4pat
+  , s1exp, s2exp) // no s2xtv in anno
 //
+| D4Ptasmp of
+  ( d4pat, c0str) // cstrnt generation
+(*
 | D4Ptcast of
-  (d4pat, c0str) // cstrnt generation
+  ( d4pat, c0str) // cstrnt generation
+*)
 //
 | D4Pnone0 of ()
 | D4Pnone1 of (d3pat) | D4Pnone2 of (d4pat)
@@ -193,6 +206,9 @@ fun
 d4pat_none1(d3p0: d3pat): d4pat
 //
 (* ****** ****** *)
+fun
+d4pat_tasmp
+(d4p1: d4pat, s2e2: s2exp): d4pat
 fun
 d4pat_tcast
 (d4p1: d4pat, s2e2: s2exp): d4pat
@@ -308,7 +324,7 @@ For trans3x:
 Please see trans3x_envmap
 for the meaning of knd
 *)
-| D4Evknd of
+| D4Ekvar of
   (int(*kind*), d2var)
 //
 | D4Efcon of (d2con)
@@ -341,12 +357,22 @@ for the meaning of knd
 | D4Esmet of (d4exp, s2explst)
 *)
 //
-| D4Esopn of
+(*
+| D4Eopnx of
+  ( d4exp, s2xtv(*deexi*) )
+*)
+| D4Eopny of
   ( d4exp
   , s2varlst, s2explst(*prop*))
 //
 | D4Edapp of
   (d4exp, int(*npf*), d4explst)
+| D4Edapq of
+  (d4exp, int(*npf*), d4explst)
+//
+| D4Elet of
+  (d4eclist, d4exp(*sequence*))
+| D4Ewhere of (d4exp, d4eclist)
 //
 | D4Eif0 of
   ( d4exp
@@ -356,17 +382,18 @@ for the meaning of knd
   (int(*knd*), d4exp(*val*), d4claulst)
 //
 | D4Eanno of
-  (d4exp, s2exp) // no s2xtv in anno
+  (d4exp, s1exp(*anno*), s2exp(*type*))
 //
 (*
 | D4Eexist1 of
-  (s2explst(*wits*), d4exp(*packed*))
+  ( s2explst(*wits*), d4exp(*packed*) )
 *)
 //
 | D4Etcast of
-  (d4exp, c0str) // cstrnt generation
+  (d4exp, c0str) // constraint generation
 //
-| D4Enone0 of () | D4Enone1 of (d3exp)
+| D4Enone0 of ()
+| D4Enone1 of (d3exp) | D4Enone2 of (d4exp)
 //
 (* ****** ****** *)
 //
@@ -406,6 +433,8 @@ overload .sexp with d4exp_get_sexp
 //
 fun
 d4exp_none1(d3e0: d3exp): d4exp
+fun
+d4exp_none2(d4e0: d4exp): d4exp
 //
 (* ****** ****** *)
 fun
@@ -581,6 +610,30 @@ fprint_v4aldecl: fprint_type(v4aldecl)
 (* ****** ****** *)
 //
 datatype
+v4ardecl =
+V4ARDECL of @{
+  loc= loc_t
+, d2v= d2var
+, wth= d2varopt
+, res= s2expopt
+, ini= d4expopt
+}
+//
+typedef
+v4ardeclist = List0(v4ardecl)
+//
+(* ****** ****** *)
+//
+fun
+print_v4ardecl: print_type(v4ardecl)
+fun
+prerr_v4ardecl: prerr_type(v4ardecl)
+fun
+fprint_v4ardecl: fprint_type(v4ardecl)
+//
+(* ****** ****** *)
+//
+datatype
 d4transd =
 D4TRANSD of @{
   stadyn= int
@@ -605,10 +658,8 @@ d4ecl_node =
 //
 | D4Cvaldecl of
   (token(*knd*), decmodopt, v4aldeclist)
-(*
 | D4Cvardecl of
   (token(*knd*), decmodopt, v4ardeclist)
-*)
 //
 (* ****** ****** *)
 //

@@ -190,7 +190,7 @@ let
 val-
 D3Evar(d2v0) = dend
 in
-D3Evknd(knd, d2v0) where
+D3Ekvar(knd, d2v0) where
 {
 val
 knd =
@@ -597,13 +597,15 @@ end // end of [D3Ellazy]
 //
 |
 D3Eanno
-(d3e1, s2e2(*anno*)) =>
+( d3e1
+, s1e2, s2e2(*anno*)) =>
 let
 //
 val d3e1 =
 trans3x_dexp(env0, d3e1)
 //
-val dend = D3Eanno(d3e1, s2e2)
+val dend =
+D3Eanno(d3e1, s1e2, s2e2)
 //
 in
   d3exp_make_node(loc0, t2p0, dend)
@@ -765,6 +767,10 @@ val rtp = rcd.rtp
 val wtp = rcd.wtp
 val ctp = rcd.ctp
 //
+val () =
+tr3xenv_add_fix1
+(env0, nam(*d2v*))
+//
 val def =
 (
 case+ a3g of
@@ -782,6 +788,9 @@ Some
 (aux_f3as_body(env0, f3as, body))
 )
 ) : d3expopt // val
+//
+val () =
+tr3xenv_pop_fix1(env0)
 //
 val rtp = t2ype_normize(rtp) 
 //

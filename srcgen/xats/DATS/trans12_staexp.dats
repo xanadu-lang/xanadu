@@ -1384,22 +1384,6 @@ end // [auxapp1_cbrf_]
 (* ****** ****** *)
 
 and
-auxapp1_atx_
-( s1e0
-: s1exp): s2exp = let
-//
-val-
-S1Eapp1
-(s1e1, s1e2) = s1e0.node()
-//
-in
-s2exp_arg
-(1(*cbr*), trans12_sexp_ci(s1e2))
-end // [auxapp1_atx_]
-
-(* ****** ****** *)
-
-and
 auxapp1_top0_
 ( s1e0
 : s1exp): s2exp = let
@@ -1410,7 +1394,7 @@ S1Eapp1
 //
 in
 s2exp_top
-(0(*knd*), trans12_sexp_ci(s1e2))
+( trans12_sexp_ci( s1e2 ) )
 end // [auxapp1_top0_]
 and
 auxapp1_top1_
@@ -1422,8 +1406,8 @@ S1Eapp1
 (s1e1, s1e2) = s1e0.node()
 //
 in
-s2exp_top
-(1(*knd*), trans12_sexp_ci(s1e2))
+s2exp_tpz
+( trans12_sexp_ci( s1e2 ) )
 end // [auxapp1_top1_]
 
 (* ****** ****** *)

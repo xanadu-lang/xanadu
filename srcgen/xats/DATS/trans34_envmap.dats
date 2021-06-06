@@ -54,12 +54,37 @@ UN = "prelude/SATS/unsafe.sats"
 //
 datavtype
 tr34env =
-TR34ENV of tr34stk
+TR34ENV of
+(abststk, dvarstk)
 //
-and
-tr34stk =
+(* ****** ****** *)
 //
-| tr34stk_nil of ()
+and abststk =
+//
+| abststk_nil of ()
+//
+| abststk_let1 of abststk
+| abststk_loc1 of abststk
+| abststk_loc2 of abststk
+//
+| abststk_open of
+  (d3ecl, s2cst, s2exp, abststk)
+| abststk_impl of
+  (d3ecl, s2cst, s2exp, abststk)
+//
+(* ****** ****** *)
+//
+and dvarstk =
+//
+| dvarstk_nil of ()
+//
+| dvarstk_fun0 of dvarstk
+//
+| dvarstk_let1 of dvarstk
+| dvarstk_loc1 of dvarstk
+| dvarstk_loc2 of dvarstk
+//
+| dvarstk_cons of (d2var, s2exp, dvarstk)
 //
 (* ****** ****** *)
 
@@ -67,28 +92,246 @@ absimpl
 tr34env_vtype = tr34env
 
 (* ****** ****** *)
-
+//
 implement
 tr34env_make_nil() =
-TR34ENV(tr34stk_nil(*void*))
-
+TR34ENV
+(abststk_nil(), dvarstk_nil())
+//
 (* ****** ****** *)
 //
 implement
 tr34env_free_nil
+  (env0) = () where
+{
+//
+val+
+~TR34ENV(tstk, dstk) = env0
+//
+val () =
+case- tstk of ~abststk_nil() => ()
+val () =
+case- dstk of ~dvarstk_nil() => ()
+//
+} (* end of [tr34env_free_nil] *)
+//
+(* ****** ****** *)
+//
+local
+//
+fun
+auxtstk
+( tstk
+: abststk): void =
+(
+case- tstk of
+|
+~abststk_nil() => ()
+|
+~abststk_open
+( d3cl
+, s2c1
+, s2e1
+, tstk) => auxtstk(tstk)
+) (* end of [auxtstk] *)
+//
+fun
+auxdstk
+( dstk
+: dvarstk): void =
+(
+case- dstk of
+|
+~dvarstk_nil() => ()
+|
+~dvarstk_cons
+( d2v1
+, s2e1
+, dstk) => auxdstk(dstk)
+) (* end of [auxdstk] *)
+//
+in(*in-of-local*)
+//
+implement
+tr34env_free_top
+  (env0) =
+{
+  val () = auxtstk(tstk)
+  val () = auxdstk(dstk)
+} where {
+//
+val+
+~TR34ENV(tstk, dstk) = env0
+//
+} (* end of [tr34env_free_top] *)
+//
+end // end of [local]
+//
+(* ****** ****** *)
+//
+implement
+tr34env_add_fun0
   (env0) =
 (
-let
-val+
-~TR34ENV(stk0) = env0
-in
-case+ stk0 of
+case+ env0 of
+|
+@TR34ENV(tstk, dstk) =>
+(
+  fold@(env0)) where
+{
+val () =
+( dstk := dvarstk_fun0(dstk) )
+}
+) (* end of [tr34env_add_fun0] *)
+//
+implement
+tr34env_pop_fun0
+  (env0) =
+(
+case+ env0 of
+|
+@TR34ENV(tstk, dstk) =>
+(
+  fold@(env0)) where
+{
+val () = (dstk := auxdstk(dstk))
+}
+) where
+{
+fun
+auxdstk
+( dstk
+: dvarstk): dvarstk =
+(
+case- dstk of
+| ~
+dvarstk_fun0
+( dstk ) => dstk
+| ~
+dvarstk_cons
+(d2v1, s2e1, dstk) => auxdstk(dstk)
+)
+} (* end of [tr34env_pop_fun0] *)
+//
+(* ****** ****** *)
+//
+implement
+tr34env_add_let1
+  (env0) =
+(
+case+ env0 of
+|
+@TR34ENV(tstk, dstk) =>
+(
+  fold@(env0)) where
+{
+val () =
+( dstk := dvarstk_let1(dstk) )
+}
+) (* end of [tr34env_add_let1] *)
+//
+implement
+tr34env_pop_let1
+  (env0) =
+(
+case+ env0 of
+|
+@TR34ENV(tstk, dstk) =>
+(
+  fold@(env0)) where
+{
+val () = (dstk := auxdstk(dstk))
+}
+) where
+{
+fun
+auxdstk
+( dstk
+: dvarstk): dvarstk =
+(
+case- dstk of
+| ~
+dvarstk_let1
+( dstk ) => dstk
+| ~
+dvarstk_cons
+(d2v1, s2e1, dstk) => auxdstk(dstk)
+)
+} (* end of [tr34env_pop_let1] *)
+//
+(* ****** ****** *)
+//
+local
+//
+fun
+dvarstk_find
+( dstk:
+! dvarstk
+, d2v0: d2var): s2exp =
+(
+case+ dstk of
+|
+dvarstk_nil() =>
+the_s2exp_none0(*void*)
 //
 |
-~tr34stk_nil((*void*)) => ()
+dvarstk_fun0
+( dstk ) =>
+dvarstk_find(dstk, d2v0)
+|
+dvarstk_let1
+( dstk ) =>
+dvarstk_find(dstk, d2v0)
+|
+dvarstk_loc1
+( dstk ) =>
+dvarstk_find(dstk, d2v0)
+|
+dvarstk_loc2
+( dstk ) =>
+dvarstk_find(dstk, d2v0)
 //
-end
-) (* end of [tr34env_free_nil] *)
+|
+dvarstk_cons
+(d2v1, s2e1, dstk) =>
+if
+(d2v0=d2v1)
+then (s2e1)
+else dvarstk_find(dstk, d2v0)
+//
+)
+//
+in(* in-of-local *)
+//
+implement
+tr34env_d2var_get_sexp
+( env0, d2v0 ) =
+(
+case+ env0 of
+|
+TR34ENV
+(_, dstk) => dvarstk_find(dstk, d2v0)
+)
+//
+end // end of [local]
+//
+(* ****** ****** *)
+//
+implement
+tr34env_add_dvar_sexp
+( env0, d2v0, s2e0 ) =
+(
+case+ env0 of
+|
+@TR34ENV
+(_, dstk) =>
+(
+  fold@(env0)) where
+{
+val () =
+dstk := dvarstk_cons(d2v0, s2e0, dstk)
+}
+) (* end of [tr34env_add_dvar_sexp] *)
 //
 (* ****** ****** *)
 

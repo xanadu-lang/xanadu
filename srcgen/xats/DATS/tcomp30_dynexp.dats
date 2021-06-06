@@ -625,7 +625,8 @@ D3Ptuple
 , npf1, d3ps) => aux_tuple(d3p0)
 |
 D3Panno
-( d3p1, s2e2) => tcomp30_dpat(d3p1)
+( d3p1
+, s1e2, s2e2) => tcomp30_dpat(d3p1)
 //
 | _(* rest-of_d3pat *) =>
 let
@@ -948,7 +949,7 @@ end
 (* ****** ****** *)
 
 fun
-auxvknd
+auxkvar
 (d3e0: d3exp): h0exp =
 let
 //
@@ -960,12 +961,12 @@ val
 h0t0 = tcomp30_type(t2p0)
 //
 val-
-D3Evknd
+D3Ekvar
 (k0, d2v0) = d3e0.node()
 val
 hdv1 = tcomp30_dvar(d2v0)
 //
-val hend = H0Evknd(k0, hdv1)
+val hend = H0Ekvar(k0, hdv1)
 //
 in
   h0exp_make_node(loc0, h0t0, hend)
@@ -2041,7 +2042,7 @@ D3Etop _ => auxtop(d3e0)
 |
 D3Evar _ => auxvar(d3e0)
 |
-D3Evknd _ => auxvknd(d3e0)
+D3Ekvar _ => auxkvar(d3e0)
 //
 |
 D3Efcon _ => auxfcon(d3e0)
@@ -2116,10 +2117,11 @@ D3Eassgn _ => aux_assgn(d3e0)
 //
 |
 D3Eanno
-(d3e1, _) => tcomp30_dexp(d3e1)
+( d3e1
+, s1e, s2e) => tcomp30_dexp(d3e1)
 |
 D3Eexist1
-(_, d3e1) => tcomp30_dexp(d3e1)
+( _, d3e1 ) => tcomp30_dexp(d3e1)
 //
 |
 D3Enone0 _ =>

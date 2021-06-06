@@ -48,12 +48,249 @@ SYM = "./../SATS/xsymbol.sats"
 #staload "./../SATS/staexp2.sats"
 //
 (* ****** ****** *)
+
+implement
+{}(*tmp*)
+s2exp_whnfz
+  (s2e0) = let
 //
-// HX-2020-05-10:
-// It is yet to be implemented!!!
+var flag: int = 0
 //
+(*
+val () =
+println!
+("s2exp_whnfz: s2e0 = ", s2e0)
+*)
+//
+in
+//
+let
+val
+s2e0 =
+auxs2e0(s2e0, flag)
+(*
+val () =
+println!
+("s2exp_whnfz: s2e0(res) = ", s2e0)
+*)
+in s2e0 end // end of [let]
+//
+end where
+{
+//
+(* ****** ****** *)
+//
+fun
+auxvar
+( s2e0: s2exp
+, flag
+: &int >> int): s2exp =
+let
+val-
+S2Evar
+(s2v0) = s2e0.node() in s2e0
+end // end of [auxvar]
+//
+(* ****** ****** *)
+//
+and
+auxcst
+( s2e0: s2exp
+, flag
+: &int >> int): s2exp =
+(
+  s2exp_whnfz$cst(s2e0, flag)
+)
+//
+(* ****** ****** *)
+//
+and
+auxxtv
+( s2e0: s2exp
+, flag
+: &int >> int): s2exp =
+let
+val-
+S2Extv
+(xtv0) = s2e0.node()
+in
+//
+let
+  val
+  s2e1 = xtv0.sexp()
+in
+  case+
+  s2e1.node() of
+  | S2Enone0() => s2e0
+  | _ (*non-S2Enone0*) =>
+    (
+      auxs2e0(s2e1, flag)
+    ) where
+    {
+      val () = flag := flag + 1
+    }
+end
+//
+end // end of [auxxtv]
+//
+(* ****** ****** *)
+
+and
+auxapp
+( s2e0: s2exp
+, flag
+: &int >> _): s2exp =
+let
+//
+val fini = flag
+//
+val-
+S2Eapp
+( s2f0
+, s2es) = s2e0.node()
+//
+val
+s2f0 = auxs2e0(s2f0, flag)
+val
+s2es = auxs2es(s2es, flag)
+//
+in
+//
+case+
+s2f0.node() of
+|
+S2Elam(s2vs, body) =>
+let
+val () =
+(flag := flag+1)
+val body =
+s2exp_subst_svarlst
+( body, s2vs, s2es ) in auxs2e0(body, flag)
+end // end of [S2Elam]
+|
+_(*non-S2Elam*) =>
+if
+flag=fini then s2e0 else
+s2exp_make_node(s2e0.sort(), S2Eapp(s2f0, s2es))
+//
+end (*let*) // end of [auxapp]
+
+(* ****** ****** *)
+//
+and
+auxs2e0
+( s2e0: s2exp
+, flag
+: &int >> int): s2exp =
+let
+(*
+val fini = flag
+*)
+in
+//
+case+
+s2e0.node() of
+//
+| S2Evar _ =>
+  auxvar(s2e0, flag)
+//
+| S2Ecst _ =>
+  auxcst(s2e0, flag)
+//
+| S2Extv _ =>
+  auxxtv(s2e0, flag)
+//
+(*
+| S2Elft _ =>
+  auxlft(s2e0, flag)
+*)
+//
+| S2Eapp _ =>
+  auxapp(s2e0, flag)
+//
+| _ (*rest-of-s2exp*) => s2e0
+//
+end (*let*) // end of [auxs2e0]
+//
+and
+auxs2es
+( s2es: s2explst
+, flag: &int >> _): s2explst =
+let
+val fini = flag
+in
+//
+case+ s2es of
+|
+list_nil() => list_nil()
+|
+list_cons
+(s2e1, ses2) =>
+let
+val
+s2e1 = auxs2e0(s2e1, flag)
+val
+ses2 = auxs2es(ses2, flag)
+in
+  if
+  flag=fini
+  then s2es
+  else list_cons(s2e1, ses2)
+end // end of [list_cons]
+//
+end (*let*) // end of [auxs2es]
+//
+} (*where*) // end of [s2exp_whnfz]
+
+(* ****** ****** *)
+//
+(*
+(*
+HX-2020-05-10:
+Yet to be implemented!!!
+*)
 implement
 s2exp_whnfize(s2e0) = s2e0
+*)
+//
+(* ****** ****** *)
+//
+implement
+s2exp_whnfize
+  (s2e0) =
+(
+  s2exp_whnfz<>(s2e0)
+) where
+{
+//
+implement
+s2exp_whnfz$cst<>
+  (s2e0, flag) =
+let
+//
+val-
+S2Ecst(s2c0) = s2e0.node()
+//
+val
+def0 = s2cst_get_sexp(s2c0)
+//
+in
+//
+case+
+def0.node() of
+//
+|
+S2Enone0() => s2e0
+//
+| _(* else *) => 
+let
+val () =
+flag := flag + 1 in s2exp_whnfize(def0)
+end
+//
+end // s2exp_whnfz$cst
+//
+} (* end of [s2exp_whnfize] *)
 //
 (* ****** ****** *)
 
@@ -126,17 +363,34 @@ flag=fini
 then s2e0
 else
 s2exp_make_node(s2t0, S2Eapp(s2e1, s2es))
-end
+end // end of [S2Eapp]
 |
 S2Elam(s2vs, s2e1) => let
 val
 s2e1 = auxs2e0(s2e1, flag)
 in
-  if
-  flag=fini
-  then s2e0
-  else
-  s2exp_make_node(s2t0, S2Elam(s2vs, s2e1))
+if
+flag=fini
+then s2e0
+else
+s2exp_make_node(s2t0, S2Elam(s2vs, s2e1))
+end // end of [S2Elam]
+//
+|
+S2Etop(s2e1) =>
+let
+val
+s2e1 = auxs2e0(s2e1, flag)
+in
+  s2exp_make_node( s2t0, S2Etop(s2e1) )
+end
+|
+S2Etpz(s2e1) =>
+let
+val
+s2e1 = auxs2e0(s2e1, flag)
+in
+  s2exp_make_node( s2t0, S2Etpz(s2e1) )
 end
 //
 |

@@ -322,6 +322,12 @@ end // end of [local]
 #dynload "./trans34_dynexp.dats"
 #dynload "./tread34_dynexp.dats"
 //
+#dynload "./cstrnt1.dats"
+#dynload "./cstrnt1_print.dats"
+//
+#dynload "./trans4x_envmap.dats"
+#dynload "./trans4x_dynexp.dats"
+//
 (* ****** ****** *)
 //
 (*
@@ -955,14 +961,6 @@ println!("//process_fpath: d1cs = ", d1cs)
 (*
 val () =
 println!("//process_fpath: d2cs = ", d2cs)
-*)
-(*
-val () =
-println!("//process_fpath: d3cs = ", d3cs)
-*)
-(*
-val () =
-println!("//process_fpath: d3cs = ", d3cs)
 *)
 (*
 val () =

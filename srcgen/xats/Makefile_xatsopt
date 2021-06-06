@@ -82,6 +82,8 @@ cstrnt0.sats \
 dynexp4.sats \
 trans34.sats \
 tread34.sats \
+cstrnt1.sats \
+trans4x.sats \
 xatsopt.sats \
 
 SRCDATS := \
@@ -181,6 +183,10 @@ trans34_util2.dats \
 trans34_envmap.dats \
 trans34_dynexp.dats \
 tread34_dynexp.dats \
+cstrnt1.dats \
+cstrnt1_print.dats \
+trans4x_envmap.dats \
+trans4x_dynexp.dats \
 xatsopt_util0.dats xatsopt_main0.dats \
 ######
 

@@ -123,6 +123,32 @@ d4pat_make_node
 (* ****** ****** *)
 
 implement
+d4pat_tasmp
+( d4p1, s2e2 ) =
+d4pat_make_node
+( loc1
+(*
+HX-2021-03-28:
+[s2e1] should not
+be changed to [s2e2]!
+*)
+, s2e1, t2p1, node) where
+{
+//
+  val loc1 = d4p1.loc()
+  val t2p1 = d4p1.type()
+  val s2e1 = d4p1.sexp()
+//
+  val cstr =
+  c0str_make_tasmp
+  (s2e1(*src*), s2e2(*dst*))
+  val node = D4Ptasmp(d4p1, cstr)
+//
+} (* end of [d4pat_tasmp] *)
+
+(* ****** ****** *)
+(*
+implement
 d4pat_tcast
 ( d4p1, s2e2 ) =
 d4pat_make_node
@@ -146,7 +172,7 @@ be changed to [s2e2]!
   val node = D4Ptcast(d4p1, cstr)
 //
 } (* end of [d4pat_tcast] *)
-
+*)
 (* ****** ****** *)
 
 local
@@ -234,6 +260,21 @@ d4exp_make_node
 (* ****** ****** *)
 
 implement
+d4exp_none2
+( d4e0 ) =
+d4exp_make_node
+( loc0
+, s2e0, t2p0, node) where
+{
+  val loc0 = d4e0.loc()
+  val t2p0 = d4e0.type()
+  val s2e0 = d4e0.sexp()
+  val node = D4Enone2(d4e0)
+} (*where*) // d4exp_none2
+
+(* ****** ****** *)
+
+implement
 d4exp_tcast
 ( d4e1, s2e2 ) =
 d4exp_make_node
@@ -247,8 +288,7 @@ d4exp_make_node
 //
   val cstr =
   c0str_make_tcast
-  ( loc1
-  , s2e1(*src*), s2e2(*dst*))
+  (s2e1(*src*), s2e2(*dst*))
   val node = D4Etcast(d4e1, cstr)
 //
 } (*where*) // d4exp_make_node

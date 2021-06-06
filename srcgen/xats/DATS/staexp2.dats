@@ -368,12 +368,38 @@ t2dat_get_sconlst
 end // end of [local]
 
 (* ****** ****** *)
-
+//
 implement
 s2var_copy(s2v) =
 s2var_make_idst
 (s2v.sym(), s2v.sort())
-
+//
+implement
+s2varlst_copy(s2vs) =
+(
+case+ s2vs of
+|
+list_nil() =>
+list_nil()
+|
+list_cons(s2v1, s2vs) =>
+list_cons(s2v1, s2vs) where
+{
+val s2v1 = s2var_copy(s2v1)
+val s2vs = s2varlst_copy(s2vs)
+}
+) (* end of [s2varlst_copy] *)
+//
+(* ****** ****** *)
+//
+implement
+s2var_new(s2t) =
+let
+  val id0 = SRP_symbol
+in
+  s2var_make_idst(id0, s2t)
+end
+//
 (* ****** ****** *)
 
 local
@@ -434,7 +460,7 @@ s2xtv_struct =
 @{
   s2xtv_loc= loc_t
 ,
-  s2xtv_kind= kxtv2
+  s2xtv_kind= k2xtv
 ,
   s2xtv_sort= sort2
 ,
@@ -449,8 +475,8 @@ s2xtv_tbox=ref(s2xtv_struct)
 in (* in-of-local *)
 //
 implement
-s2xtv_new
-(loc0, s2t0) =
+s2xtv_new_srt
+( loc0, s2t0 ) =
 (
 ref<s2xtv_struct>
 @{
@@ -466,10 +492,10 @@ ref<s2xtv_struct>
 }
 ) where
 {
-val knd0 = KXTV2non()
+val knd0 = K2XTVnon()
 val s2e0 = the_s2exp_none0
 val stamp = s2xtv_stamp_new()
-} (* end of [s2xtv_new] *)
+} (* end of [s2xtv_new_srt] *)
 //
 (* ****** ****** *)
 //
@@ -478,12 +504,16 @@ s2xtv_get_loc
   (xtv0) = xtv0->s2xtv_loc
 //
 implement
-s2xtv_get_kind
-  (xtv0) = xtv0->s2xtv_kind
-//
-implement
 s2xtv_get_sort
   (xtv0) = xtv0->s2xtv_sort
+//
+implement
+s2xtv_get_kind
+  (xtv0) = xtv0->s2xtv_kind
+implement
+s2xtv_set_kind
+  (xtv0, knd0) =
+  (xtv0->s2xtv_kind := knd0)
 //
 implement
 s2xtv_get_sexp
@@ -751,16 +781,31 @@ s2exp_make_node
 (* ****** ****** *)
 
 implement
-s2exp_top
-(knd, s2e) =
+s2exp_top(s2e) =
 (
 s2exp_make_node
-(s2t, S2Etop(knd, s2e))
+(s2t, S2Etop(s2e))
 ) where
 {
   val s2t =
   sort2_topize(s2e.sort())
 }
+implement
+s2exp_tpz(s2e) =
+let
+val
+s2t = s2e.sort()
+in
+if
+sort2_islin(s2t)
+then
+let
+val s2t =
+sort2_topize(s2t)
+in
+s2exp_make_node
+(s2t, S2Etpz(s2e)) end else s2e
+end // end of [s2exp_tpz]
 
 (* ****** ****** *)
 //
@@ -1273,9 +1318,19 @@ implement
 s2exp_t2ype
   (t2p0) =
 (
+case+
+t2p0.node() of
+|
+T2Pvar(s2v0) =>
+s2exp_var(s2v0)
+|
+T2Pcst(s2c0) =>
+s2exp_cst(s2c0)
+|
+_ (*else-of-t2ype*) =>
 s2exp_make_node
 (t2p0.sort(), S2Et2ype(t2p0))
-)
+) (* end of [s2exp_t2ype] *)
 //
 (* ****** ****** *)
 //

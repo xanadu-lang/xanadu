@@ -223,6 +223,20 @@ case+ x0.node() of
   , "D4Psapx("
   , d4f0, "; ", s2es, "; ", s2ps, ")")
 //
+(*
+| D4Popnx
+  (d4p1, xtv2) =>
+  fprint!
+  ( out
+  , "D4Popnx(", d4p1, "; ", xtv2, ")")
+*)
+| D4Popny
+  (d4p1, s2vs, s2ps) =>
+  fprint!
+  ( out
+  , "D4Popny("
+  , d4p1, "; ", s2vs, "; ", s2ps, ")")
+//
 | D4Pdap1(d4f0) =>
   fprint!
   ( out, "D4Pdap1(", d4f0, ")")
@@ -233,15 +247,21 @@ case+ x0.node() of
   , d4f0, "; ", npf1, "; ", d4ps, ")")
 //
 | D4Panno
-  (d4p1, s2e2) =>
+  (d4p1, s1e2, s2e2) =>
   fprint!
   ( out
   , "D4Panno(", d4p1, "; ", s2e2, ")")
 //
+| D4Ptasmp(d4p1, cstr) =>
+  fprint!
+  ( out
+  , "D4Ptasmp(", d4p1, "; ", cstr, ")")
+(*
 | D4Ptcast(d4p1, cstr) =>
   fprint!
   ( out
   , "D4Ptcast(", d4p1, "; ", cstr, ")")
+*)
 //
 | D4Pnone1(d3psrc) =>
   fprint!( out, "D4Pnone1(", d3psrc, ")" )
@@ -356,10 +376,10 @@ case+ x0.node() of
 //
 | D4Evar(d2v) =>
   fprint!(out, "D4Evar(", d2v, ")")
-| D4Evknd(knd0, d2v1) =>
+| D4Ekvar(knd0, d2v1) =>
   fprint!
   ( out
-  , "D4Evknd(", knd0, ", ", d2v1, ")")
+  , "D4Ekvar(", knd0, ", ", d2v1, ")")
 //
 | D4Efcon(d2c) =>
   fprint!(out, "D4Efcon(", d2c, ")")
@@ -410,11 +430,18 @@ case+ x0.node() of
   , "D4Esapx("
   , d4f0, "; ", s2es, "; ", s2ps, ")")
 //
-| D4Esopn
+(*
+| D4Eopnx
+  (d4e1, xtv2) =>
+  fprint!
+  ( out
+  , "D4Eopnx(", d4e1, "; ", xtv2, ")")
+*)
+| D4Eopny
   (d4e1, s2vs, s2ps) =>
   fprint!
   ( out
-  , "D4Esopn("
+  , "D4Eopny("
   , d4e1, "; ", s2vs, "; ", s2ps, ")")
 //
 | D4Edapp
@@ -424,6 +451,24 @@ case+ x0.node() of
   ( out
   , "D4Edapp("
   , d4f0, "; ", npf1, "; ", d4es, ")")
+| D4Edapq
+  ( dapp
+  , npf1, d4es) =>
+  fprint!
+  ( out
+  , "D4Edapq("
+  , dapp, "; ", npf1, "; ", d4es, ")")
+//
+| D4Elet
+  ( dcls, d4e1) =>
+  fprint!
+  ( out
+  , "D4Elet(", dcls, "; ", d4e1, ")")
+| D4Ewhere
+  ( d4e1, dcls) =>
+  fprint!
+  ( out
+  , "D4Ewhere(", d4e1, "; ", dcls, ")")
 //
 | D4Eif0
   (d4e1, d4e2, opt3) =>
@@ -438,7 +483,7 @@ case+ x0.node() of
   , knd0, "; ", d4e1, "; ", dcls, ")")
 //
 | D4Eanno
-  (d4e1, s2e2) =>
+  (d4e1, s1e2, s2e2) =>
   fprint!
   ( out
   , "D4Eanno(", d4e1, "; ", s2e2, ")")
@@ -453,6 +498,8 @@ case+ x0.node() of
   fprint!(out, "D4Enone0(", ")")
 | D4Enone1(d3esrc) =>
   fprint!(out, "D4Enone1(", d3esrc, ")")
+| D4Enone2(d4esrc) =>
+  fprint!(out, "D4Enone2(", d4esrc, ")")
 //
 (*
 | _(* rest-of-d4exp *) => fprint!(out, "D4E...(...)")

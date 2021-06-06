@@ -196,7 +196,7 @@ in
   auxd3ps(npf1, d3ps)
 end // end of [D3Pdapp]
 |
-D3Panno(d3p1, _) =>
+D3Panno(d3p1, _, _) =>
 (
   d3pat_leftize(d3p1)
 )
@@ -459,41 +459,50 @@ d3p0.node() of
   aux_tuple(env0, d3p0)
 //
 |
-D3Panno(d3p1, s2e2) =>
-(
-d3pat_anno(d3p1, s2e2)
-) where
-{
+D3Panno
+(d3p1, s1e2, s2e2) =>
+let
 val
 d3p1 = 
 trans33_dpat(env0, d3p1)
-} (* D3Panno *)
+in
+d3pat_anno(d3p1, s1e2, s2e2)
+end // end of [D3Panno]
 //
 |
 D3Ptcast(d3p1, t2p2) =>
 let
 val
-d3p1 = // HX: abstype-handling!
-trans33_dpat
+d3p1 =
+// HX: for handling
+trans33_dpat // abstypes!!!
 (env0, d3p1) in d3p1 end where
 {
 val
 loc1 = d3p1.loc()
 val
 t2p1 = d3p1.type()
+(*
 val () =
 println!
-("trans33_dpat: D3Ptcast: loc1 = ", loc1)
+("\
+trans33_dpat: \
+D3Ptcast: loc1 = ", loc1)
 val () =
 println!
-("trans33_dpat: D3Ptcast: d3p1 = ", d3p1)
+("\
+trans33_dpat: \
+D3Ptcast: d3p1 = ", d3p1)
 val () =
 println!
-("trans33_dpat: D3Ptcast: t2p1 = ", t2p1)
+("\
+trans33_dpat: D3Ptcast: t2p1 = ", t2p1)
 val () =
 println!
-("trans33_dpat: D3Ptcast: t2p2 = ", t2p2)
-} (* where *) // end of [D3Ptcast]
+("\
+trans33_dpat: D3Ptcast: t2p2 = ", t2p2)
+*)
+} (*where*) // end of [D3Ptcast]
 //
 |
 D3Pnone0 _ => d3p0 // HX: interp
@@ -551,9 +560,9 @@ trans33_dpat_dntp
   d3pat_dntp(d3p0, t2p0)
 ) where
 {
-val
-d3p0 = trans33_dpat(env0, d3p0)
-}
+  val
+  d3p0 = trans33_dpat(env0, d3p0)
+} (* end of [trans33_dpat_dntp] *)
 //
 (* ****** ****** *)
 //
@@ -620,7 +629,9 @@ d33exp_make_node
 , d3en
 : d3exp_node): d3exp =
 let
+//
 val t2p0 = whnfize(t2p0)
+//
 val d3e0 =
 d3exp_make_node(loc0, t2p0, d3en)
 in
@@ -1847,7 +1858,8 @@ fun
 aux_eval
 ( env0:
 ! abstenv
-, d3e0: d3exp): d3exp = let
+, d3e0
+: d3exp ): d3exp = let
 //
 val
 loc0 = d3e0.loc()
@@ -1863,11 +1875,14 @@ trans33_dexp(env0, d3e1)
 //
 val t2p0 =
 let
+//
 val
 t2p1 = d3e1.type()
 val
-t2p1 = whnfize_env(env0, t2p1)
-in
+t2p1 =
+whnfize_env( env0, t2p1 )
+//
+in(* in-of-let *)
 //
 let
 val
@@ -1875,22 +1890,20 @@ opt2 =
 t2ype_un_p2tr(t2p1)
 in
 case+ opt2 of
-|
-~Some_vt(t2p2) =>
- (knd0 := 1; t2p2)
-|
-~None_vt((*void*)) =>
+| ~
+Some_vt(t2p2) => (knd0 := 1; t2p2)
+| ~
+None_vt((*void*)) =>
 let
 val
 opt2 =
 t2ype_un_lazy(t2p1)
 in
 case+ opt2 of
-|
-~Some_vt(t2p2) =>
- (knd0 := 2; t2p2)
-|
-~None_vt((*void*)) =>
+| ~
+Some_vt(t2p2) => (knd0 := 2; t2p2)
+| ~
+None_vt((*void*)) =>
 let
 val
 opt2 =
@@ -1936,13 +1949,16 @@ t2p0 = the_t2ype_void(*void*)
 val
 knd0 =
 let
+//
 val
 t2p1 = d3e1.type()
 val
 t2p1 =
-whnfize_env(env0, t2p1)
+whnfize_env( env0, t2p1 )
+//
 val
 opt2 = t2ype_un_p2tr(t2p1)
+//
 in
 case+ opt2 of
 | ~Some_vt _ => 1 | ~None_vt _ =>
@@ -2073,7 +2089,8 @@ println!
 //
 val-
 D3Eanno
-(d3e1, s2e2) = d3e0.node()
+( d3e1
+, s1e2, s2e2) = d3e0.node()
 (*
 val t2p2 = s2exp_erase(s2e2)
 *)
@@ -2082,7 +2099,8 @@ val d3e1 =
 trans33_dexp_dntp(env0, d3e1, t2p0)
 //
 in
-d33exp_make_node(loc0, t2p0, D3Eanno(d3e1, s2e2))
+d33exp_make_node
+(loc0, t2p0, D3Eanno(d3e1, s1e2, s2e2))
 end // end of [aux_anno]
 
 (* ****** ****** *)
@@ -2295,28 +2313,36 @@ end // end of [D3Elcast]
 D3Etcast
 (d3e1, t2p2) =>
 let
-  val
-  d3e1 = // HX: abstype-handling!
-  trans33_dexp(env0, d3e1) in d3e1
-end where
+val
+d3e1 =
+// HX: for handling
+trans33_dexp // abstypes!!!
+(env0, d3e1) in d3e1 end where
 {
 val
 loc1 = d3e1.loc()
 val
 t2p1 = d3e1.type()
+(*
 val () =
 println!
-("trans33_dexp: D3Etcast: loc1 = ", loc1)
+("\
+trans33_dexp: \
+D3Etcast: loc1 = ", loc1)
 val () =
 println!
-("trans33_dexp: D3Etcast: d3e1 = ", d3e1)
+("\
+trans33_dexp: \
+D3Etcast: d3e1 = ", d3e1)
 val () =
 println!
-("trans33_dexp: D3Etcast: t2p1 = ", t2p1)
+("\
+trans33_dexp: D3Etcast: t2p1 = ", t2p1)
 val () =
 println!
 ("trans33_dexp: D3Etcast: t2p2 = ", t2p2)
-} (* where *) // end of [D3Etcast]
+*)
+} (*where*) // end of [D3Etcast]
 //
 | D3Enone0 _ => d3e0 // HX: interp
 | D3Enone1 _ => d3e0 // HX: errmsg
@@ -3085,11 +3111,13 @@ auxv3ds
 : v3ardeclist =
 (
 case+ v3ds of
-| list_nil() =>
-  list_nil()
-| list_cons(x0, xs) =>
-  list_cons
-  (auxv3d0(env0, d3cl, x0), auxv3ds(env0, d3cl, xs))
+|
+list_nil() =>
+list_nil()
+|
+list_cons(x0, xs) =>
+list_cons
+(auxv3d0(env0, d3cl, x0), auxv3ds(env0, d3cl, xs))
 )
 //
 } (* end of [aux_vardecl] *)

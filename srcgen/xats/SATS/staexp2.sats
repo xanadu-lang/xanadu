@@ -474,7 +474,14 @@ overload .sort with s2var_set_sort
 overload .stamp with s2var_get_stamp
 //
 fun
-s2var_copy(s2v: s2var): s2var
+s2var_copy
+  (s2v0: s2var): s2var
+fun
+s2varlst_copy
+  (s2vs: s2varlst): s2varlst
+//
+fun
+s2var_new(s2t: sort2): s2var
 //
 fun
 s2var_make_idst
@@ -540,24 +547,30 @@ typedef t2ype = t2ype_tbox
 //
 (* ****** ****** *)
 //
-datatype kxtv2 =
-| KXTV2non of ()
-| KXTV2tmp of () // for temp args
-| KXTV2uni of () // for poly args
-| KXTV2join of () // for if/case-exps
+datatype k2xtv =
+//
+| K2XTVnon of () // default
+//
+| K2XTVtmp of () // for temp args
+//
+| K2XTVuni of () // for poly args
+//
+| K2XTVjoin of () // for if/case-exps
+//
+| K2XTVopen of (s2exp) // handling opnx
 //
 (* ****** ****** *)
 //
 fun
-print_kxtv2: print_type(kxtv2)
+print_k2xtv: print_type(k2xtv)
 fun
-prerr_kxtv2: print_type(kxtv2)
+prerr_k2xtv: print_type(k2xtv)
 fun
-fprint_kxtv2: fprint_type(kxtv2)
+fprint_k2xtv: fprint_type(k2xtv)
 //
-overload print with print_kxtv2
-overload prerr with prerr_kxtv2
-overload fprint with fprint_kxtv2
+overload print with print_k2xtv
+overload prerr with prerr_k2xtv
+overload fprint with fprint_k2xtv
 //
 (* ****** ****** *)
 //
@@ -568,9 +581,12 @@ s2xtv_get_loc(s2xtv): loc_t
 fun
 s2xtv_get_loc(s2xtv): loc_t
 fun
-s2xtv_get_kind(s2xtv): kxtv2
-fun
 s2xtv_get_sort(s2xtv): sort2
+//
+fun
+s2xtv_get_kind(s2xtv): k2xtv
+fun
+s2xtv_set_kind(s2xtv, k2xtv): void
 //
 fun
 s2xtv_get_sexp(s2xtv): s2exp
@@ -583,6 +599,9 @@ s2xtv_get_stamp(s2xtv): stamp
 overload .loc with s2xtv_get_loc
 overload .sort with s2xtv_get_sort
 //
+overload .kind with s2xtv_get_kind
+overload .kind with s2xtv_set_kind
+//
 overload .sexp with s2xtv_get_sexp
 overload .sexp with s2xtv_set_sexp
 //
@@ -591,7 +610,21 @@ overload .stamp with s2xtv_get_stamp
 (* ****** ****** *)
 //
 fun
-s2xtv_new(loc_t, sort2): s2xtv
+s2xtv_new_srt
+(loc: loc_t, s2t: sort2): s2xtv
+//
+(* ****** ****** *)
+//
+fun
+print_s2xtv: print_type(s2xtv)
+fun
+prerr_s2xtv: prerr_type(s2xtv)
+fun
+fprint_s2xtv: fprint_type(s2xtv)
+//
+overload print with print_s2xtv
+overload prerr with prerr_s2xtv
+overload fprint with fprint_s2xtv
 //
 (* ****** ****** *)
 //
@@ -757,15 +790,15 @@ s2exp_node =
 //
 | S2Extv of (s2xtv) // ext-variable
 //
+| S2Eany of int(*knd*)
+//
+| S2Etop of (s2exp) // uninitized
+| S2Etpz of (s2exp) // delineared
+//
 | S2Eapp of
   (s2exp, s2explst) // application
 | S2Elam of
   (s2varlst, s2exp) // abstraction
-//
-| S2Eany of int(*knd*)
-//
-| S2Etop of // HX: knd: 0/1: 
-  (int(*knd*), s2exp) // ?(s2e)/~(s2e)
 //
 | S2Earg of // HX: knd: 0/1: 
   (int(*knd*), s2exp) // call-by-val/ref
@@ -914,8 +947,9 @@ s2exp_any(knd: int): s2exp
 (* ****** ****** *)
 //
 fun
-s2exp_top
-(knd: int, s2e0: s2exp): s2exp
+s2exp_top(s2e0: s2exp): s2exp
+fun
+s2exp_tpz(s2e0: s2exp): s2exp
 //
 (* ****** ****** *)
 //
@@ -1456,6 +1490,14 @@ val the_ullint_ctype : s2cstref
 val the_string_ctype : s2cstref
 //
 (* ****** ****** *)
+//
+val the_sint0_ctype : s2cstref
+val the_uint0_ctype : s2cstref
+val the_bool0_ctype : s2cstref
+val the_char0_ctype : s2cstref
+val the_string0_ctype : s2cstref
+//
+(* ****** ****** *)
 
 val the_excptn_ctype : s2cstref
 
@@ -1473,13 +1515,35 @@ s2exp_revar
 //
 fun
 s2explst_revar
-( s2es: s2explst
+( s2es
+: s2explst
 , s2v1: s2var, s2v2: s2var): s2explst
 //
 fun
 s2explst_revar_vt
-( s2es: s2explst
+( s2es
+: s2explst
 , s2v1: s2var, s2v2: s2var): s2explst_vt
+//
+(* ****** ****** *)
+//
+fun
+s2exp_revars
+( s2e0: s2exp
+, svs1
+: s2varlst, svs2: s2varlst): s2exp
+fun
+s2explst_revars
+( s2e0
+: s2explst
+, svs1
+: s2varlst, svs2: s2varlst): s2explst
+fun
+s2explst_revars_vt
+( s2e0
+: s2explst
+, svs1
+: s2varlst, svs2: s2varlst): s2explst_vt
 //
 (* ****** ****** *)
 (*
@@ -1490,7 +1554,7 @@ Various substitution-related functions
 //
 fun{}
 s2exp_whnfz
-  (s2e0: t2ype): s2exp
+  (s2e0: s2exp): s2exp
 fun{}
 s2exp_whnfz$cst
   (s2exp, flag: &int >> _): s2exp

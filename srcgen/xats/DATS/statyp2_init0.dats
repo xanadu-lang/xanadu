@@ -108,13 +108,15 @@ t2ype_make_node
 (S2Tnone0, T2Pnone0)
 //
 implement
-t2ype_none0() =
-the_t2ype_none0(*void*)
-//
-implement
-t2ype_none1(s2e) =
+t2ype_none0
+( s2t0 ) =
 t2ype_make_node
-(S2Tnone0(), T2Pnone1(s2e))
+(s2t0, T2Pnone0(*void*))
+implement
+t2ype_none1
+( s2e0 ) =
+t2ype_make_node
+(s2e0.sort(), T2Pnone1(s2e0))
 //
 (* ****** ****** *)
 //
@@ -246,13 +248,13 @@ ifcase
   the_p2tr_ctype.type()
 //
 | sym=XATS_SINT_T =>
-  the_sint_ctype.type()
+  the_sint0_ctype.type()
 | sym=XATS_UINT_T =>
-  the_uint_ctype.type()
+  the_uint0_ctype.type()
 | sym=XATS_BOOL_T =>
-  the_bool_ctype.type()
+  the_bool0_ctype.type()
 | sym=XATS_CHAR_T =>
-  the_char_ctype.type()
+  the_char0_ctype.type()
 //
 | sym=XATS_SFLT_T =>
   the_sflt_ctype.type()
@@ -271,7 +273,7 @@ ifcase
   the_ullint_ctype.type()
 //
 | sym=XATS_STRING_T =>
-  the_string_ctype.type()
+  the_string0_ctype.type()
 //
 | sym=XATS_LAZY_T =>
   the_lazy_ctype.type((*void*))
