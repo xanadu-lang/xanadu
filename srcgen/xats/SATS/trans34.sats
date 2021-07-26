@@ -112,6 +112,13 @@ typedef d4exp = $D4E.d4exp
 typedef d4ecl = $D4E.d4ecl
 //
 (* ****** ****** *)
+typedef dlocs = $D4E.dlocs
+typedef stmap = $D4E.stmap
+typedef stmrg = $D4E.stmrg
+(* ****** ****** *)
+typedef dvmrg2 = $D4E.dvmrg2
+typedef dvmrgs = $D4E.dvmrgs
+(* ****** ****** *)
 typedef d4gua = $D4E.d4gua
 typedef d4gpat = $D4E.d4gpat
 typedef d4clau = $D4E.d4clau
@@ -197,11 +204,45 @@ tr34env_pop_lams
   ( env0 : !tr34env ) : void
 //
 (* ****** ****** *)
+//
+fun
+tr34env_add_bran
+  ( env0 : !tr34env ) : void
+fun
+tr34env_pop_bran
+  ( env0 : !tr34env ) : void
+//
+(* ****** ****** *)
+fun
+tr34env_stmap_fun0
+  ( env0 : !tr34env ) : stmap
+(* ****** ****** *)
+fun
+tr34env_dlocs_let1
+  ( env0 : !tr34env ) : dlocs
+fun
+tr34env_stmap_let1
+  ( env0 : !tr34env ) : stmap
+(* ****** ****** *)
+fun
+tr34env_stmap_bran
+  ( env0 : !tr34env ) : stmap
+(* ****** ****** *)
+fun
+tr34env_add_dvar
+( env0:
+! tr34env, d2v0: d2var): void
 fun
 tr34env_add_dvar_sexp
 ( env0:
 ! tr34env
 , d2v0: d2var, s2e0: s2exp): void
+(* ****** ****** *)
+fun
+tr34env_add_denvs
+( env0:
+! tr34env
+, d2vs: dlocs, stmp: stmap): stmap
 (* ****** ****** *)
 fun
 s2exp_tq2as_elim
@@ -224,6 +265,9 @@ sexpize_env with t2ype_sexpize_env
 overload
 whnfize_env with s2exp_whnfize_env
 //
+(* ****** ****** *)
+fun
+s2exp_used(s2e0: s2exp): s2exp
 (* ****** ****** *)
 //
 fun
@@ -427,7 +471,11 @@ f3undeclist = $D3E.f3undeclist
 typedef
 v3aldecl = $D3E.v3aldecl
 typedef
+v3ardecl = $D3E.v3ardecl
+typedef
 v3aldeclist = $D3E.v3aldeclist
+typedef
+v3ardeclist = $D3E.v3ardeclist
 
 (* ****** ****** *)
 
@@ -437,12 +485,16 @@ typedef
 f4undeclist = $D4E.f4undeclist
 
 (* ****** ****** *)
-
+//
 typedef
 v4aldecl = $D4E.v4aldecl
 typedef
+v4ardecl = $D4E.v4ardecl
+typedef
 v4aldeclist = $D4E.v4aldeclist
-
+typedef
+v4ardeclist = $D4E.v4ardeclist
+//
 (* ****** ****** *)
 //
 fun
@@ -461,7 +513,7 @@ trans34_fundeclist
 ! tr34env, f3ds: f3undeclist): f4undeclist
 
 (* ****** ****** *)
-
+//
 fun
 trans34_valdecl
 ( env0:
@@ -470,7 +522,16 @@ fun
 trans34_valdeclist
 ( env0:
 ! tr34env, v3ds: v3aldeclist): v4aldeclist
-
+//
+fun
+trans34_vardecl
+( env0:
+! tr34env, v3d0: v3ardecl): v4ardecl
+fun
+trans34_vardeclist
+( env0:
+! tr34env, v3ds: v3ardeclist): v4ardeclist
+//
 (* ****** ****** *)
 //
 // HX-2021-02-20:
@@ -492,12 +553,7 @@ fun
 tr34env_d2var_get_sexp
 ( env0:
 ! tr34env, d2v0: d2var): s2exp
-fun
-tr34env_d2var_set_sexp
-( env0:
-! tr34env, d2v0: d2var, s2e0: s2exp): void
 //
-(* ****** ****** *)
 fun
 trans34_d3pat_get_sexp
 (env0: !tr34env, d3p0: d3pat): s2exp
@@ -508,6 +564,24 @@ trans34_d3patlst_get_s2es
 fun
 trans34_f3undecl_set_sexp
 (env0: !tr34env, f3d0: f3undecl): void
+(* ****** ****** *)
+//
+(*
+fun
+tr34env_d2var_get_msexp
+( env0:
+! tr34env, d2v0: d2var): s2exp
+*)
+//
+fun
+trans34_dvmrg2_list
+( env0
+: !tr34env, xtts: List0(dvmrg2)): stmrg
+fun
+trans34_dvmrgs_list
+( env0
+: !tr34env, xtts: List0(dvmrgs)): stmrg
+//
 (* ****** ****** *)
 
 (* end of [xats_trans34.sats] *)

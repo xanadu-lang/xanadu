@@ -779,7 +779,25 @@ s2exp_make_node
 }
 //
 (* ****** ****** *)
-
+//
+implement
+s2exp_at0
+(s2e(*elt*), s2l) =
+(
+s2exp_make_node
+(s2t, S2Eapp(s2f, arg))
+) where
+{
+val s2t =
+the_sort2_view
+val s2f = 
+s2cstref_get_sexp
+( the_a0p1tr_cview )
+val arg = list_pair(s2e, s2l)
+}
+//
+(* ****** ****** *)
+//
 implement
 s2exp_top(s2e) =
 (
@@ -787,9 +805,10 @@ s2exp_make_node
 (s2t, S2Etop(s2e))
 ) where
 {
-  val s2t =
-  sort2_topize(s2e.sort())
+val s2t =
+sort2_topize(s2e.sort())
 }
+//
 implement
 s2exp_tpz(s2e) =
 let
@@ -806,7 +825,7 @@ in
 s2exp_make_node
 (s2t, S2Etpz(s2e)) end else s2e
 end // end of [s2exp_tpz]
-
+//
 (* ****** ****** *)
 //
 implement
@@ -996,7 +1015,10 @@ val node =
 S2Eapp(s2f0, list_sing(s2i1))
 //
 in
+s2exp_whnfize
+(
   s2exp_make_node(s2t0, node)
+)
 end // end of [s2exp_type_sint]
 
 implement
@@ -1015,7 +1037,10 @@ val node =
 S2Eapp(s2f0, list_sing(s2i1))
 //
 in
+s2exp_whnfize
+(
   s2exp_make_node(s2t0, node)
+)
 end // end of [s2exp_type_uint]
 
 (* ****** ****** *)
@@ -1036,7 +1061,10 @@ val node =
 S2Eapp(s2f0, list_sing(s2i1))
 //
 in
+s2exp_whnfize
+(
   s2exp_make_node(s2t0, node)
+)
 end // end of [s2exp_type_bool]
 
 (* ****** ****** *)
@@ -1057,7 +1085,10 @@ val node =
 S2Eapp(s2f0, list_sing(s2i1))
 //
 in
+s2exp_whnfize
+(
   s2exp_make_node(s2t0, node)
+)
 end // end of [s2exp_type_char]
 
 (* ****** ****** *)
@@ -1078,7 +1109,10 @@ val node =
 S2Eapp(s2f0, list_sing(s2i1))
 //
 in
+s2exp_whnfize
+(
   s2exp_make_node(s2t0, node)
+)
 end // end of [s2exp_type_strlen]
 
 (* ****** ****** *)
@@ -1105,8 +1139,8 @@ s2exp_list1
   labs2explst_make_list1(s2es)
 //
 in
-  s2exp_make_node
-  (s2t, S2Etyrec(knd, ~1(*npf*), ls2es))
+s2exp_make_node
+(s2t, S2Etyrec(knd, ~1(*npf*), ls2es))
 end // end of [s2exp_list1]
 
 implement
@@ -1135,7 +1169,7 @@ s2exp_list2
   labs2explst_make_list2(s2es1, s2es2)
 //
 in
-  s2exp_make_node(s2t, S2Etyrec(knd, npf, ls2es))
+s2exp_make_node(s2t, S2Etyrec(knd, npf, ls2es))
 end // end of [s2exp_list2]
 
 (* ****** ****** *)

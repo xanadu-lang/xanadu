@@ -94,8 +94,13 @@ $FP0.fprint_filpath_full2
 //
 implement
 fprint_val<s2cst> = fprint_s2cst
+//
 implement
 fprint_val<s2var> = fprint_s2var
+//
+implement
+fprint_val<s2xtv> = fprint_s2xtv
+//
 implement
 fprint_val<s2exp> = fprint_s2exp
 //
@@ -332,6 +337,133 @@ case+ x0 of
 (* ****** ****** *)
 //
 implement
+print_dlocs(x0) =
+fprint_dlocs(stdout_ref, x0)
+implement
+prerr_dlocs(x0) =
+fprint_dlocs(stderr_ref, x0)
+//
+(* ****** ****** *)
+//
+implement
+fprint_dlocs
+  (out, dvrs) =
+(
+auxlst
+(dlocs_listize(dvrs))
+) where
+{
+fun
+auxlst
+( d2vs
+: List0_vt(d2var)): void =
+(
+case+ d2vs of
+| ~
+list_vt_nil
+((*void*)) => ()
+| ~
+list_vt_cons
+(d2v0, d2vs) =>
+(
+fprintln!(out, d2v0); auxlst(d2vs)
+)
+)
+} (*where*) // end of [fprint_dlocs]
+//
+(* ****** ****** *)
+//
+implement
+print_stmap(x0) =
+fprint_stmap(stdout_ref, x0)
+implement
+prerr_stmap(x0) =
+fprint_stmap(stderr_ref, x0)
+//
+(* ****** ****** *)
+
+implement
+fprint_stmap
+  (out, map0) =
+(
+auxlst
+(stmap_listize(map0))
+) where
+{
+fun
+auxlst
+( vts
+: List_vt
+(
+@(d2var, s2exp))
+) : void =
+(
+case+ vts of
+| ~
+list_vt_nil
+((*void*)) => ()
+| ~
+list_vt_cons
+( vt0, vts ) =>
+let
+val
+(d2v, s2e) = vt0
+in
+auxlst(vts) where
+{
+val () =
+fprintln!
+(out, "(", d2v, ": ", s2e, ")") }
+end (*let*) // end of [list_cons]
+) } (*where*) // end of [fprint_stmap]
+
+(* ****** ****** *)
+//
+implement
+print_stmrg(x0) =
+fprint_stmrg(stdout_ref, x0)
+implement
+prerr_stmrg(x0) =
+fprint_stmrg(stderr_ref, x0)
+//
+(* ****** ****** *)
+
+implement
+fprint_stmrg
+  (out, mrg) =
+(
+auxlst
+(stmrg_listize(mrg))
+) where
+{
+typedef
+xtt =
+(d2var, s2exp, s2exp)
+fun
+auxlst
+(xtts: List0_vt(xtt)): void =
+(
+case+ xtts of
+| ~
+list_vt_nil() => ()
+| ~
+list_vt_cons
+(xtt0, xtts) =>
+(
+auxlst(xtts)) where
+{
+val
+(x0, t1, t2) = xtt0
+val () =
+print!
+("(", x0, "; ", t1, ";", t2, ")")
+} (*where*) // end of [list_cons]
+)
+} (*where*) // end of [fprint_stmrg]
+
+(* ****** ****** *)
+//
+implement
 print_d4exp(x0) =
 fprint_d4exp(stdout_ref, x0)
 implement
@@ -376,6 +508,10 @@ case+ x0.node() of
 //
 | D4Evar(d2v) =>
   fprint!(out, "D4Evar(", d2v, ")")
+(*
+| D4Evmut(d2v) =>
+  fprint!(out, "D4Evmut(", d2v, ")")
+*)
 | D4Ekvar(knd0, d2v1) =>
   fprint!
   ( out
@@ -458,6 +594,32 @@ case+ x0.node() of
   ( out
   , "D4Edapq("
   , dapp, "; ", npf1, "; ", d4es, ")")
+| D4Edarg
+  ( darg
+  , knd0, saft) =>
+  fprint!
+  ( out
+  , "D4Edarg("
+  , darg, "; ", knd0, "; ", saft, ")")
+//
+| D4Eproj
+  (d4e1, lab2, idx2) =>
+  fprint!
+  ( out
+  , "D4Eproj("
+  , d4e1, "; ", lab2, "; ", idx2, ")")
+| D4Eplft
+  (d4e1, lab2, idx2) =>
+  fprint!
+  ( out
+  , "D4Eplft("
+  , d4e1, "; ", lab2, "; ", idx2, ")")
+| D4Epptr
+  (d4e1, lab2, idx2) =>
+  fprint!
+  ( out
+  , "D4Epptr("
+  , d4e1, "; ", lab2, "; ", idx2, ")")
 //
 | D4Elet
   ( dcls, d4e1) =>
@@ -469,6 +631,25 @@ case+ x0.node() of
   fprint!
   ( out
   , "D4Ewhere(", d4e1, "; ", dcls, ")")
+//
+| D4Eseqn
+  (d4es, d4e2) =>
+  fprint!
+  ( out
+  , "D4Eseqn(", d4es, "; ", d4e2, ")")
+//
+| D4Eassgn
+  (d4e1, d4e2, err3) =>
+  fprint!
+  ( out
+  , "D4Eassgn("
+  , d4e1, "; ", d4e2, "; ", err3, ")")
+| D4Eupdtd
+  (d4e1, s2e2, err3) =>
+  fprint!
+  ( out
+  , "D4Eupdtd("
+  , d4e1, "; ", s2e2, "; ", err3, ")")
 //
 | D4Eif0
   (d4e1, d4e2, opt3) =>
@@ -482,17 +663,55 @@ case+ x0.node() of
   ( out, "D4Ecas0("
   , knd0, "; ", d4e1, "; ", dcls, ")")
 //
+(*
+| D4Elval
+  (dlft, d4e1) =>
+  fprint!
+  ( out
+  , "D4Elval(", dlft, "; ", d4e1, ")")
+*)
+//
+| D4Eaddr(d4e1) =>
+  (
+   fprint!(out, "D4Eaddr(", d4e1, ")")
+  )
+| D4Eflat
+  ( d4e1, opt2 ) =>
+  fprint!
+  ( out
+  , "D4Eflat(", d4e1, "; ", opt2, ")")
+| D4Etalf
+  ( d4e1, opt2 ) =>
+  fprint!
+  ( out
+  , "D4Etalf(", d4e1, "; ", opt2, ")")
+//
 | D4Eanno
   (d4e1, s1e2, s2e2) =>
   fprint!
   ( out
   , "D4Eanno(", d4e1, "; ", s2e2, ")")
 //
+| D4Estmap
+  ( d4e1, map2 ) =>
+  fprint!
+  ( out
+  , "D4Estmap(", d4e1, "; ", "[]", ")")
+| D4Estmrg
+  ( d4e1, mrg2 ) =>
+  fprint!
+  ( out
+  , "D4Estmrg(", d4e1, "; ", "[]", ")")
+//
 | D4Etcast
   ( d4e1, cstr ) =>
   fprint!
   ( out
   , "D4Etcast(", d4e1, "; ", cstr, ")")
+//
+| D4Eleakd(d4e1) =>
+  fprint!
+  ( out, "D4Eleakd(", d4e1, ")")
 //
 | D4Enone0() =>
   fprint!(out, "D4Enone0(", ")")
@@ -508,13 +727,74 @@ case+ x0.node() of
 ) (*val*) } (*where*) (* end of [fprint_d4exp] *)
 //
 (* ****** ****** *)
+(*
+//
+implement
+print_d4lft(x0) =
+fprint_d4lft(stdout_ref, x0)
+implement
+prerr_d4lft(x0) =
+fprint_d4lft(stderr_ref, x0)
+//
+implement
+fprint_d4lft
+  (out, x0) =
+(
+case+ x0 of
+|
+D4ELFTvar(d2v) =>
+fprint!
+(out, "D4ELFTvar(", d2v, ")")
+|
+D4ELFTsome(dlft) =>
+fprint!
+(out, "D4ELFTsome(", dlft, ")")
+|
+D4ELFTproj
+(dlft, lab1, ind2) =>
+fprint!
+( out
+, "D4ELFTproj("
+, dlft, "; ", lab1, "; ", ind2, ")")
+)
+*)
+(* ****** ****** *)
+implement
+print_d4err(x0) =
+fprint_d4err(stdout_ref, x0)
+implement
+prerr_d4err(x0) =
+fprint_d4err(stderr_ref, x0)
+(* ****** ****** *)
+implement
+fprint_d4err
+  (out, x0) =
+(
+case+ x0 of
+|
+D4ERRnone() =>
+fprint!
+(out, "D4ERRnone(", ")")
+//
+|
+D4ERRupdtd0() =>
+fprint!
+(out, "D4ERRupdtd0(", ")")
+|
+D4ERRupdtd1(d2w1, selt) =>
+fprint!
+( out
+, "D4ERRupdtd1(", d2w1, "; ", selt, ")")
+//
+)
+(* ****** ****** *)
 //
 implement
 print_d4gua(x0) =
-fprint_d4gua(stdout_ref, x0)
+fprint_d4gua( stdout_ref, x0 )
 implement
 prerr_d4gua(x0) =
-fprint_d4gua(stderr_ref, x0)
+fprint_d4gua( stderr_ref, x0 )
 //
 implement
 fprint_d4gua
@@ -559,10 +839,12 @@ fprint!
 (out, "D4CLAUpat(", d4gp, ")")
 //
 |
-D4CLAUexp(d4gp, d0e0) =>
+D4CLAUexp
+(d4gp, d4e1, map2) =>
 fprint!
 ( out
-, "D4CLAUexp(", d4gp, "; ", d0e0, ")")
+, "D4CLAUexp("
+, d4gp, "; ", d4e1, "; ", "[]", ")")
 //
 ) (* end of [fprint_d4clau] *)
 //
@@ -574,14 +856,14 @@ case+
 x0.node() of
 //
 |
-D4GPATpat(d4p) =>
+D4GPATpat(d4p1) =>
 fprint!
-(out, "D4GPATpat(", d4p, ")")
+(out, "D4GPATpat(", d4p1, ")")
 //
 |
-D4GPATgua(d4p, d4gs) =>
+D4GPATgua(d4p1, d4gs) =>
 fprint!
-(out, "D4GPATgua(", d4p, "; ", d4gs, ")")
+(out, "D4GPATgua(", d4p1, "; ", d4gs, ")")
 //
 ) (* end of [fprint_d4gpat] *)
 //
@@ -597,9 +879,12 @@ fprint_d4ecl(stderr_ref, x0)
 local
 //
 implement
-fprint_val<f4undecl> = fprint_f4undecl
-implement
 fprint_val<v4aldecl> = fprint_v4aldecl
+implement
+fprint_val<v4ardecl> = fprint_v4ardecl
+//
+implement
+fprint_val<f4undecl> = fprint_f4undecl
 //
 in(*in-of-local*)
 //
@@ -614,6 +899,13 @@ D4Cvaldecl
 fprint!
 ( out, "D4Cvaldecl("
 , tok0, "; ", mopt, "; ", "; ", v4ds, ")")
+|
+D4Cvardecl
+(tok0, mopt, v4ds) =>
+fprint!
+( out, "D4Cvardecl("
+, tok0, "; ", mopt, "; ", "; ", v4ds, ")")
+//
 |
 D4Cfundecl
 (tok0, mopt, tqas, f4ds) =>
@@ -656,6 +948,37 @@ end // end of [fprint_v4aldecl]
 (* ****** ****** *)
 
 implement
+print_v4ardecl(x0) =
+fprint_v4ardecl(stdout_ref, x0)
+implement
+prerr_v4ardecl(x0) =
+fprint_v4ardecl(stderr_ref, x0)
+
+(* ****** ****** *)
+//
+implement
+fprint_v4ardecl
+  (out, x0) = let
+//
+val+V4ARDECL(rcd) = x0
+//
+in
+  fprint!
+  ( out
+  , "V4ARDECL@{"
+  , ", d2v=", rcd.d2v
+  , ", d2w=", rcd.d2w
+  , ", s2e=", rcd.s2e
+(*
+  , ", wth=", rcd.wth
+*)
+  , ", res=", rcd.res
+  , ", ini=", rcd.ini, "}")
+end // end of [fprint_v4ardecl]
+//
+(* ****** ****** *)
+
+implement
 print_f4undecl(x0) =
 fprint_f4undecl(stdout_ref, x0)
 implement
@@ -690,6 +1013,7 @@ Some(rcd_a4g) =>
   , "F4UNDECL@{"
   , "nam=", rcd.nam, ", "
   , "d2c=", rcd.d2c, ", "
+  , "a2g=", rcd.a2g, ", "
   , "a4g=", rcd_a4g, ", "
   , "res=", rcd.res, ", "
   , "def=", rcd.def, ", "
@@ -699,6 +1023,58 @@ Some(rcd_a4g) =>
 //
 end // end of [fprint_f4undecl]
 
+(* ****** ****** *)
+//
+implement
+print_dvmrg2(x0) =
+fprint_dvmrg2(stdout_ref, x0)
+implement
+prerr_dvmrg2(x0) =
+fprint_dvmrg2(stderr_ref, x0)
+implement
+fprint_dvmrg2(out, x0) =
+(
+case+ x0 of
+|
+DVMRG2
+(d2v0, opt1, opt2) =>
+fprint!
+( out
+, "DVMRG2("
+, d2v0, "; ", opt1, "; ", opt2, ")")
+)
+//
+(* ****** ****** *)
+//
+implement
+print_dvmrgs(x0) =
+fprint_dvmrgs(stdout_ref, x0)
+implement
+prerr_dvmrgs(x0) =
+fprint_dvmrgs(stderr_ref, x0)
+implement
+fprint_dvmrgs(out, x0) =
+(
+case+ x0 of
+|
+DVMRGS(d2v0, opts) =>
+let
+implement
+fprint_val<s2expopt>(out,x0) =
+(
+case+ x0 of
+| None() =>
+  fprint!(out, "None(", ")")
+| Some(s2e) =>
+  fprint!(out, "Some(", s2e, ")")
+)
+in
+fprint!
+( out
+, "DVMRGS(", d2v0, "; ", opts, ")")
+end (*let*) // end of [DVMRGS]
+)
+//
 (* ****** ****** *)
 
 (* end of [xats_dynexp4_print.dats] *)

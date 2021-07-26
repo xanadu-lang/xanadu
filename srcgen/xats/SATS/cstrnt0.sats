@@ -39,11 +39,13 @@
 
 #staload S2E = "./staexp2.sats"
 #staload S2T = "./statyp2.sats"
+#staload D2E = "./dynexp2.sats"
 
 (* ****** ****** *)
 //
 typedef s2exp = $S2E.s2exp
 typedef t2ype = $S2T.t2ype
+typedef d2var = $D2E.d2var
 //
 (* ****** ****** *)
 //

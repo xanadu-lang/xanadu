@@ -394,6 +394,36 @@ overload .xnam with d2cst_get_xnam
 (* ****** ****** *)
 //
 fun
+d2var_get_saddr
+  ( d2v0: d2var ) : s2expopt
+fun
+d2var_get_atprf
+  ( d2v0: d2var ) : d2varopt
+//
+fun
+d2var_set_saddr
+(d2v0: d2var, s2l0: s2exp): void
+fun
+d2var_set_atprf
+(d2v0: d2var, d2v1: d2var): void
+//
+overload .saddr with d2var_get_saddr
+overload .atprf with d2var_get_atprf
+//
+(* ****** ****** *)
+//
+fun
+d2var_get_msexp
+  ( d2v0: d2var ) : s2expopt
+fun
+d2var_set_msexp
+(d2v0: d2var, s2e0: s2exp): void
+//
+overload .msexp with d2var_get_msexp
+//
+(* ****** ****** *)
+//
+fun
 d2con_get_stamp(d2con): stamp
 fun
 d2cst_get_stamp(d2cst): stamp
@@ -423,6 +453,12 @@ overload = with eq_d2var_d2var
 (* ****** ****** *)
 //
 fun
+cmp_d2var_d2var
+(x1: d2var, x2: d2var): int(*sgn*)
+//
+(* ****** ****** *)
+//
+fun
 d2cst_make_dvar
 (d2v: d2var): d2cst
 //
@@ -437,8 +473,10 @@ d2cst_make_idtp
 , knd: tnode
 , tqas: tq2as, s2e1: s2exp): d2cst
 //
+(*
 fun
 stamp_d2cst_kind(d2cst, tnode): void
+*)
 //
 fun
 stamp_d2cst_xknd(d2cst, x2knd): void
@@ -455,9 +493,15 @@ d2var_new2
 //
 fun
 d2var_make_idvk
-(loc_t, sym_t, knd: tnode): d2var
+( loc0: loc_t
+, sym1: sym_t, knd: tnode): d2var
+//
 fun
-stamp_d2var_kind(d2var, tnode): void
+stamp_d2var_saddr(d2v0: d2var): void
+fun
+stamp_d2var_atprf(d2v0: d2var): void
+fun
+stamp_d2var_msexp(d2v0: d2var): void
 //
 (* ****** ****** *)
 //

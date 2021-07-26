@@ -300,6 +300,135 @@ overload prerr with prerr_ti4arg
 overload fprint with fprint_ti4arg
 //
 (* ****** ****** *)
+//
+abstype dlocs_type = ptr
+abstype stmap_type = ptr
+typedef dlocs = dlocs_type
+typedef stmap = stmap_type
+//
+(* ****** ****** *)
+//
+abstype stmrg_type = ptr
+typedef stmrg = stmrg_type
+//
+(* ****** ****** *)
+//
+fun
+dlocs_nil(): dlocs
+fun
+dlocs_ismem
+( dvrs
+: dlocs, d2v0: d2var ): bool
+//
+fun
+dlocs_insert
+( dvrs
+: dlocs, d2v0: d2var ): dlocs
+//
+fun
+dlocs_listize
+(dvrs: dlocs): List0_vt(d2var)
+//
+(* ****** ****** *)
+//
+fun
+print_dlocs(d2vs: dlocs): void
+fun
+prerr_dlocs(d2vs: dlocs): void
+fun
+fprint_dlocs
+(out: FILEref, d2vs: dlocs): void
+//
+overload print with print_dlocs
+overload prerr with prerr_dlocs
+overload fprint with fprint_dlocs
+//
+(* ****** ****** *)
+//
+fun
+stmap_nil(): stmap
+//
+fun
+stmap_ismem
+( stmp
+: stmap, d2v0: d2var ): bool
+//
+fun
+stmap_insert
+( stmp:
+& stmap >> _
+, d2v0
+: d2var, s2e0: s2exp ): bool
+//
+fun
+stmap_remove
+( stmp:
+& stmap >> _, d2v0: d2var): bool
+//
+fun
+stmap_listize
+( stmp
+: stmap )
+: List0_vt( @(d2var, s2exp) )
+//
+(* ****** ****** *)
+fun
+{env:vt0p}
+stmap_foreach$fwork
+( k0: d2var
+, x0: s2exp, env: &(env) >> _): void
+fun
+{env:vt0p}
+stmap_foreach_env
+(map: stmap, env: &(env) >> _): void
+(* ****** ****** *)
+//
+fun
+print_stmap(map0: stmap): void
+fun
+prerr_stmap(map0: stmap): void
+fun
+fprint_stmap
+(out: FILEref, map0: stmap): void
+//
+overload print with print_stmap
+overload prerr with prerr_stmap
+overload fprint with fprint_stmap
+//
+(* ****** ****** *)
+//
+datatype
+dvcast = DVCAST of
+(d2var, s2exp, s2exp)
+//
+(* ****** ****** *)
+fun
+stmrg_make
+(xs: List0(dvcast)): stmrg
+(* ****** ****** *)
+//
+fun
+stmrg_listize
+( mrg0
+: stmrg )
+: List0_vt
+  ( @(d2var, s2exp, s2exp) )
+//
+(* ****** ****** *)
+//
+fun
+print_stmrg(mrg: stmrg): void
+fun
+prerr_stmrg(mrg: stmrg): void
+fun
+fprint_stmrg
+( out: FILEref, mrg: stmrg): void
+//
+overload print with print_stmrg
+overload prerr with prerr_stmrg
+overload fprint with fprint_stmrg
+//
+(* ****** ****** *)
 
 datatype
 d4exp_node =
@@ -318,6 +447,11 @@ d4exp_node =
 | D4Etop of (token)
 //
 | D4Evar of (d2var)
+//
+(*
+| D4Evmut of (d2var)
+*)
+//
 (*
 HX-2021-03:
 For trans3x:
@@ -369,10 +503,34 @@ for the meaning of knd
   (d4exp, int(*npf*), d4explst)
 | D4Edapq of
   (d4exp, int(*npf*), d4explst)
+| D4Edarg of
+  (d4exp, int(*knd*), s2exp(*aft*))
+//
+| D4Eproj of
+  (d4exp(*flt*),
+   label(*proj*), int(*index*))
+| D4Eplft of
+  (d4exp(*flt*),
+   label(*proj*), int(*index*))
+| D4Epptr of
+  (d4exp(*ptr*),
+   label(*proj*), int(*index*))
 //
 | D4Elet of
   (d4eclist, d4exp(*sequence*))
 | D4Ewhere of (d4exp, d4eclist)
+//
+| D4Eseqn of
+  (
+  d4explst(*semi*), d4exp(*last*)
+  )
+//
+| D4Eassgn of
+  ( d4exp(*l-val*)
+  , d4exp(*r-val*), d4err(*error*))
+| D4Eupdtd of
+  ( d4exp(*l-val*)
+  , s2exp(*r-val*), d4err(*error*))
 //
 | D4Eif0 of
   ( d4exp
@@ -380,6 +538,18 @@ for the meaning of knd
 //
 | D4Ecas0 of
   (int(*knd*), d4exp(*val*), d4claulst)
+//
+(*
+| D4Elval of
+  (d4lft(*proof*), d4exp)
+*)
+//
+| D4Eaddr of d4exp(*l-value*)
+//
+| D4Eflat of
+  (d4exp(*l-value*), Option(s2xtv))
+| D4Etalf of
+  (d4exp(*D4Eflat*), Option(s2xtv))
 //
 | D4Eanno of
   (d4exp, s1exp(*anno*), s2exp(*type*))
@@ -389,11 +559,43 @@ for the meaning of knd
   ( s2explst(*wits*), d4exp(*packed*) )
 *)
 //
+| D4Estmap of
+  (d4exp, stmap) // linear vtype changes
+| D4Estmrg of
+  (d4exp, stmrg) // linear vtype merging
+//
 | D4Etcast of
   (d4exp, c0str) // constraint generation
 //
+| D4Eleakd of (d4exp) // [d4exp] is linear
+//
 | D4Enone0 of ()
 | D4Enone1 of (d3exp) | D4Enone2 of (d4exp)
+//
+(* ****** ****** *)
+//
+(*
+and
+d4lft =
+//
+| D4ELFTnone of ()
+//
+| D4ELFTroot of (d4exp)
+//
+| D4ELFTproj of
+  (d4lft, label(*proj*), int(*index*))
+*)
+//
+(* ****** ****** *)
+//
+and
+d4err =
+//
+| D4ERRnone of ()
+//
+| D4ERRupdtd0 of ()
+| D4ERRupdtd1 of
+  (d2var(*d2w1*), s2exp) // update failure
 //
 (* ****** ****** *)
 //
@@ -438,8 +640,30 @@ d4exp_none2(d4e0: d4exp): d4exp
 //
 (* ****** ****** *)
 fun
+d4exp_dapq
+( dapp: d4exp
+, npf1: int(*pfarity*)
+// HX:
+// Some of [args] are l-values
+, d4es: d4explst(*args*)): d4exp
+fun
+d4exp_darg
+( darg: d4exp
+, knd0: int, saft: s2exp): d4exp
+(* ****** ****** *)
+fun
+d4exp_stmap
+(d4e1: d4exp, map2: stmap): d4exp
+fun
+d4exp_stmrg
+(d4e1: d4exp, mrg2: stmrg): d4exp
+(* ****** ****** *)
+fun
 d4exp_tcast
 (d4e1: d4exp, s2e2: s2exp): d4exp
+(* ****** ****** *)
+fun
+d4exp_leakify(d4e0: d4exp): d4exp
 (* ****** ****** *)
 //
 fun
@@ -460,6 +684,34 @@ fprint_d4exp: fprint_type(d4exp)
 overload print with print_d4exp
 overload prerr with prerr_d4exp
 overload fprint with fprint_d4exp
+//
+(* ****** ****** *)
+//
+(*
+fun
+print_d4lft: print_type(d4lft)
+fun
+prerr_d4lft: prerr_type(d4lft)
+fun
+fprint_d4lft: fprint_type(d4lft)
+//
+overload print with print_d4lft
+overload prerr with prerr_d4lft
+overload fprint with fprint_d4lft
+*)
+//
+(* ****** ****** *)
+//
+fun
+print_d4err: print_type(d4err)
+fun
+prerr_d4err: prerr_type(d4err)
+fun
+fprint_d4err: fprint_type(d4err)
+//
+overload print with print_d4err
+overload prerr with prerr_d4err
+overload fprint with fprint_d4err
 //
 (* ****** ****** *)
 //
@@ -493,7 +745,8 @@ d4gua_make_node
 datatype
 d4clau_node =
 | D4CLAUpat of d4gpat
-| D4CLAUexp of (d4gpat, d4exp)
+| D4CLAUexp of
+  (d4gpat, d4exp, stmap)
 and
 d4gpat_node =
 | D4GPATpat of (d4pat)
@@ -517,6 +770,9 @@ d4gpat_get_node(d4gpat): d4gpat_node
 overload .loc with d4gpat_get_loc
 overload .node with d4gpat_get_node
 //
+(* ****** ****** *)
+fun
+d4gpat_get_dlocs(d4gpat): dlocs
 (* ****** ****** *)
 //
 fun
@@ -614,6 +870,8 @@ v4ardecl =
 V4ARDECL of @{
   loc= loc_t
 , d2v= d2var
+, d2w= d2var
+, s2e= s2exp
 , wth= d2varopt
 , res= s2expopt
 , ini= d4expopt
@@ -694,6 +952,58 @@ fun d4ecl_none1(d3ecl): d4ecl
 fun
 d4ecl_make_node
 (loc: loc_t, node: d4ecl_node): d4ecl
+//
+(* ****** ****** *)
+//
+datatype
+dvmrg2 = DVMRG2 of
+( d2var
+, s2expopt(*then*)
+, s2expopt(*else*))
+datatype
+dvmrgs = DVMRGS of
+( d2var, List0(s2expopt))
+//
+(* ****** ****** *)
+fun
+print_dvmrg2(dvmrg2): void
+fun
+prerr_dvmrg2(dvmrg2): void
+fun
+fprint_dvmrg2: fprint_type(dvmrg2)
+(* ****** ****** *)
+fun
+print_dvmrgs(dvmrgs): void
+fun
+prerr_dvmrgs(dvmrgs): void
+fun
+fprint_dvmrgs: fprint_type(dvmrgs)
+(* ****** ****** *)
+//
+fun
+stmap2_dvmrg
+( map1: stmap
+, map2: stmap): List0(dvmrg2)
+//
+(*
+fun
+stmap1l_dvmrg
+( map1: stmap): List0(dvmrg2)
+fun
+stmap1r_dvmrg
+( map1: stmap): List0(dvmrg2)
+*)
+//
+(* ****** ****** *)
+//
+(*
+fun
+stmaplst_dvmrg
+(maps: List0(stmap)): List0(dvmrgs)
+*)
+fun
+dclaulst_dvmrg
+(dcls: List0(d4clau)): List0(dvmrgs)
 //
 (* ****** ****** *)
 

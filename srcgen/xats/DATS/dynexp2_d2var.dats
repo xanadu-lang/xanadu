@@ -57,6 +57,19 @@ UN = "prelude/SATS/unsafe.sats"
 
 (* ****** ****** *)
 
+(*
+datatype
+s2eopt =
+| S2EOPTnone of ()
+| S2EOPTsome of s2exp
+datatype
+d2vopt =
+| D2VOPTnone of ()
+| D2VOPTsome of d2var
+*)
+
+(* ****** ****** *)
+
 local
 
 typedef
@@ -64,11 +77,19 @@ d2var_struct = @{
 //
   d2var_loc= loc_t // loc
 , d2var_sym= sym_t // name
+, d2var_kind= tnode // kind
 , d2var_kmut= (int) // kmut
 , d2var_tqas= tq2as // tqas
 , d2var_sexp= s2exp // sexp
 , d2var_type= t2ype // type
 , d2var_stamp= stamp // unicity
+//
+(*
+// HX:
+// it is done externally
+, d2var_saddr= s2eopt // static address
+, d2var_atprf= d2vopt // proof-of-atview 
+*)
 //
 } (* end of [d2var_tbox] *)
 
@@ -100,24 +121,37 @@ d2var_make_idvk
 //
 implement
 d2var_make_idvk
-(loc, sym, knd0) =
+(loc, sym, kvar) =
 (
 ( d2v0 ) where
 {
+//
 val
 d2v0 =
 ref<d2var_struct>
 @{
+//
   d2var_loc= loc
 , d2var_sym= sym
+//
+, d2var_kind= kvar
+//
 , d2var_kmut= kmut
 , d2var_tqas= tqas
 , d2var_sexp= s2e1
 , d2var_type= t2p2
+//
 , d2var_stamp= stamp
+//
 }
+//
 val () =
-stamp_d2var_kind(d2v0, knd0)
+stamp_d2var_saddr(d2v0)
+val () =
+stamp_d2var_atprf(d2v0)
+val () =
+stamp_d2var_msexp(d2v0)
+//
 }
 ) where
 {
@@ -128,9 +162,10 @@ stamp_d2var_kind(d2v0, knd0)
 //
   val s2e1 = the_s2exp_none0
   val t2p2 = the_t2ype_none0
+//
   val stamp = d2var_stamp_new()
 //
-}
+} (*where*) // [d2var_make_idvk]
 //
 (* ****** ****** *)
 //
@@ -138,8 +173,12 @@ implement
 d2var_get_loc(x0) = x0->d2var_loc
 implement
 d2var_get_sym(x0) = x0->d2var_sym
+//
+implement
+d2var_get_kind(x0) = x0->d2var_kind
 implement
 d2var_get_kmut(x0) = x0->d2var_kmut
+//
 implement
 d2var_get_tqas(x0) = x0->d2var_tqas
 implement
@@ -174,7 +213,7 @@ local
 #staload _ =
 "libats/DATS/dynarray.dats"
 //
-typedef itm = tnode
+typedef itm = s2expopt
 vtypedef dynarray = dynarray(itm)
 //
 val
@@ -186,11 +225,11 @@ theDynarr = $UN.castvwtp0{ptr}(theDynarr)
 in (* in-of-local *)
 
 implement
-d2var_get_kind
-  (d2v) = let
+d2var_get_saddr
+  (d2v0) = let
 //
   val s0 =
-  d2v.stamp()
+  d2v0.stamp()
   val i0 =
   stamp2uint(s0)
   val i0 =
@@ -198,45 +237,314 @@ d2var_get_kind
   val A0 =
   $UN.castvwtp0{dynarray}(theDynarr)
   val cp = dynarray_getref_at(A0, i0)
-  prval ((*void*)) = $UN.cast2void(A0)
+  prval((*void*)) = $UN.cast2void(A0)
 //
 in
 //
-if isneqz(cp)
-  then $UN.p2tr_get(cp) else $LEX.T_EOF()
+if
+isneqz(cp)
+then $UN.p2tr_get(cp) else None(*void*)
 //
-end // end of [d2var_get_kind]
+end // end of [d2var_get_saddr]
 
 (* ****** ****** *)
 
 implement
-stamp_d2var_kind
-  (d2v, knd) = let
+stamp_d2var_saddr
+  (d2v0) = let
 //
 (*
 val () =
 println!
-("stamp_d2var_kind: d2v = ", d2v)
+("stamp_d2var_saddr: d2v0 = ", d2v0)
+*)
+//
+val s0 =
+d2v0.stamp()
+val i0 =
+stamp2uint(s0)
+val i0 =
+u2sz(g1ofg0(i0))
+val A0 =
+$UN.castvwtp0{dynarray}(theDynarr)
+//
+val itm = None()
+val-
+~None_vt() =
+dynarray_insert_at_opt(A0, i0, itm)
+//
+prval((*void*)) = $UN.cast2void(A0)
+//
+in
+  // nothing
+end (*let*) // end of [stamp_d2var_saddr]
+
+(* ****** ****** *)
+
+implement
+d2var_set_saddr
+  (d2v0, s2l1) = let
+//
+(*
 val () =
 println!
-("stamp_d2var_kind: knd = ", knd)
+("d2var_set_saddr: d2v0 = ", d2v0)
+val () =
+println!
+("d2var_set_saddr: s2l1 = ", s2l1)
 *)
 //
   val s0 =
-  d2v.stamp()
+  d2v0.stamp()
   val i0 =
   stamp2uint(s0)
   val i0 =
   u2sz(g1ofg0(i0))
   val A0 =
   $UN.castvwtp0{dynarray}(theDynarr)
-  val-
-  ~None_vt() =
-  dynarray_insert_at_opt(A0, i0, knd)
-  prval ((*void*)) = $UN.cast2void(A0)
+//
+  val () =
+  let
+  val itm = Some(s2l1)
+  in
+  dynarray_set_at_exn<itm>(A0, i0, itm)
+  end
+//
+  prval((*void*)) = $UN.cast2void(A0)
+//
 in
   // nothing
-end // end of [stamp_d2var_kind]
+end (*let*) // end of [d2var_set_saddr]
+
+(* ****** ****** *)
+
+end // end of [local]
+
+(* ****** ****** *)
+
+local
+//
+#staload
+"libats/SATS/dynarray.sats"
+#staload _ =
+"libats/DATS/dynarray.dats"
+//
+typedef itm = d2varopt
+vtypedef dynarray = dynarray(itm)
+//
+val
+theDynarr = 
+dynarray_make_nil<itm>(i2sz(ND2VAR))
+val
+theDynarr = $UN.castvwtp0{ptr}(theDynarr)
+//
+in (* in-of-local *)
+
+implement
+d2var_get_atprf
+  (d2v0) = let
+//
+  val s0 =
+  d2v0.stamp()
+  val i0 =
+  stamp2uint(s0)
+  val i0 =
+  u2sz(g1ofg0(i0))
+  val A0 =
+  $UN.castvwtp0{dynarray}(theDynarr)
+  val cp = dynarray_getref_at(A0, i0)
+  prval((*void*)) = $UN.cast2void(A0)
+//
+in
+//
+if
+isneqz(cp)
+then $UN.p2tr_get(cp) else None(*void*)
+//
+end // end of [d2var_get_atprf]
+
+(* ****** ****** *)
+
+implement
+d2var_set_atprf
+  (d2v0, d2w1) = let
+//
+(*
+val () =
+println!
+("d2var_set_atprf: d2v0 = ", d2v0)
+val () =
+println!
+("d2var_set_atprf: d2w1 = ", d2w1)
+*)
+//
+  val s0 =
+  d2v0.stamp()
+  val i0 =
+  stamp2uint(s0)
+  val i0 =
+  u2sz(g1ofg0(i0))
+  val A0 =
+  $UN.castvwtp0{dynarray}(theDynarr)
+//
+  val () =
+  let
+  val itm = Some(d2w1)
+  in
+  dynarray_set_at_exn<itm>(A0, i0, itm)
+  end
+//
+  prval((*void*)) = $UN.cast2void(A0)
+//
+in
+  // nothing
+end (*let*) // end of [d2var_set_atprf]
+
+(* ****** ****** *)
+
+implement
+stamp_d2var_atprf
+  (d2v0) = let
+//
+(*
+val () =
+println!
+("stamp_d2var_atprf: d2v0 = ", d2v0)
+*)
+//
+val s0 =
+d2v0.stamp()
+val i0 =
+stamp2uint(s0)
+val i0 =
+u2sz(g1ofg0(i0))
+val A0 =
+$UN.castvwtp0{dynarray}(theDynarr)
+//
+val itm = None()
+val-
+~None_vt() =
+dynarray_insert_at_opt(A0, i0, itm)
+//
+prval((*void*)) = $UN.cast2void(A0)
+//
+in
+  // nothing
+end (*let*) // end of [stamp_d2var_atprf]
+
+end // end of [local]
+
+(* ****** ****** *)
+
+local
+//
+#staload
+"libats/SATS/dynarray.sats"
+#staload _ =
+"libats/DATS/dynarray.dats"
+//
+typedef itm = s2expopt
+vtypedef dynarray = dynarray(itm)
+//
+val
+theDynarr = 
+dynarray_make_nil<itm>(i2sz(ND2VAR))
+val
+theDynarr = $UN.castvwtp0{ptr}(theDynarr)
+//
+in (* in-of-local *)
+
+implement
+d2var_get_msexp
+  (d2v0) = let
+//
+  val s0 =
+  d2v0.stamp()
+  val i0 =
+  stamp2uint(s0)
+  val i0 =
+  u2sz(g1ofg0(i0))
+  val A0 =
+  $UN.castvwtp0{dynarray}(theDynarr)
+  val cp = dynarray_getref_at(A0, i0)
+  prval((*void*)) = $UN.cast2void(A0)
+//
+in
+//
+if
+isneqz(cp)
+then $UN.p2tr_get(cp) else None(*void*)
+//
+end // end of [d2var_get_msexp]
+
+(* ****** ****** *)
+
+implement
+d2var_set_msexp
+  (d2v0, s2e1) = let
+//
+(*
+val () =
+println!
+("d2var_set_msexp: d2v0 = ", d2v0)
+val () =
+println!
+("d2var_set_msexp: s2e1 = ", s2e1)
+*)
+//
+  val s0 =
+  d2v0.stamp()
+  val i0 =
+  stamp2uint(s0)
+  val i0 =
+  u2sz(g1ofg0(i0))
+  val A0 =
+  $UN.castvwtp0{dynarray}(theDynarr)
+//
+  val () =
+  let
+  val itm = Some(s2e1)
+  in
+  dynarray_set_at_exn<itm>(A0, i0, itm)
+  end
+//
+  prval((*void*)) = $UN.cast2void(A0)
+//
+in
+  // nothing
+end (*let*) // end of [d2var_set_msexp]
+
+(* ****** ****** *)
+
+implement
+stamp_d2var_msexp
+  (d2v0) = let
+//
+(*
+val () =
+println!
+("stamp_d2var_msexp: d2v0 = ", d2v0)
+*)
+//
+val s0 =
+d2v0.stamp()
+val i0 =
+stamp2uint(s0)
+val i0 =
+u2sz(g1ofg0(i0))
+val A0 =
+$UN.castvwtp0{dynarray}(theDynarr)
+//
+val itm = None()
+val-
+~None_vt() =
+dynarray_insert_at_opt(A0, i0, itm)
+//
+prval((*void*)) = $UN.cast2void(A0)
+//
+in
+  // nothing
+end (*let*) // end of [stamp_d2var_msexp]
 
 end // end of [local]
 

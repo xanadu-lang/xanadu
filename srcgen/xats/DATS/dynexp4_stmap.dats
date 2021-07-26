@@ -6,7 +6,7 @@
 
 (*
 ** ATS/Xanadu - Unleashing the Potential of Types!
-** Copyright (C) 2018 Hongwei Xi, ATS Trustful Software, Inc.
+** Copyright (C) 2021 Hongwei Xi, ATS Trustful Software, Inc.
 ** All rights reserved
 **
 ** ATS is free software;  you can  redistribute it and/or modify it under
@@ -28,105 +28,137 @@
 (* ****** ****** *)
 //
 // Author: Hongwei Xi
-// Start Time: October, 2018
+// Start Time: January, 2021
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
 //
 #include
 "share/atspre_staload.hats"
-//
 #staload
 UN = "prelude/SATS/unsafe.sats"
 //
 (* ****** ****** *)
-//
 #staload "./../SATS/xstamp0.sats"
-//
 (* ****** ****** *)
-
-absimpl stamp_type = ptr
-
+#staload "./../SATS/staexp2.sats"
+#staload "./../SATS/dynexp2.sats"
 (* ****** ****** *)
-//
-implement
-the_stamp0 = ( the_null_ptr )
-//
+#staload "./../SATS/dynexp4.sats"
 (* ****** ****** *)
-//
-implement
-stamp2uint(x0) =
-let
-val x0 =
-$UN.cast
-{uintptr}(x0) in $UN.cast{uint}(x0)
-end // end of [stamp2uint]
-//
+#staload
+FM =
+"libats/SATS/funmap_avltree.sats"
+(* ****** ****** *)
+#staload
+_(*FM*) =
+"libats/DATS/funmap_avltree.dats"
+#staload
+_(*QL*) = "libats/DATS/qlist.dats"
 (* ****** ****** *)
 //
-implement
-eq_stamp_stamp
-  (x1, x2) =
-(
-  eq_ptr0_ptr0(x1, x2)
-)
+typedef
+key = d2var and itm = s2exp
 //
 (* ****** ****** *)
-//
-implement
-cmp_stamp_stamp
-  (x1, x2) =
-(
-  compare_ptr0_ptr0(x1, x2)
-)
-//
-(* ****** ****** *)
-//
-implement
-print_stamp(x0) =
-fprint_stamp(stdout_ref, x0)
-implement
-prerr_stamp(x0) =
-fprint_stamp(stderr_ref, x0)
-//
-implement
-fprint_stamp(out, x0) =
-(
-fprint_uint(out, stamp2uint(x0))
-)
-//
-(* ****** ****** *)
-
-local
 //
 absimpl
-stamper_tbox = ref(stamp)
+stmap_type = $FM.map(key, itm)
 //
-in (* in-of-local *)
-//
-implement
-stamper_new() =
-  ref<stamp>(the_null_ptr)
+(* ****** ****** *)
 //
 implement
-stamper_set
-  (obj, n0) = let
-  val n0 =
-  $UN.cast{uintptr}(n0)
+$FM.equal_key_key<key>
+(k1, k2) =
+$effmask_all
+(k1.stamp() = k2.stamp())
+implement
+$FM.compare_key_key<key>
+(k1, k2) =
+$effmask_all
+(compare(k1.stamp(), k2.stamp()))
+//
+(* ****** ****** *)
+//
+implement
+stmap_nil() = $FM.funmap_nil()
+//
+(* ****** ****** *)
+
+implement
+stmap_ismem
+(map, key) =
+let
+//
+var res: itm
+//
+val ans =
+$FM.funmap_search<key,itm>(map,key,res)
+//
 in
-  obj[] := $UN.cast{ptr}(n0)
-end // end of [stamper_set]
-//
-implement
-stamper_getinc
-  (obj) = n0 where
-{
-  val n0 = obj[]
-  val () = obj[] := ptr_succ<byte>(n0)
-}
-//
-end // end of [local]
+let
+  prval () = opt_clear{itm}(res) in ans
+end
+end (*let*) // end of [stmap_ismem]
 
 (* ****** ****** *)
 
-(* end of [xats_xstamp0.dats] *)
+implement
+stmap_insert
+(map, key, itm) =
+let
+val
+ismem = stmap_ismem(map, key)
+(*
+val () =
+println!("stmap_insert: key = ", key)
+val () =
+println!("stmap_insert: itm = ", itm)
+*)
+in
+if
+ismem
+then false
+else (true) where
+{
+val-
+~None_vt() =
+$FM.funmap_insert_opt<key,itm>(map,key,itm)
+} (*where*)
+end (*let*) // end of [stmap_insert]
+
+(* ****** ****** *)
+
+implement
+stmap_remove
+( map, key ) =
+$FM.funmap_remove<key,itm>(map, key)
+
+(* ****** ****** *)
+//
+implement
+stmap_listize
+( map ) = $FM.funmap_listize<key,itm>(map)
+//
+(* ****** ****** *)
+
+implement
+{env}(*tmp*)
+stmap_foreach_env
+( map, env ) = let
+//
+implement
+$FM.funmap_foreach$fwork<key,itm><env>
+  (k0, x0, env) =
+(
+  stmap_foreach$fwork<env>(k0, x0, env)
+)
+//
+in
+$FM.funmap_foreach_env<key,itm><env>(map, env)
+end (*end*) // end of [stmap_foreach_env]
+
+(* ****** ****** *)
+
+(* end of [xats_dynexp4_stmap.dats] *)
+

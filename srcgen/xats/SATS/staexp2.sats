@@ -800,8 +800,8 @@ s2exp_node =
 | S2Elam of
   (s2varlst, s2exp) // abstraction
 //
-| S2Earg of // HX: knd: 0/1: 
-  (int(*knd*), s2exp) // call-by-val/ref
+| S2Earg of // HX: knd: -1/0/1: 
+  (int(*knd*), s2exp) //cbrf/cbv0/cbv1
 | S2Eatx of
   (s2exp(*bef*), s2exp(*aft*)) // trans
 //
@@ -826,10 +826,17 @@ s2exp_node =
 //
 | S2Emet of (s2explst(*met*), s2exp(*body*))
 //
+// HX: for [...]
 | S2Eexi of // exists quantifier
   (s2varlst(*vars*), s2explst(*props*), s2exp(*body*))
+// HX: for {...}
 | S2Euni of // forall quantifier
   (s2varlst(*vars*), s2explst(*props*), s2exp(*body*))
+(*
+// HX: for #[...]
+| S2Eexj of // exists quantifier
+  (s2varlst(*vars*), s2explst(*props*), s2exp(*body*))
+*)
 //
 (*
 | S2Elist of s2explst // HX: temporary use
@@ -943,6 +950,13 @@ s2exp_app2
 //
 fun
 s2exp_any(knd: int): s2exp
+//
+(* ****** ****** *)
+//
+fun
+s2exp_at0
+( s2e(*elt*): s2exp
+, s2l(*addr*): s2exp): s2exp
 //
 (* ****** ****** *)
 //
@@ -1430,10 +1444,22 @@ s2cstref_equ_s2exp(s2cstref, s2exp): bool
 //
 (* ****** ****** *)
 //
-val the_p2tr_tbox : s2cstref
+val
+the_a0ptr_view : s2cstref
+fun
+s2exp_is_a0ptr(s2exp): bool
 //
-val the_lazy_t0_x0 : s2cstref // (t0) -> x0
-val the_lazy_vt_vx : s2cstref // (vt) -> vx
+(* ****** ****** *)
+//
+val
+the_p2tr_tbox : s2cstref
+//
+(* ****** ****** *)
+//
+val
+the_lazy_t0_x0 : s2cstref // (t0) -> x0
+val
+the_lazy_vt_vx : s2cstref // (vt) -> vx
 //
 (* ****** ****** *)
 
@@ -1451,16 +1477,16 @@ val the_neq_b0_b0 : s2cstref // (b0, b0) -> b0
 //
 (* ****** ****** *)
 //
-val the_neg_i0 : s2cstref // : (int) -> int
+val the_neg_i0 : s2cstref // : (i0) -> i0
 //
-val the_add_i0_i0 : s2cstref // : (int, int) -> int
-val the_sub_i0_i0 : s2cstref // : (int, int) -> int
-val the_mul_i0_i0 : s2cstref // : (int, int) -> int
-val the_div_i0_i0 : s2cstref // : (int, int) -> int
-val the_mod_i0_i0 : s2cstref // : (int, int) -> int
+val the_add_i0_i0 : s2cstref // : (i0, i0) -> i0
+val the_sub_i0_i0 : s2cstref // : (i0, i0) -> i0
+val the_mul_i0_i0 : s2cstref // : (i0, i0) -> i0
+val the_div_i0_i0 : s2cstref // : (i0, i0) -> i0
+val the_mod_i0_i0 : s2cstref // : (i0, i0) -> i0
 //
-val the_ndiv_i0_i0 : s2cstref // : (int, int) -> int
-val the_idiv_i0_i0 : s2cstref // : (int, int) -> int
+val the_ndiv_i0_i0 : s2cstref // : (i0, i0) -> i0
+val the_idiv_i0_i0 : s2cstref // : (i0, i0) -> i0
 //
 (* ****** ****** *)
 //
@@ -1498,13 +1524,17 @@ val the_char0_ctype : s2cstref
 val the_string0_ctype : s2cstref
 //
 (* ****** ****** *)
-
-val the_excptn_ctype : s2cstref
-
-(* ****** ****** *)
 //
 val the_lazy_ctype : s2cstref//nonlin
 val the_llazy_ctype : s2cstref//linear
+//
+(* ****** ****** *)
+//
+val the_excptn_ctype : s2cstref//linear
+//
+(* ****** ****** *)
+//
+val the_a0p1tr_cview : s2cstref//linear
 //
 (* ****** ****** *)
 //

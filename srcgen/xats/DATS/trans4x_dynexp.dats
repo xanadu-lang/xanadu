@@ -186,7 +186,7 @@ D4Ptasmp
   val () =
   trans4x_dpat(env0, d4p1)
   val () =
-  trans4x_cstr(env0, loc0, cstr)
+  trans4x_c0str(env0, loc0, cstr)
 }
 //
 | _ (*rest-of-d4pat*) => ((*void*))
@@ -538,13 +538,29 @@ D4Eif0
 D4Ecas0 _ => aux_cas0(env0, d4e0)
 //
 |
+D4Estmap
+(d4e1, map2) =>
+{
+  val () =
+  trans4x_dexp(env0, d4e1)
+}
+|
+D4Estmrg
+(d4e1, mrg2) =>
+{
+  val () =
+  trans4x_dexp(env0, d4e1)
+  val () =
+  trans4x_stmrg(env0, loc0, mrg2)
+}
+|
 D4Etcast
 (d4e1, cstr) =>
 {
   val () =
   trans4x_dexp(env0, d4e1)
   val () =
-  trans4x_cstr(env0, loc0, cstr)
+  trans4x_c0str(env0, loc0, cstr)
 }
 //
 | _ (*rest-of-d4exp*) => ((*void*))
@@ -643,6 +659,57 @@ list_cons(f4a0, f4as) =>
 ) (* end of [trans4x_farglst] *)
 //
 (* ****** ****** *)
+
+implement
+trans4x_stmrg
+( env0
+, loc0, mrg0 ) =
+(
+auxlst
+( env0
+, stmrg_listize(mrg0)
+)
+) where
+{
+//
+typedef
+xtt =
+(d2var, s2exp, s2exp)
+//
+fun
+auxlst
+( env0:
+! tr4xenv
+, xtts: List0_vt(xtt)): void =
+(
+case+ xtts of
+| ~
+list_vt_nil
+((*void*)) => ()
+| ~
+list_vt_cons
+(xtt0, xtts) =>
+let
+//
+val
+( d2v0
+, s2e1, s2e2) = xtt0
+//
+val
+cstr =
+c1str_make_node
+( loc0
+, C1Stple(s2e1, s2e2))
+//
+in
+  auxlst(env0, xtts) where
+{ val () =
+  tr4xenv_add_cstr(env0, cstr) }
+end (*end*) // end of [list_vt_cons]
+)
+} (*where*) // end of [trans4x_stmrg]
+
+(* ****** ****** *)
 //
 implement
 trans4x_dgpat
@@ -680,7 +747,8 @@ D4CLAUpat
 ( dgpt ) => ()
 |
 D4CLAUexp
-(dgpt, d4e1) =>
+( dgpt
+, d4e1, map2) =>
 let
 val () =
 tr4xenv_add_bloc(env0)
@@ -1445,11 +1513,11 @@ val
 s2e2 =
 trans4x_s2exp_deexi
 ( env0, loc0, s2e2 )
-(*
+// (*
 val () =
 println!
 ("auxi_tple: s2e2 = ", s2e2)
-*)
+// *)
 val-
 S2Eapp
 ( s2f2
@@ -1592,7 +1660,7 @@ end
 in(*in-of-local*)
 
 implement
-trans4x_cstr
+trans4x_c0str
 (env0, loc0, cstr) =
 let
 //
@@ -1608,15 +1676,19 @@ in
 case+ cstr of
 //
 |
-C0Htpeq(s2e1, s2e2) =>
+C0Htpeq
+(s2e1, s2e2) =>
 auxh_tpeq(env0, loc0, s2e1, s2e2)
 //
 |
-C0Itple(s2e1, s2e2) =>
+C0Itple
+(s2e1, s2e2) =>
 auxi_tple(env0, loc0, s2e1, s2e2)
 |
-C0Itpeq(s2e1, s2e2) =>
+C0Itpeq
+(s2e1, s2e2) =>
 auxi_tpeq(env0, loc0, s2e1, s2e2)
+//
 (*
 |
 _(*rest-of-c0str*) =>
